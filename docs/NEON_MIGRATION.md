@@ -22,7 +22,24 @@ The user selected Neon, GitHub account `haseeb9876`, and Vercel as the intended 
 5. Complete patient/provider/admin browser journeys, PDF exports, mobile/tablet/desktop review, accessibility and performance checks.
 6. Reconcile every requirement against actual evidence. Deploy only within the clarified scope and present a review walkthrough.
 
-No Neon database has been connected or migration accepted merely by writing this document. Earlier Supabase test passes do not establish Neon compatibility.
+## Current provisioning checkpoint
+
+- Private source repository created and initial application checkpoint pushed: https://github.com/haseeb9876/careathome-platform. Initial GitHub application-check workflow passed.
+- Created `careathome-development`, project `fancy-brook-14378314`, in Singapore. Console confirms the Free plan. Renamed its default branch to `development` (`br-nameless-glitter-b395hmhx`). Requested a private `credentials` bucket during project creation; upload/download verification remains pending.
+- Non-secret target identifiers are recorded in [neon-target.json](../database/neon-target.json). Existing unrelated Neon projects were not modified.
+- Added a bounded, verified-TLS application pool restricted by configuration to `careathome_app`, plus transaction-local PostgreSQL role/identity handling and rollback cleanup. This module is not wired into routes yet. Database grants and actual RLS isolation must still be tested against Neon.
+- Pinned Better Auth 1.7.9 and AWS S3 SDK 3.1152.0 for the upcoming authentication/private-storage migration. Better Auth will run inside the Next.js application so its supported two-factor plugin can preserve MFA. These dependencies are installed, not yet integrated.
+- Neon CLI 8.4.5 was invoked through npx (no global installation). The agent left its account-wide consent page for the user; the CLI subsequently reported `Auth complete`. A read-only project lookup succeeded. The returned owner email differs in spelling from the email in the user's instruction. Asked the user to confirm the signed-in account before further cloud configuration. No database credentials have been retrieved or schema applied.
+
+## Validation of this foundation
+
+- 27 unit tests passed (12 existing plus 15 new configuration/transaction boundary cases).
+- Standalone TypeScript and full ESLint checks passed; production build including TypeScript passed after dependency installation.
+- Runtime dependency audit: zero known vulnerabilities. Full audit reports five high-severity entries in the existing ESLint/fast-glob/micromatch/braces development dependency chain. The suggested automatic fix downgrades eslint-config-next to 14; it was not applied to this Next 16 project. Review an upstream compatible fix before release.
+- Editor diagnostics: no errors in the new test/module files.
+- Live Neon migrations, authentication, storage and application acceptance remain pending. Mock connection tests validate transaction orchestration, not live database permissions.
+
+No application schema has been applied to Neon, and the running application has not switched databases. Earlier Supabase test passes do not establish Neon compatibility.
 
 ## Official references checked October 15
 

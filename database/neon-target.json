@@ -1,0 +1,12 @@
+{
+  "purpose": "synthetic-development-only",
+  "projectName": "careathome-development",
+  "projectId": "fancy-brook-14378314",
+  "branchName": "development",
+  "branchId": "br-nameless-glitter-b395hmhx",
+  "region": "aws-ap-southeast-1",
+  "database": "careathome",
+  "applicationRole": "careathome_app",
+  "credentialBucket": "credentials",
+  "credentialBucketAccess": "private"
+}
