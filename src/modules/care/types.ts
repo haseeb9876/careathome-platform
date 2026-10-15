@@ -1,0 +1,91 @@
+export type Profile = {
+  id: string;
+  name: string;
+  role: "patient" | "provider" | "admin";
+  active: boolean;
+};
+export type Service = {
+  id: string;
+  name: string;
+  category: "nurse" | "physiotherapist";
+  description: string;
+  duration_minutes: number;
+  price_minor: number;
+  currency: string;
+  active: boolean;
+};
+export type Booking = {
+  id: string;
+  patient_id: string;
+  provider_id: string | null;
+  preferred_provider_id: string | null;
+  service_id: string;
+  starts_at: string;
+  ends_at: string;
+  address: string;
+  area: string;
+  status: string;
+  price_minor: number;
+  currency: string;
+  created_at: string;
+};
+export type Provider = {
+  id: string;
+  public_name: string;
+  profession: string;
+  qualifications: string;
+  experience_years: number;
+  specialisation: string;
+  areas: string[];
+  verification: string;
+  bio: string;
+  demo: boolean;
+  rating?: number | null;
+  review_count?: number;
+  min_price?: number;
+  services?: Service[];
+};
+export type RecordEntry = {
+  id: string;
+  booking_id: string;
+  patient_id: string;
+  provider_id: string;
+  service_id: string;
+  visit_at: string;
+  observations: string;
+  patient_report: string;
+  notes: string;
+  mobility_minutes: number | null;
+  author_name: string;
+  created_at: string;
+  amendments?: Amendment[];
+};
+export type Amendment = {
+  id: string;
+  record_id: string;
+  author_name: string;
+  content: string;
+  reason: string;
+  created_at: string;
+};
+export type Report = {
+  id: string;
+  patient_id: string;
+  creator: string;
+  period_start: string;
+  period_end: string;
+  title: string;
+  summary: string;
+  source_records: RecordEntry[];
+  adapter: string;
+  reviewed_at: string | null;
+  created_at: string;
+};
+export type Settings = {
+  timezone: string;
+  currency: string;
+  travel_buffer_minutes: number;
+  cancellation_cutoff_hours: number;
+  enforce_credential_expiry: boolean;
+  require_admin_mfa: boolean;
+};
