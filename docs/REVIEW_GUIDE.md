@@ -16,7 +16,11 @@ Create a patient account from the sign-in page to try registration and bookings.
 4. Administrator: review provider evidence, verify/reject/suspend applications, queue and assign visits, manage services/accounts, review simulated payments/refunds, moderate reviews and answer support requests.
 5. Review security settings, authenticator enrollment, notifications and audit history. Registration never grants administrator access.
 
-## Verified hosted behavior
+## Current cleanup release
+
+The code has been modularized and legacy tooling removed; see [maintenance guidance](MAINTENANCE.md). Core/static regression passes. Current 5 MiB credential transfers encountered timeouts and a Neon storage HTTP 500 despite passing in the earlier release. The upload UI now stops after 90 seconds and offers a retry. Treat large-upload acceptance as open until the storage issue is resolved; see [latest results](TEST_RESULTS.md).
+
+## Previous verified hosted behavior
 
 All 13 Chrome scenarios passed across hosted runs after the PDF packaging correction. Coverage includes patient registration/booking/profile/cancellation/logout; provider registration; administrator booking queue; public layouts at 390/768/1440; protected-page redirect; all three role workspaces and mobile navigation; report PDF/sharing/revocation; responsive home/patient accessibility scans; 5 MiB credential upload/download and disguised-content rejection. A separate hosted payment receipt PDF check also passed.
 

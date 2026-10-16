@@ -6,10 +6,10 @@
 - All 59 live Neon care workflows passed. Applied SQL migrations are byte-for-byte unchanged.
 - Production dependency audit: zero known vulnerabilities; development-tool advisories are outside that count.
 - Stylesheet extraction preserved parsed CSS rules and declaration order. Homepage visual inspection and responsive/axe checks passed.
-- First Chrome run: 11 passed, 2 failed (5 MiB upload remained pending; admin sign-in returned its generic failure message). Separate storage attempts encountered a database connection timeout and then Neon storage HTTP 500 on the large PUT. Targeted reruns are underway.
+- First Chrome run: 11 passed, 2 failed (5 MiB upload remained pending; admin sign-in returned its generic failure message). Separate storage attempts encountered a database connection timeout and then Neon storage HTTP 500 on the large PUT. The admin workspace passed on targeted retry, giving 12/13 successful local scenarios across runs. The large upload retry reached the new explicit timeout message; it is not counted as a successful transfer.
 - Added a 90-second browser upload timeout with clear retry guidance. The upload test allows 120 seconds for transfer plus registration; it still requires a successful byte-exact download and rejects disguised content.
 - Source-reference scan found no non-route source files without an inbound source import. Exact runtime-secret scan passed. This is a focused cleanup audit, not a proof that every export is necessary.
-- Public deployment of the refactor remains pending.
+- Cleanup commit 0ffc743 deployed successfully; GitHub CI passed. All five post-deployment Chrome scenarios passed: patient/provider/admin workspaces and mobile navigation, report/PDF/private-share revocation, and responsive primary-screen accessibility. The public homepage returned HTTP 200.
 
 ## Previous public release - October 16, 2026
 
