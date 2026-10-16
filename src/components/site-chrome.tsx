@@ -40,7 +40,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
           <Brand />
           <p>Thoughtful care. Familiar surroundings.</p>
           <small>
-            Local demonstration · Synthetic data only
+            Demonstration · Synthetic data only
             <br />
             Not an emergency service
           </small>

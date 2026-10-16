@@ -146,7 +146,7 @@ export async function CareSections({
         {patient && points.length > 0 && (
           <Panel
             title="Recorded mobility activity"
-            description="Minutes recorded per session Â· Not a clinical outcome score"
+            description="Minutes recorded per session · Not a clinical outcome score"
             className="mb-6"
           >
             <div
@@ -185,7 +185,7 @@ export async function CareSections({
                 <RecordView
                   record={{
                     ...r,
-                    amendments: a.data?.filter((x) => x.record_id === r.id),
+                    amendments: a.data?.filter((x) => x.record_id === r.id) as import("./types").Amendment[] | undefined,
                   }}
                   timezone={tz}
                 />
@@ -227,7 +227,7 @@ export async function CareSections({
           ) : (
             <Empty
               title="Your care story starts with a visit"
-              description="Completed visits create dated records here, with the professionalâ€™s observations and any later amendments."
+              description="Completed visits create dated records here, with the professional’s observations and any later amendments."
               href="/dashboard/bookings"
               label="View visits"
             />
@@ -299,7 +299,7 @@ export async function CareSections({
                               }
                             />
                             <p className="muted text-xs mt-3">
-                              Expires {dateTime(x.expires_at, tz)} Â·{" "}
+                              Expires {dateTime(x.expires_at, tz)} ·{" "}
                               {a.data?.filter((log) => log.share_id === x.id)
                                 .length ?? 0}{" "}
                               access events
@@ -369,7 +369,7 @@ export async function CareSections({
                   <Link href={"/dashboard/reports?report=" + r.id} key={r.id}>
                     {r.title}
                     <small>
-                      {r.period_start} â€” {r.period_end}
+                      {r.period_start} — {r.period_end}
                     </small>
                   </Link>
                 ))}
@@ -631,7 +631,7 @@ export async function CareSections({
             ) : (
               <Panel>
                 <Empty
-                  title="Weâ€™re here when you need a hand"
+                  title="We’re here when you need a hand"
                   description="Start a conversation and your care team can respond here."
                 />
               </Panel>
@@ -645,7 +645,7 @@ export async function CareSections({
                   <option value="">General question</option>
                   {b.data?.map((b) => (
                     <option key={b.id} value={b.id}>
-                      {dateTime(b.starts_at, tz)} Â· {b.id.slice(0, 8)}
+                      {dateTime(b.starts_at, tz)} · {b.id.slice(0, 8)}
                     </option>
                   ))}
                 </select>
@@ -697,7 +697,7 @@ export async function CareSections({
                   <strong>{n.title}</strong>
                   <p>{n.body}</p>
                   <small>
-                    {dateTime(n.created_at, tz)} Â·{" "}
+                    {dateTime(n.created_at, tz)} ·{" "}
                     {n.read_at ? "Read" : "Unread"}
                   </small>
                   {n.booking_id && (
@@ -721,7 +721,7 @@ export async function CareSections({
             ))
           ) : (
             <Empty
-              title="Youâ€™re all caught up"
+              title="You’re all caught up"
               description="Updates and visit reminders will appear here."
             />
           )}

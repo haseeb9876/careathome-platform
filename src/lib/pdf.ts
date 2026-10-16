@@ -1,5 +1,6 @@
 import "server-only";
 import { chromium } from "playwright";
+import serverlessChromium from "@sparticuz/chromium";
 import type { Report, RecordEntry } from "@/modules/care/types";
 export function escapeHtml(value: unknown) {
   return String(value ?? "").replace(
@@ -22,10 +23,18 @@ export async function createPdf(body: string) {
   active++;
   let browser;
   try {
-    browser = await chromium.launch({
-      channel: process.env.PLAYWRIGHT_CHANNEL ?? "chrome",
-      headless: true,
-    });
+    browser = await chromium.launch(
+      process.env.VERCEL
+        ? {
+            executablePath: await serverlessChromium.executablePath(),
+            args: serverlessChromium.args,
+            headless: true,
+          }
+        : {
+            channel: process.env.PLAYWRIGHT_CHANNEL ?? "chrome",
+            headless: true,
+          },
+    );
     const page = await browser.newPage({ javaScriptEnabled: false });
     await page.route("**/*", (route) => route.abort());
     await page.setContent(

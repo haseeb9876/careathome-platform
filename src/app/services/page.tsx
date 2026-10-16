@@ -1,6 +1,6 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowUpRight, Clock3 } from "lucide-react";
-import { db, configured } from "@/lib/supabase/server";
+import { db, configured } from "@/lib/database/server";
 import { Button } from "@/components/ui/button";
 import { money } from "@/lib/utils";
 export default async function Services({
@@ -29,7 +29,7 @@ export default async function Services({
     if (category === "nurse" || category === "physiotherapist")
       query = query.eq("category", category);
     const { data, error } = await query;
-    services = data ?? [];
+    services = (data ?? []) as typeof services;
     unavailable = Boolean(error);
   }
   return (

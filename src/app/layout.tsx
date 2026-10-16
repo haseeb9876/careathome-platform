@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s · CareAtHome",
   },
   description:
-    "Thoughtful home nursing and physiotherapy, with your care journey in one place. Local demonstration.",
+    "Thoughtful home nursing and physiotherapy, with your care journey in one place. Demonstration.",
   robots: { index: false, follow: false },
 };
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -1,6 +1,6 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { authenticate } from "@/modules/accounts/actions";
-import { configured } from "@/lib/supabase/server";
+import { configured } from "@/lib/database/server";
 import { Button } from "@/components/ui/button";
 export default async function Auth({
   searchParams,
@@ -45,7 +45,7 @@ export default async function Auth({
           {mode === "register"
             ? "Create a patient account or apply as a care provider."
             : mode === "recover"
-              ? "Weâ€™ll send a recovery link to the local email inbox."
+              ? "We’ll send a recovery link to the local email inbox."
               : "Sign in to your personal care workspace."}
         </p>
         {!configured() && (
@@ -76,9 +76,9 @@ export default async function Auth({
               <label>
                 Account type
                 <select name="role">
-                  <option value="patient">Patient â€” arrange home care</option>
+                  <option value="patient">Patient — arrange home care</option>
                   <option value="provider">
-                    Provider â€” apply to offer care
+                    Provider — apply to offer care
                   </option>
                 </select>
               </label>

@@ -1,4 +1,4 @@
-import { db } from "@/lib/supabase/server";
+import { db } from "@/lib/database/server";
 import { z } from "zod";
 export async function POST(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > 1024)

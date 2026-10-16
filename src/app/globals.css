@@ -826,7 +826,7 @@ input[type="radio"] {
   flex-shrink: 0;
   border-radius: 50%;
   background: #e9e7db;
-  color: #7f795e;
+  color: #5f5a43;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -839,7 +839,7 @@ input[type="radio"] {
   height: 62px;
   font-size: 20px;
   background: #eaf0e3;
-  color: #68834d;
+  color: #486332;
 }
 .workspace-body {
   margin-left: 244px;
@@ -1154,7 +1154,7 @@ input[type="radio"] {
   padding: 15px 0;
   border-bottom: 1px solid #edf0e9;
   font-size: 12px;
-  color: #7f9073;
+  color: #536747;
 }
 .quick-links a:last-child {
   border-bottom: 0;

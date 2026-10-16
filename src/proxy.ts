@@ -1,23 +1,8 @@
-import { createServerClient } from "@supabase/ssr";
+import { getSessionCookie } from "better-auth/cookies";
 import { NextResponse, type NextRequest } from "next/server";
-export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key || key.startsWith("replace")) return response;
-  const client = createServerClient(url, key, {
-    cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll: (values) => {
-        values.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        values.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options),
-        );
-      },
-    },
-  });
-  await client.auth.getUser();
-  return response;
+export function proxy(request: NextRequest) {
+  if (!getSessionCookie(request)) return NextResponse.redirect(new URL("/auth", request.url));
+  // Each protected entrypoint additionally validates the actual session and RLS identity.
+  return NextResponse.next();
 }
-export const config = { matcher: ["/dashboard/:path*", "/auth/:path*"] };
+export const config = { matcher: ["/dashboard/:path*"] };

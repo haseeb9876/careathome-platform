@@ -1,0 +1,111 @@
+import "server-only";
+import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
+import { Pool } from "pg";
+import { headers } from "next/headers";
+import { cache } from "react";
+import { createCipheriv, randomBytes } from "node:crypto";
+import { authenticationOptions } from "./auth-options";
+import { applicationDatabaseConfig } from "./config";
+
+let pool: Pool | undefined;
+export function authenticationPool() {
+  if (!pool) {
+    pool = new Pool(
+      applicationDatabaseConfig(
+        { DATABASE_URL: process.env.AUTH_DATABASE_URL },
+        "careathome_auth",
+      ),
+    );
+    pool.on("error", () =>
+      console.error("An idle authentication database connection closed."),
+    );
+  }
+  return pool;
+}
+function makeAuth() {
+  const secret = process.env.BETTER_AUTH_SECRET;
+  if (!secret || !/^[a-f0-9]{64,}$/i.test(secret))
+    throw new Error("Authentication secret is not configured.");
+  const connection = authenticationPool();
+  const options = authenticationOptions(
+    connection,
+    secret,
+    process.env.APP_ORIGIN ?? "http://127.0.0.1:3000",
+  );
+  return betterAuth({
+    ...options,
+    plugins: [...options.plugins, nextCookies()],
+    emailAndPassword: {
+      ...options.emailAndPassword,
+      sendResetPassword: async ({ user, url }) => {
+        // Development sink: encrypted at rest; no real email is sent by tests.
+        const nonce = randomBytes(12);
+        const cipher = createCipheriv(
+          "aes-256-gcm",
+          Buffer.from(secret.slice(0, 64), "hex"),
+          nonce,
+        );
+        const body = Buffer.concat([
+          cipher.update(
+            JSON.stringify({ subject: "Reset your CareAtHome password", url }),
+            "utf8",
+          ),
+          cipher.final(),
+        ]);
+        const payload = Buffer.concat([
+          nonce,
+          cipher.getAuthTag(),
+          body,
+        ]).toString("base64");
+        await connection.query(
+          "insert into private.development_email(recipient,payload_encrypted) values($1,$2)",
+          [user.email, payload],
+        );
+      },
+    },
+    databaseHooks: {
+      session: {
+        create: {
+          before: async (session, context) => {
+            const result = await connection.query(
+              'select u."twoFactorEnabled", p.active from public.identity_users u join public.profiles p on p.id=u.id where u.id=$1',
+              [session.userId],
+            );
+            if (!result.rows[0]?.active) return false;
+            const verifiedPath =
+              context?.path === "/two-factor/verify-totp" ||
+              context?.path === "/two-factor/verify-backup-code";
+            return {
+              data: {
+                ...session,
+                mfaVerified:
+                  result.rows[0].twoFactorEnabled === true && verifiedPath,
+              },
+            };
+          },
+        },
+      },
+    },
+  });
+}
+let instance: ReturnType<typeof makeAuth> | undefined;
+export function getAuth() {
+  return (instance ??= makeAuth());
+}
+export const verifiedSession = cache(async () => {
+  const session = await getAuth().api.getSession({
+    headers: await headers(),
+    query: { disableCookieCache: true },
+  });
+  if (
+    !session ||
+    Date.now() - new Date(session.session.createdAt).getTime() >= 24 * 3600000
+  )
+    return null;
+  const account = await authenticationPool().query(
+    "select active from public.profiles where id=$1",
+    [session.user.id],
+  );
+  return account.rows[0]?.active ? session : null;
+});

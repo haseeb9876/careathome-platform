@@ -1,3 +1,7 @@
+# Current scope ? October 16, 2026
+
+Public Vercel deployment is now explicitly authorised. This supersedes earlier local-review deployment gates below. Use the free Vercel project connected to private GitHub source and the existing free Neon project. No Docker. Public content must remain clearly labelled as synthetic demonstration data; payments are simulated. External email is not configured, and clinical deployment remains outside this demonstration scope.
+
 # Decisions and SRS reconciliation
 
 ## Latest scope decision — October 15: Neon and GitHub

@@ -1,49 +1,23 @@
-﻿# Progress — 2026-10-15
+# CareAtHome progress ? October 16, 2026
 
-## Latest direction: Neon migration
+The user authorised public Vercel deployment on October 16. Docker remains removed. GitHub source is private at haseeb9876/careathome-platform. Vercel project careathome-platform is created and linked to that repository; deployment and public acceptance are in progress, not yet complete.
 
-The user confirmed Docker was removed and selected Neon, GitHub account `haseeb9876`, and Vercel. Migration and private GitHub source storage are authorised. The private GitHub repository is created and the source checkpoint is pushed; its initial CI passed. Neon sign-in succeeded, and a separate CareAtHome development project was created on the Free plan in Singapore. The user completed CLI browser authorization. A read-only lookup revealed that the signed-in account email differs in spelling from the requested email; cloud configuration is paused for confirmation. Vercel preview timing also awaits clarification. See [migration decisions](NEON_MIGRATION.md). Earlier runtime-restoration instructions below are historical and superseded: do not reinstall Docker.
+## Implemented and verified
 
-The existing application still uses Supabase until its replacements have been implemented and verified. The new Neon connection/transaction boundary is implemented but not wired into routes. All 27 unit tests passed, including 15 database-boundary cases; standalone typecheck and lint passed. Production build including TypeScript passed after dependency installation. Runtime dependency audit found zero known vulnerabilities; five existing development-tool advisories remain documented. No live Neon acceptance passes are claimed. Next: confirm account spelling, retrieve credentials into ignored local configuration, provision restricted database/auth roles, port the authoritative migrations, then integrate and test authentication and private storage.
+The application uses Neon PostgreSQL with restricted application, authentication and worker roles; Better Auth with password recovery, TOTP and backup codes; private Neon S3 credential storage. Ten migrations (000?009) are applied. Owner and worker secrets are excluded from the web runtime.
 
-## Current application
-The premium redesign is implemented: editorial homepage with a labelled fictional image, locally hosted Manrope/Inter fonts, responsive role-specific workspace, dedicated care screens and a three-step booking flow.
+The responsive patient/provider/administrator workspace covers discovery, booking, eligibility and scheduling conflicts, credentials and verification, clinical records and amendments, reviewed reports and private sharing, simulated payments/refunds, reviews, support and notifications.
 
-Migrations 001–003 were applied to the existing local Supabase instance on October 14. Real database tests passed: 17 foundation checks and 59 care-workflow checks. Demo accounts and care fixtures were created; 20 notification emails were delivered to the local Mailpit inbox.
+Evidence: 18 foundation checks; 59 care workflows (rerun successfully using the HTTP transaction adapter); 8 HTTP authentication checks; 3 password-recovery checks; 6 private-storage scenarios including a full 5 MiB signed transfer and overwrite denial; 33 unit tests. The earlier 12 Chrome scenarios passed across the original run and corrected reruns. These counts do not imply every SRS requirement has final acceptance.
 
-Implemented UI and server/database workflows include provider profiles/credentials/verification, discovery filters, availability/time off, assignment/reassignment/rescheduling/cancellation, session completion and amendments, reports/review/private sharing, simulated payments/refunds/receipts, reviews/moderation, support, notifications, services/users/settings/audit. Database-level coverage is not equivalent to browser acceptance.
+The isolated backup drill restored the database checkpoint and verified encrypted object recovery. Twenty notification emails were captured in an encrypted development sink. There is no external email delivery or scheduled backup policy yet.
 
-## Resume-session improvements
-- Fixed stale browser selectors, registration password labelling, booking validation redirects and hidden wizard panels.
-- Added administrator MFA verification gate; memoized account reads.
-- Aligned Next server-action limit with 5 MB credential upload allowance; validate future expiry before upload.
-- Added editable availability windows, service-type discovery filter and additional live admin counts.
-- Added explicit unavailable summary-adapter failure behaviour, private credential download filename safety and bounded database fetches.
-- Added migration 004: indexes, settings constraints, inactive-patient assignment prevention, sharing review metadata, orphan-upload cleanup policy and monotonic email completion.
-- Prepared isolated database/private-storage backup and recovery drill script. It is NOT tested yet.
-- Formatted source, tests and scripts; updated this checkpoint to replace obsolete infrastructure notes.
+## Hosting changes under verification
 
-## Current blocker — different from the earlier image-download problem
-On resuming October 15, ports 54321/54322/54324 were closed. Docker is absent from PATH and its previous Program Files executable is missing. No replacement infrastructure was installed and no database was reset. The user has been asked whether Docker was removed or moved; answer pending.
-The existing local Supabase dependency needs restoring before authenticated tests can continue. Existing Docker files/settings alone do not prove that database volumes are intact.
+Private credential transfers use short-lived signed S3 URLs after server authorization, preserving the 5 MiB allowance without passing file bytes through Vercel. File content is checked server-side before registration. Report and receipt PDFs use packaged Linux Chromium on Vercel and installed Chrome locally. Application queries use atomic Neon HTTP transactions with server-derived identity and RLS. Runtime secrets are being configured for production only.
 
-## Verified this resume
-- 12 Vitest tests passed (validation + safe summary-adapter configuration).
-- 4 public Chrome Playwright tests passed, including 390/768/1440 layouts and authentication redirect.
-- Homepage screenshot review and overflow checks passed at those three widths.
-- Homepage axe WCAG A/AA check: zero detected violations after contrast fixes.
-- Final production build and standalone TypeScript checks passed; editor diagnostics are clear. Lint details are recorded in TEST_RESULTS.md.
+## Remaining acceptance
 
-## Pending work — do not call the whole application accepted
-1. Restore the existing local runtime; verify persisted demo data rather than reseeding/resetting blindly.
-2. Apply migration 004 and activate the configured Auth inactivity/timebox settings.
-3. Rerun both integration suites. Test MFA enforcement, inactive accounts, credential expiry, reminder dedup/retry and service-price snapshot changes explicitly.
-4. Run all updated authenticated Playwright journeys, including PDF fidelity, share expiry/revocation, all roles and mobile navigation. Earlier authenticated browser runs failed; they are not acceptance passes.
-5. Inspect patient/provider/admin screenshots and run accessibility checks across those screens.
-6. Measure warmed production performance; run persistence restart and isolated backup/recovery drill. Recovery script needs the existing local database container/CLI.
-7. Update each requirement with final evidence and provide the full user review walkthrough.
+Complete build and hosted browser checks, including sign-in, 5 MiB upload/download and PDF generation; measure performance after HTTP migration; update requirement evidence and push the source checkpoint. Public password-recovery email delivery remains unavailable until an email service is configured; the development sink must never be exposed publicly. Payments remain simulated and all demonstration data is synthetic. Automated accessibility scans do not establish full accessibility compliance.
 
-## Boundaries
-No application Docker image was built, no deployment occurred, no Git push/remote was created. Only synthetic care data was used. The original PDF and attachment snapshot were not edited. Local configuration and generated credentials remain ignored.
-
-
+The user's phrase ?other app? is awaiting clarification; no unrelated repository has been changed.

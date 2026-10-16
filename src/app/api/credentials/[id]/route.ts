@@ -1,4 +1,4 @@
-import { db } from "@/lib/supabase/server";
+import { db } from "@/lib/database/server";
 import { z } from "zod";
 export async function GET(
   _request: Request,
@@ -20,16 +20,13 @@ export async function GET(
   if (!data) return new Response("Not found", { status: 404 });
   const { data: file, error } = await client.storage
     .from("credentials")
-    .download(data.object_path);
+    .downloadUrl(data.object_path);
   if (error || !file)
     return new Response("Document unavailable", { status: 404 });
-  return new Response(file, {
+  return new Response(null, {
+    status: 302,
     headers: {
-      "Content-Type": file.type,
-      "Content-Disposition":
-        'attachment; filename="credential.' +
-        (file.type==="application/pdf"?"pdf":file.type==="image/png"?"png":file.type==="image/jpeg"?"jpg":"bin") +
-        '"',
+      Location: file.url,
       "Cache-Control": "private, no-store",
       "X-Content-Type-Options": "nosniff",
     },

@@ -47,8 +47,12 @@ test("patient report review, PDF export, bearer sharing and revocation", async (
     shared.getByText("DEMO / TEMPLATE SUMMARY.", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Revoke access" }).last().click();
+  await expect(page.getByRole("status")).toContainText("Changes saved");
+  await expect(page.getByText("Revoked", { exact: true }).last()).toBeVisible();
   await shared.reload();
-  await expect(shared.getByRole("alert")).toContainText("expired");
+  await expect(
+    shared.getByRole("alert").filter({ hasText: "expired" }),
+  ).toBeVisible();
   await shared.close();
 });
 for (const role of ["patient", "provider", "admin"])

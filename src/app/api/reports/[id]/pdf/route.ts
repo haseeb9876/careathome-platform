@@ -1,4 +1,5 @@
-import { db } from "@/lib/supabase/server";
+export const maxDuration = 60;
+import { db } from "@/lib/database/server";
 import { createPdf, reportHtml } from "@/lib/pdf";
 import { z } from "zod";
 import type { Report } from "@/modules/care/types";

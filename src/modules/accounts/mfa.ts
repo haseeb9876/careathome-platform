@@ -1,66 +1,80 @@
-﻿"use server";
+"use server";
 import { requireAccount } from "./session";
-import { z } from "zod";
+import { getAuth, authenticationPool } from "@/lib/database/auth-server";
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
-export async function mfaAction(
-  _state: {
-    error?: string;
-    message?: string;
-    qr?: string;
-    factor?: string;
-    verified?: boolean;
-  },
-  form: FormData,
-): Promise<{
+import QRCode from "qrcode";
+
+type MfaState = {
   error?: string;
   message?: string;
   qr?: string;
   factor?: string;
   verified?: boolean;
-}> {
-  const { client } = await requireAccount();
-  const operation = form.get("operation");
-  if (operation === "enroll") {
-    const { data: factors } = await client.auth.mfa.listFactors();
-    const verified = factors?.totp.find((f) => f.status === "verified");
-    if (verified)
+  backupCodes?: string[];
+};
+export async function mfaAction(
+  _state: MfaState,
+  form: FormData,
+): Promise<MfaState> {
+  const { user } = await requireAccount();
+  const auth = getAuth();
+  const requestHeaders = await headers();
+  if (form.get("operation") === "enroll") {
+    const session = await auth.api.getSession({ headers: requestHeaders });
+    if (session?.user.twoFactorEnabled)
       return {
-        factor: verified.id,
-        message: "Enter the current code from your authenticator.",
+        factor: "totp",
+        message: "Enter the current authenticator code to verify this session.",
       };
-    for (const f of factors?.all ?? [])
-      if (f.status === "unverified")
-        await client.auth.mfa.unenroll({ factorId: f.id });
-    const { data, error } = await client.auth.mfa.enroll({
-      factorType: "totp",
-      friendlyName: "CareAtHome authenticator",
+    const password = String(form.get("password") ?? "");
+    if (!password || password.length > 128)
+      return {
+        error: "Enter your current password to set up an authenticator.",
+      };
+    try {
+      const result = await auth.api.enableTwoFactor({
+        headers: requestHeaders,
+        body: { password },
+      });
+      if (result.method !== "totp")
+        return { error: "Authenticator setup is unavailable." };
+      return {
+        factor: "totp",
+        qr: await QRCode.toDataURL(result.totpURI),
+        backupCodes: result.backupCodes,
+        message:
+          "Save your recovery codes privately, scan the QR code, then enter the current authenticator code.",
+      };
+    } catch {
+      return {
+        error:
+          "Setup could not be completed. Check your password and try again.",
+      };
+    }
+  }
+  const code = String(form.get("code") ?? "");
+  if (!/^\d{6}$/.test(code))
+    return { factor: "totp", error: "Enter the six-digit authenticator code." };
+  try {
+    const verified = await auth.api.verifyTOTP({
+      headers: requestHeaders,
+      body: { code, trustDevice: false },
     });
-    if (error)
-      return { error: "Unable to set up an authenticator. Try again." };
+    // Upgrade only the session returned by successful verification, never all user sessions.
+    await authenticationPool().query(
+      'update public.identity_sessions set "mfaVerified"=true where token=$1 and "userId"=$2',
+      [verified.token, user.id],
+    );
+  } catch {
     return {
-      qr: data.totp.qr_code,
-      factor: data.id,
-      message:
-        "Scan this code with your authenticator, then verify a six-digit code.",
+      factor: "totp",
+      error: "The code was not accepted. Try the current code again.",
     };
   }
-  const parsed = z
-    .object({ factor: z.uuid(), code: z.string().regex(/^\d{6}$/) })
-    .safeParse(Object.fromEntries(form));
-  if (!parsed.success)
-    return { error: "Enter the six-digit code from your authenticator." };
-  const { error } = await client.auth.mfa.challengeAndVerify({
-    factorId: parsed.data.factor,
-    code: parsed.data.code,
-  });
-  if (error)
-    return {
-      error: "The code was not accepted. Try the current code again.",
-      factor: parsed.data.factor,
-    };
   revalidatePath("/dashboard", "layout");
   return {
     verified: true,
-    message: "Two-step verification is complete for this session.",
+    message: "Authenticator verified. Two-step verification is enabled.",
   };
 }

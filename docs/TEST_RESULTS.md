@@ -1,3 +1,18 @@
+# Latest evidence ? October 16, 2026
+
+This section supersedes pending claims in historical notes below.
+
+- 18 Neon foundation checks passed.
+- 59 care workflow checks passed again using Neon HTTP atomic transactions, including numeric result conversion.
+- 8 HTTP authentication checks and 3 encrypted password recovery checks passed before the hosting changes.
+- 6 private-storage scenarios passed, including full 5 MiB signed upload/download, overwrite rejection, unauthorized signed-download rejection and oversize preparation rejection.
+- 33 unit tests, standalone TypeScript and lint passed after the signed-transfer implementation.
+- 12 Chrome scenarios passed across the earlier full run and two corrected reruns. New hosted transfer and Linux PDF paths require hosted acceptance.
+- Isolated recovery drill: database checkpoint restored, encrypted private object recovered with matching SHA-256. This is not an automatic retention schedule.
+- 20 synthetic notification emails processed into the encrypted development sink; no external messages sent.
+- Earlier TCP performance: median 3353 ms, p95 5358 ms across 15 warm requests. The SRS performance target is not accepted; HTTP performance needs remeasurement.
+- Production build and public Vercel smoke checks are currently in progress.
+
 ﻿# Test evidence
 
 Evidence is scoped to the code and environment at the time of the run.
@@ -42,3 +57,12 @@ The five high-severity dependency audit entries reported earlier are in the deve
 
 
 
+
+## Neon migration evidence ? October 15?16
+
+- 18 live Neon foundation checks passed.
+- 8 HTTP authentication checks passed: registration/session behavior, MFA enrollment/login, logout, recovery codes, rate limiting.
+- 5 private S3/RLS checks passed: upload/download byte equality, ownership denial, unsigned URL denial, orphan cleanup.
+- 33 unit tests passed October 16, including SQL adapter injection/allowlist checks.
+- Current full care regression and production build are pending. The previous incomplete care regression exposed numeric count serialization; conversion has been corrected.
+- Four saved Chrome failures are being corrected; no full browser acceptance claimed.

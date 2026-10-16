@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star, ArrowUpRight, MapPin, ShieldCheck } from "lucide-react";
-import { db } from "@/lib/supabase/server";
+import { db } from "@/lib/database/server";
 import { Avatar, Empty, Panel } from "@/components/care-ui";
 import { money } from "@/lib/utils";
 import type { Provider } from "@/modules/care/types";

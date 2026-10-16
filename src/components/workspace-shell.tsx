@@ -215,7 +215,7 @@ export function WorkspaceShell({
           <div>
             <span className="local-indicator">
               <i />
-              Local demonstration
+              Demonstration
             </span>
             <Link
               className="icon-button notification-button"

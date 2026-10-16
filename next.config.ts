@@ -2,7 +2,11 @@
 const config: NextConfig = {
   poweredByHeader: false,
   experimental: { serverActions: { bodySizeLimit: "6mb" } },
-  serverExternalPackages: ["playwright"],
+  serverExternalPackages: ["playwright", "@sparticuz/chromium"],
+  outputFileTracingIncludes: {
+    "/api/reports/*/pdf": ["./node_modules/@sparticuz/chromium/bin/**/*"],
+    "/api/payments/*/receipt": ["./node_modules/@sparticuz/chromium/bin/**/*"],
+  },
   async headers() {
     return [
       {

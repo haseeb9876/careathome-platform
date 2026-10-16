@@ -1,6 +1,6 @@
 ﻿# CareAtHome
 
-A local home-nursing and physiotherapy coordination application built with Next.js, TypeScript, React, Tailwind and Supabase PostgreSQL/Auth/private Storage.
+A local home-nursing and physiotherapy coordination application built with Next.js, TypeScript, React, Tailwind and Neon PostgreSQL, Better Auth and private Neon object storage.
 
 The redesigned application includes:
 - Patient booking wizard, visit status/history, care timeline, reports and patient-controlled sharing.
@@ -8,7 +8,7 @@ The redesigned application includes:
 - Administrator verification, assignment, user/service management, simulated refunds, review moderation, support and audit.
 - Local PDF exports, simulated payments, notifications and a local email worker.
 
-**Current status:** migration to Neon is authorised and in progress. Docker was intentionally removed. Existing Supabase database test results are historical evidence; Neon compatibility and final browser acceptance remain pending. See the [migration decisions](docs/NEON_MIGRATION.md). Do not restore Docker or run legacy local-only scripts against a cloud database.
+**Current status:** the application runs on Neon without Docker. Live database, authentication, storage and browser checks are recorded in [test results](docs/TEST_RESULTS.md). Remaining release conditions are tracked in [progress](docs/PROGRESS.md). No Vercel app deployment has occurred.
 
 Open the local app at http://127.0.0.1:3000 while npm.cmd run dev is running. No deployment or application Docker image has been created.
 
@@ -27,6 +27,6 @@ Synthetic demo accounts use patient@careathome.test, provider@careathome.test an
 
 ## Checks
 Use npm.cmd run typecheck, npm.cmd run lint, npm.cmd test and npm.cmd run build.
-With local services restored, run npm.cmd run test:integration, npm.cmd run test:workflows and the Chrome Playwright suite described in the runbook.
+With the ignored Neon development configuration installed, run npm.cmd run test:integration, npm.cmd run test:workflows and the Chrome Playwright suite described in the runbook.
 
 The original private SRS/brief, local secrets, uploaded credentials, backups and generated clinical PDFs are not intended for source control.

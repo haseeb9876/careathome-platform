@@ -1,14 +1,12 @@
 export const dynamic = "force-dynamic";
 import { changePassword } from "@/modules/accounts/actions";
-import { requireAccount } from "@/modules/accounts/session";
 import { Button } from "@/components/ui/button";
 export default async function Password({
   searchParams,
 }: {
-  searchParams: Promise<{ message?: string }>;
+  searchParams: Promise<{ message?: string; token?: string }>;
 }) {
-  await requireAccount();
-  const { message } = await searchParams;
+  const { message, token } = await searchParams;
   return (
     <main className="auth-wrap">
       <section className="panel auth-card">
@@ -20,6 +18,7 @@ export default async function Password({
           </p>
         )}
         <form action={changePassword}>
+          <input name="token" type="hidden" value={token ?? ""} />
           <label>
             New password
             <input

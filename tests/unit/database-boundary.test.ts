@@ -67,9 +67,9 @@ describe("transaction-scoped identity", () => {
       },
     );
     expect(result).toBe(42);
-    expect(client.calls[0].sql).toBe("BEGIN");
-    expect(client.calls[4].sql).toBe("SET LOCAL ROLE authenticated");
-    expect(client.calls[5]).toEqual({
+    expect(client.calls[0].sql).toMatch(/^BEGIN;.*SET LOCAL ROLE authenticated$/);
+    expect(client.calls[0].sql).toContain("statement_timeout = '8s'");
+    expect(client.calls[1]).toEqual({
       sql: "SELECT set_config('request.jwt.claims', $1, true)",
       values: [JSON.stringify({ sub: identity.userId, aal: "aal1" })],
     });
@@ -83,8 +83,8 @@ describe("transaction-scoped identity", () => {
       null,
       async () => undefined,
     );
-    expect(client.calls[4].sql).toBe("SET LOCAL ROLE anon");
-    expect(client.calls[5].values).toEqual(["{}"]);
+    expect(client.calls[0].sql).toMatch(/SET LOCAL ROLE anon$/);
+    expect(client.calls[1].values).toEqual(["{}"]);
   });
   it("rolls back failures and never commits them", async () => {
     const client = new Connection();

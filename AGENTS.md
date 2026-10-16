@@ -5,12 +5,12 @@
 - Stack: strict TypeScript, Next.js App Router, React, Tailwind, customised shadcn primitives. The user authorised migration from Supabase to Neon on October 15; preserve existing SQL invariants and application features during that migration.
 - SQL migrations are authoritative. RLS and explicit RPC grants must enforce ownership and roles; UI visibility is not authorisation.
 - Never expose service-role credentials to the browser. Do not trust role, owner, price or verification fields supplied by clients.
-- Do not use production services, real patient data, real payments, external AI or deployment without a new scope decision.
+- The user explicitly authorised public Vercel deployment on October 16. Deploy a clearly labelled synthetic demonstration; real patient data, real payments and external AI remain out of scope.
 - Keep all seven SRS booking states. Completed and Cancelled are terminal. Assignment must validate eligibility and use database conflict protection.
 - Record test results only after they actually run. Unverified code remains pending in the matrix.
 - Required checks: npm.cmd run typecheck, npm.cmd run lint, npm.cmd test, npm.cmd run build; relevant database and Playwright tests.
 - Windows: use npm.cmd/npx.cmd; do not change PowerShell execution policy.
-- Update progress, test evidence and exact next step before handover. The user authorised storing source under GitHub account haseeb9876 on October 15. Use a private repository; exclude secrets, private reference documents, generated credentials and patient data. Use only free development services and synthetic fixtures. Vercel deployment timing needs the answer to the pending user question; do not interpret source publication as deployment approval.
+- Update progress, test evidence and exact next step before handover. The user authorised storing source under GitHub account haseeb9876 on October 15. Use a private repository; exclude secrets, private reference documents, generated credentials and patient data. Use only free development services and synthetic fixtures. Public Vercel deployment is now explicitly authorised; verify the live site before reporting success.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -12,6 +12,12 @@ export function MfaPanel() {
         name="operation"
         value={state.factor ? "verify" : "enroll"}
       />
+      {!state.factor && !state.verified && (
+        <label>Current password<input type="password" name="password" autoComplete="current-password" required maxLength={128} /></label>
+      )}
+      {state.backupCodes && (
+        <div className="notice"><p>Save these single-use recovery codes somewhere private before continuing.</p><code>{state.backupCodes.join(" · ")}</code></div>
+      )}
       {state.qr && (
         <Image
           unoptimized

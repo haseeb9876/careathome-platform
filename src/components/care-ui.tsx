@@ -167,7 +167,14 @@ export function BookingCard({
           <h3>{service?.name ?? "Home care visit"}</h3>
           <Badge status={booking.status} />
         </div>
-        <p>{providerName ?? "Your care team will arrange a provider"}</p>
+        <p>
+          {providerName ??
+            (booking.provider_id
+              ? "Care professional assigned — view visit for details"
+              : booking.status === "Cancelled"
+                ? "This visit has been cancelled"
+                : "Your care team will arrange a provider")}
+        </p>
         <div className="visit-meta">
           <span>
             <Clock3 size={14} />

@@ -1,7 +1,11 @@
+import { types } from "pg";
 export type DatabaseEnvironment = Record<string, string | undefined>;
 
 /** Validate without including connection strings or passwords in errors. */
-export function applicationDatabaseConfig(env: DatabaseEnvironment) {
+export function applicationDatabaseConfig(
+  env: DatabaseEnvironment,
+  role: "careathome_app" | "careathome_auth" = "careathome_app",
+) {
   const value = env.DATABASE_URL;
   if (!value) throw new Error("Neon application database is not configured.");
   let url: URL;
@@ -19,7 +23,7 @@ export function applicationDatabaseConfig(env: DatabaseEnvironment) {
   ) {
     throw new Error("Use a Neon PostgreSQL application connection.");
   }
-  if (decodeURIComponent(url.username) !== "careathome_app") {
+  if (decodeURIComponent(url.username) !== role) {
     throw new Error(
       "The application requires its restricted careathome_app database role.",
     );
@@ -56,5 +60,20 @@ export function applicationDatabaseConfig(env: DatabaseEnvironment) {
     connectionTimeoutMillis: 10_000,
     idleTimeoutMillis: 10_000,
     application_name: "careathome",
+    types: {
+      getTypeParser(oid: number, format?: "text" | "binary") {
+        if (format !== "binary" && (oid === 20 || oid === 1700))
+          return (value: string) => {
+            const number = Number(value);
+            if (
+              !Number.isFinite(number) ||
+              Math.abs(number) > Number.MAX_SAFE_INTEGER
+            )
+              throw new Error("Database number exceeds application precision.");
+            return number;
+          };
+        return types.getTypeParser(oid, format as "text");
+      },
+    },
   };
 }

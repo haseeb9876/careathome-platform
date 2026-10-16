@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { db, configured } from "@/lib/supabase/server";
+import { db, configured } from "@/lib/database/server";
 export const requireAccount = cache(async function requireAccount() {
   if (!configured())
     redirect(

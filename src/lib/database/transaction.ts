@@ -31,14 +31,10 @@ export async function withDatabaseIdentity<C extends TransactionConnection, T>(
   const connection = await pool.connect();
   let discard = false;
   try {
-    await connection.query("BEGIN");
-    await connection.query("SET LOCAL statement_timeout = '8s'");
-    await connection.query("SET LOCAL lock_timeout = '3s'");
+    // Fixed SQL only: combine setup to avoid four extra network round trips.
     await connection.query(
-      "SET LOCAL idle_in_transaction_session_timeout = '10s'",
-    );
-    await connection.query(
-      identity ? "SET LOCAL ROLE authenticated" : "SET LOCAL ROLE anon",
+      "BEGIN; SET LOCAL statement_timeout = '8s'; SET LOCAL lock_timeout = '3s'; SET LOCAL idle_in_transaction_session_timeout = '10s'; SET LOCAL ROLE " +
+        (identity ? "authenticated" : "anon"),
     );
     await connection.query(
       "SELECT set_config('request.jwt.claims', $1, true)",

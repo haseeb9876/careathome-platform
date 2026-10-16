@@ -8,7 +8,7 @@ import {
 } from "@/components/care-ui";
 import { SubmitButton } from "@/components/submit-button";
 import { MfaPanel } from "@/components/mfa-panel";
-import { uploadCredential } from "./actions";
+import { CredentialUpload } from "@/components/credential-upload";
 import { updateProfile } from "@/modules/bookings/actions";
 import { requireAccount } from "@/modules/accounts/session";
 import { dateTime, localInput } from "@/lib/format";
@@ -193,7 +193,7 @@ export async function ProfileSections({
               </label>
               <fieldset>
                 <legend className="text-xs mb-3 font-semibold">
-                  Services you offer Â· {provider?.profession}
+                  Services you offer · {provider?.profession}
                 </legend>
                 <div className="stack">
                   {s.data
@@ -221,38 +221,13 @@ export async function ProfileSections({
                 Private documents are visible only to you and authorised
                 administrators.
               </p>
-              <form action={uploadCredential}>
-                <label>
-                  Document label
-                  <input
-                    name="label"
-                    placeholder="e.g. Professional registration"
-                    minLength={3}
-                    maxLength={100}
-                    required
-                  />
-                </label>
-                <label>
-                  Expiry date
-                  <input name="expires_on" type="date" required />
-                </label>
-                <label>
-                  PDF, JPEG or PNG Â· up to 5 MB
-                  <input
-                    name="document"
-                    type="file"
-                    accept="application/pdf,image/jpeg,image/png"
-                    required
-                  />
-                </label>
-                <SubmitButton>Upload credential</SubmitButton>
-              </form>
+              <CredentialUpload />
               {c.data?.map((d) => (
                 <div className="activity-item" key={d.id}>
                   <div>
                     <strong>{d.label}</strong>
                     <p>
-                      Expires {d.expires_on} Â·{" "}
+                      Expires {d.expires_on} ·{" "}
                       {d.reviewed_at ? "Reviewed" : "Awaiting review"}
                     </p>
                     <a className="text-link" href={"/api/credentials/" + d.id}>
@@ -424,7 +399,7 @@ export async function ProfileSections({
                     <div className="flex-1">
                       <strong>{dateTime(x.starts_at, tz)}</strong>
                       <p>
-                        Until {dateTime(x.ends_at, tz)} Â· {x.reason}
+                        Until {dateTime(x.ends_at, tz)} · {x.reason}
                       </p>
                     </div>
                     <ActionForm

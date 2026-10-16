@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAccount } from "@/modules/accounts/session";
 import { PageHeading } from "@/components/care-ui";
 import { BookingWizard } from "@/components/booking-wizard";
+import type { Service } from "@/modules/care/types";
 export default async function NewBooking({
   searchParams,
 }: {
@@ -33,7 +34,7 @@ export default async function NewBooking({
       )}
       <div className="detail-grid">
         <BookingWizard
-          services={s.data ?? []}
+          services={(s.data ?? []) as Service[]}
           requestKey={randomUUID()}
           address={patient.data?.address ?? ""}
           area={patient.data?.area ?? ""}

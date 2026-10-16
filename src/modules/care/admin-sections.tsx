@@ -349,7 +349,7 @@ export async function AdminSections({
                 </p>
                 <details>
                   <summary>Edit service</summary>
-                  <ServiceForm service={s} />
+                  <ServiceForm service={s as import("./types").Service} />
                 </details>
               </Panel>
             ))}

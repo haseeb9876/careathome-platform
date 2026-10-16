@@ -71,6 +71,7 @@ test("provider registers as Pending", async ({ page }) => {
     .getByLabel("Password", { exact: true })
     .fill("SyntheticOnlyPass123!");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(/\/dashboard/);
   await page.goto("/dashboard/profile");
   await expect(
     page.getByText("Pending", { exact: true }).first(),
