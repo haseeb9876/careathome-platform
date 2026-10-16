@@ -31,6 +31,7 @@ export function CredentialUpload() {
           const response = await fetch(prepared.url, {
             method: "PUT",
             body: file,
+            signal: AbortSignal.timeout(90_000),
             headers: { "Content-Type": file.type, "If-None-Match": "*" },
           });
           if (!response.ok)
@@ -49,9 +50,11 @@ export function CredentialUpload() {
           router.refresh();
         } catch (error) {
           setMessage(
-            error instanceof Error
-              ? error.message
-              : "Upload failed. Please try again.",
+            error instanceof Error && error.name === "TimeoutError"
+              ? "Upload timed out. Check your connection and try again."
+              : error instanceof Error
+                ? error.message
+                : "Upload failed. Please try again.",
           );
         } finally {
           setBusy(false);

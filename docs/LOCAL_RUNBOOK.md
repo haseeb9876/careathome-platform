@@ -14,7 +14,7 @@ Synthetic accounts: patient@careathome.test, provider@careathome.test, admin@car
 
 ## Database and fixtures
 
-npm.cmd run db:plan checks pending migration hashes without applying them. npm.cmd run db:migrate applies only pending authoritative migrations to the explicitly guarded development database. Do not reset the database.
+npm.cmd run db:plan validates the configured development target without applying SQL. npm.cmd run db:migrate applies only pending authoritative migrations to the explicitly guarded development database. Do not reset the database.
 
 npm.cmd run local:seed-accounts provisions missing synthetic accounts. npm.cmd run local:seed-care creates care fixtures only when demo visits are absent. Credentials are never printed by provisioning scripts.
 
@@ -35,6 +35,6 @@ npm.cmd run local:notifications processes one batch into the encrypted developme
 
 The October 16 drill uses only the disposable recovery branch named recovery-drill-20261016. Its script is deliberately pinned to that target and must not be repointed at the application branch. Encrypted credential backup files live under ignored backups/. Keep the encryption secret separately from any copied backup.
 
-Legacy Supabase/Docker scripts remain historical references and their dependencies are removed. They are not supported run commands. See TEST_RESULTS.md for the precise recovery evidence and remaining limitations.
+Legacy Supabase/Docker scripts were removed; recover historical references from Git if needed. See TEST_RESULTS.md for the precise recovery evidence and remaining limitations.
 
 The user authorised public synthetic Vercel deployment on October 16. See PROGRESS.md for its actual verification state.

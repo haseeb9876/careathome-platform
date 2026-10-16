@@ -16,6 +16,7 @@ See the [review guide](docs/REVIEW_GUIDE.md) for account access and a walkthroug
 
 ## Review and setup
 
+- [Maintenance and contribution guide](docs/MAINTENANCE.md)
 - [Local runbook](docs/LOCAL_RUNBOOK.md)
 - [Progress and remaining work](docs/PROGRESS.md)
 - [Actual test results](docs/TEST_RESULTS.md)

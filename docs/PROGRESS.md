@@ -1,31 +1,19 @@
-# Public release checkpoint ? October 16, 2026
+# Current progress
 
-Live: https://careathome-platform.vercel.app. Private GitHub source: haseeb9876/careathome-platform. Public access was checked without Vercel authentication. All 13 hosted Chrome scenarios passed across runs after correcting the missing Playwright PDF runtime; a separate hosted receipt PDF check passed. GitHub CI passed for commit 0298b20.
+Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
-The first CLI source bundle included local-only files in private deployment storage. Public path checks returned 404. That deployment was removed. Explicit .vercelignore exclusions were added; replacement CLI source inspection found no local-only files (empty directory entries were excluded from that check). Subsequent deployment comes from the private GitHub repository, which excludes those files.
+## Cleanup in progress
 
-Updated warm local production measurement after HTTP migration: 15 sequential requests, median 751 ms, p95 829 ms. This is not a concurrent load test. See REVIEW_GUIDE.md for the review walkthrough and remaining service limitations. Final presentation-copy/documentation changes are being published next.
+Removed retired Supabase configuration, migrations, scripts and integration suites from the active tree; their history remains in Git. Applied Neon migrations 000-009 are unchanged. Removed the unused application pool, superseded upload action, duplicate visual capture tool, obsolete matrix generator and unused Nodemailer packages.
 
-# CareAtHome progress ? October 16, 2026
+Split dashboard rendering into fourteen named screen modules with an explicit role registry. Extracted action validation/procedure definitions from server action execution. Split the global stylesheet into six ordered stylesheets; parsed CSS rules and declaration order were checked to be identical. Private local environment, backup and SRS files are preserved.
 
-The user authorised public Vercel deployment on October 16. Docker remains removed. GitHub source is private at haseeb9876/careathome-platform. Vercel project careathome-platform is created and linked to that repository; deployment and public acceptance are in progress, not yet complete.
+The maintenance guide describes ownership, setup, migrations, verification and deployment. Static checks, 33 unit tests, the optimized build and 59 Neon workflows pass. Eleven Chrome scenarios passed; upload/admin reruns and public deployment are pending. See TEST_RESULTS.md for the storage HTTP 500 and connection timeouts encountered during regression.
 
-## Implemented and verified
+## Existing verified functionality
 
-The application uses Neon PostgreSQL with restricted application, authentication and worker roles; Better Auth with password recovery, TOTP and backup codes; private Neon S3 credential storage. Ten migrations (000?009) are applied. Owner and worker secrets are excluded from the web runtime.
+The previous release passed 13 hosted Chrome scenarios plus receipt PDF export, 59 Neon care-workflow checks, 18 foundation checks, 8 HTTP auth scenarios, 3 recovery checks, 6 private storage scenarios and 33 unit tests. Those results predate the current refactor and are regression baselines.
 
-The responsive patient/provider/administrator workspace covers discovery, booking, eligibility and scheduling conflicts, credentials and verification, clinical records and amendments, reviewed reports and private sharing, simulated payments/refunds, reviews, support and notifications.
+## Remaining product/service work
 
-Evidence: 18 foundation checks; 59 care workflows (rerun successfully using the HTTP transaction adapter); 8 HTTP authentication checks; 3 password-recovery checks; 6 private-storage scenarios including a full 5 MiB signed transfer and overwrite denial; 33 unit tests. The earlier 12 Chrome scenarios passed across the original run and corrected reruns. These counts do not imply every SRS requirement has final acceptance.
-
-The isolated backup drill restored the database checkpoint and verified encrypted object recovery. Twenty notification emails were captured in an encrypted development sink. There is no external email delivery or scheduled backup policy yet.
-
-## Hosting changes under verification
-
-Private credential transfers use short-lived signed S3 URLs after server authorization, preserving the 5 MiB allowance without passing file bytes through Vercel. File content is checked server-side before registration. Report and receipt PDFs use packaged Linux Chromium on Vercel and installed Chrome locally. Application queries use atomic Neon HTTP transactions with server-derived identity and RLS. Runtime secrets are being configured for production only.
-
-## Remaining acceptance
-
-Complete build and hosted browser checks, including sign-in, 5 MiB upload/download and PDF generation; measure performance after HTTP migration; update requirement evidence and push the source checkpoint. Public password-recovery email delivery remains unavailable until an email service is configured; the development sink must never be exposed publicly. Payments remain simulated and all demonstration data is synthetic. Automated accessibility scans do not establish full accessibility compliance.
-
-The user's phrase ?other app? is awaiting clarification; no unrelated repository has been changed.
+External email transport, scheduled backups, broader performance/browser/accessibility acceptance and the conditional/deferred SRS features remain open. Payments are simulated and summaries deterministic. The phrase "other app" still needs a project name/path before work can begin in another repository.

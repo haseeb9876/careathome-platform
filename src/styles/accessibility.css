@@ -1,0 +1,96 @@
+/* Small supporting text remains readable on the warm, pale surfaces. */
+:root {
+  --muted: #5e7065;
+}
+.hero-description,
+.hero-trust p,
+.hero-footnote,
+.photo-note p,
+.trust-strip,
+.section-heading > p,
+.editorial-service > p,
+.service-card-top,
+.journey-steps > div > span,
+footer p,
+footer small,
+.sidebar-label,
+.sidebar nav a,
+.sidebar-help strong,
+.sidebar-help a,
+.breadcrumb,
+.breadcrumb strong,
+.local-indicator,
+.workspace-heading p:not(.eyebrow),
+.workspace-heading .eyebrow,
+.workspace-footer,
+.metric-top,
+.metric-card small,
+.welcome-banner p,
+.visit-main > p,
+.visit-meta,
+.visit-end > span,
+.empty-state,
+.empty-state h3,
+.activity-item p,
+th,
+td,
+.provider-details,
+.detail-list dt,
+.record h4,
+.security-note,
+.step-indicator span,
+.chart-bars > div {
+  color: #5e7059;
+}
+.status-badge.success {
+  color: #456638;
+  background: #ecf3e6;
+}
+.status-badge.amber {
+  color: #7a5a29;
+  background: #faf2e4;
+}
+.status-badge.danger {
+  color: #924d40;
+  background: #faeeeb;
+}
+.status-badge.neutral,
+.badge {
+  color: #596a50;
+  background: #f0f2ee;
+}
+.sidebar nav b {
+  background: #52713e;
+}
+.photo-tag {
+  background: #294137e6;
+}
+.photo-disclosure {
+  background: #253b32d9;
+  bottom: 0;
+  padding: 4px;
+}
+.home-cta .eyebrow {
+  color: #c7d7bc;
+}
+.share-result {
+  display: grid;
+  gap: 12px;
+}
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+.feedback.error {
+  color: #914b3d;
+  font-size: 12px;
+}
+.text-button {
+  color: #285e4c;
+  justify-self: start;
+  font-size: 12px;
+  text-decoration: underline;
+}
+[hidden] {
+  display: none !important;
+}

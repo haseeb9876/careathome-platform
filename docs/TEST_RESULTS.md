@@ -1,76 +1,31 @@
-# Public release checkpoint ? October 16, 2026
+# Test evidence
 
-Live: https://careathome-platform.vercel.app. Private GitHub source: haseeb9876/careathome-platform. Public access was checked without Vercel authentication. All 13 hosted Chrome scenarios passed across runs after correcting the missing Playwright PDF runtime; a separate hosted receipt PDF check passed. GitHub CI passed for commit 0298b20.
+## Cleanup regression
 
-The first CLI source bundle included local-only files in private deployment storage. Public path checks returned 404. That deployment was removed. Explicit .vercelignore exclusions were added; replacement CLI source inspection found no local-only files (empty directory entries were excluded from that check). Subsequent deployment comes from the private GitHub repository, which excludes those files.
+- TypeScript, zero-warning ESLint, 33 unit tests and optimized build passed.
+- All 59 live Neon care workflows passed. Applied SQL migrations are byte-for-byte unchanged.
+- Production dependency audit: zero known vulnerabilities; development-tool advisories are outside that count.
+- Stylesheet extraction preserved parsed CSS rules and declaration order. Homepage visual inspection and responsive/axe checks passed.
+- First Chrome run: 11 passed, 2 failed (5 MiB upload remained pending; admin sign-in returned its generic failure message). Separate storage attempts encountered a database connection timeout and then Neon storage HTTP 500 on the large PUT. Targeted reruns are underway.
+- Added a 90-second browser upload timeout with clear retry guidance. The upload test allows 120 seconds for transfer plus registration; it still requires a successful byte-exact download and rejects disguised content.
+- Source-reference scan found no non-route source files without an inbound source import. Exact runtime-secret scan passed. This is a focused cleanup audit, not a proof that every export is necessary.
+- Public deployment of the refactor remains pending.
 
-Updated warm local production measurement after HTTP migration: 15 sequential requests, median 751 ms, p95 829 ms. This is not a concurrent load test. See REVIEW_GUIDE.md for the review walkthrough and remaining service limitations. Final presentation-copy/documentation changes are being published next.
+## Previous public release - October 16, 2026
 
-# Latest evidence ? October 16, 2026
+- 33 unit tests; standalone TypeScript, lint, production build and GitHub CI passed.
+- 18 live Neon foundation checks; 59 care workflows using atomic HTTP identity transactions.
+- 8 HTTP authentication scenarios, including TOTP/backup codes/logout/rate limiting; 3 encrypted-inbox password recovery scenarios.
+- 6 private-storage scenarios including 5 MiB signed upload/download, overwrite denial, unauthorized access and size limits.
+- 13 hosted Chrome scenarios passed across corrected runs: patient registration/booking/profile/cancellation/logout, provider registration, admin queue, responsive public pages, protected redirect, all role workspaces/mobile navigation, reports/PDF/sharing/revocation, primary-screen accessibility and 5 MiB credential transfer/content rejection. Hosted receipt PDF also passed.
+- An initial hosted PDF failure (missing Playwright runtime file) was corrected and retested successfully.
+- Isolated recovery restored a database checkpoint and a separately encrypted object with matching SHA-256. No automatic backup schedule is implied.
+- 20 synthetic notification emails were processed into the encrypted development sink. No external messages were sent.
 
-This section supersedes pending claims in historical notes below.
+## Performance scope
 
-- 18 Neon foundation checks passed.
-- 59 care workflow checks passed again using Neon HTTP atomic transactions, including numeric result conversion.
-- 8 HTTP authentication checks and 3 encrypted password recovery checks passed before the hosting changes.
-- 6 private-storage scenarios passed, including full 5 MiB signed upload/download, overwrite rejection, unauthorized signed-download rejection and oversize preparation rejection.
-- 33 unit tests, standalone TypeScript and lint passed after the signed-transfer implementation.
-- 12 Chrome scenarios passed across the earlier full run and two corrected reruns. New hosted transfer and Linux PDF paths require hosted acceptance.
-- Isolated recovery drill: database checkpoint restored, encrypted private object recovered with matching SHA-256. This is not an automatic retention schedule.
-- 20 synthetic notification emails processed into the encrypted development sink; no external messages sent.
-- Earlier TCP performance: median 3353 ms, p95 5358 ms across 15 warm requests. The SRS performance target is not accepted; HTTP performance needs remeasurement.
-- Production build and public Vercel smoke checks are currently in progress.
+HTTP adapter, local optimized server: 15 warm sequential requests, median 751 ms, p95 829 ms. Public Vercel from the development laptop: 15 warm sequential requests, median 220 ms, p95 472 ms. These are small single-user measurements, not a concurrent load test. Earlier TCP measurements were median 3353 ms and p95 5358 ms.
 
-﻿# Test evidence
+## Limits
 
-Evidence is scoped to the code and environment at the time of the run.
-
-| Check | Observed result |
-|---|---|
-| October 14 foundation integration | 17 passed against actual local Auth/PostgreSQL/RLS/Storage |
-| October 14 care workflows integration | 59 passed against actual local database |
-| Synthetic care seed | 5 visits, 3 completed records, 3 simulated payments, verified demo nurse, support request |
-| Local notification delivery | 20 delivered to Mailpit, 0 retryable failures in that cycle |
-| October 15 unit tests | 12 passed |
-| October 15 public Chrome Playwright | 4 passed, one worker, 1.7 minutes in development mode |
-| Homepage responsive checks | No horizontal overflow at 390, 768, 1440 pixels |
-| Homepage accessibility | axe WCAG A/AA: zero detected violations after eyebrow-text contrast correction |
-| Production build during resume | Passed: all routes compiled and TypeScript passed |
-| Final post-polish checks | Production build PASS; standalone TypeScript PASS; editor diagnostics clear. Full lint had no errors and one unused-import warning; import removed and focused lint passed without warnings. |
-| Authenticated browser suite | Not accepted: earlier selectors/cold navigation failed; updated suite awaits runtime restoration |
-| Migration 004 | Written, NOT applied or database-tested |
-| MFA, credential expiry renewal, worker retry/restart | Still require dedicated integration evidence |
-| PDF export/browser source fidelity | Written, not accepted yet |
-| Auth session inactivity/timebox | Configured, requires runtime restart and verification |
-| Backup/recovery/persistence restart | Script prepared; not executed/accepted |
-| Performance p95 target | Not measured; cold development timings do not establish performance compliance |
-
-## Care workflow suite coverage
-Provider application/credential review and private access; pending/verified transitions; discovery; invalid/overlapping availability; concurrent assignment (exactly one winner); travel buffer, profession, area and time-off checks; protected availability; independent and idempotent payments/refunds; rescheduling history and price preservation; cancellation cutoff; assigned-provider start/completion; terminal states; patient/admin clinical access boundaries; immutable records and author-only amendments; completed-only unique reviews and moderation; report snapshots with amendments; review-before-sharing; hashed tokens, expiry/revocation/access logs; support ownership/resolution; suspension/reassignment; in-app notifications; worker role restrictions.
-
-## Reproducible commands
-- npm.cmd test
-- npm.cmd run typecheck
-- npm.cmd run lint
-- npm.cmd run build
-- npm.cmd run test:integration
-- npm.cmd run test:workflows
-- PowerShell: $env:PLAYWRIGHT_CHANNEL='chrome'; npm.cmd run test:e2e
-- npm.cmd run review:visual
-- npm.cmd run local:recovery-drill (only after runtime restoration; isolated targets retained)
-
-Screenshots and homepage accessibility evidence are under [screenshots](./screenshots/). Automated accessibility checks do not replace keyboard, screen-reader and human visual review. Firefox/WebKit are not yet tested.
-
-The five high-severity dependency audit entries reported earlier are in the development lint dependency chain. No forced dependency downgrade was performed.
-
-
-
-
-## Neon migration evidence ? October 15?16
-
-- 18 live Neon foundation checks passed.
-- 8 HTTP authentication checks passed: registration/session behavior, MFA enrollment/login, logout, recovery codes, rate limiting.
-- 5 private S3/RLS checks passed: upload/download byte equality, ownership denial, unsigned URL denial, orphan cleanup.
-- 33 unit tests passed October 16, including SQL adapter injection/allowlist checks.
-- Current full care regression and production build are pending. The previous incomplete care regression exposed numeric count serialization; conversion has been corrected.
-- Four saved Chrome failures are being corrected; no full browser acceptance claimed.
+Chrome coverage is not Firefox/WebKit acceptance. Automated axe checks are not full keyboard/screen-reader accessibility acceptance. Outbound email, backup scheduling and real clinical operations are not complete. Database evidence is distinct from UI acceptance; see the [requirements matrix](REQUIREMENTS_MATRIX.md).

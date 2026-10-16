@@ -19,18 +19,17 @@ test("provider uploads a full 5 MiB private credential and rejects disguised con
     .fill(new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10));
   const bytes = Buffer.alloc(5 * 1024 * 1024, 32);
   bytes.write("%PDF-1.4\nSynthetic maximum-size transfer check\n%%EOF");
-  await page
-    .getByLabel("PDF, JPEG or PNG")
-    .setInputFiles({
-      name: "synthetic.pdf",
-      mimeType: "application/pdf",
-      buffer: bytes,
-    });
+  await page.getByLabel("PDF, JPEG or PNG").setInputFiles({
+    name: "synthetic.pdf",
+    mimeType: "application/pdf",
+    buffer: bytes,
+  });
   await page
     .getByRole("button", { name: "Upload credential", exact: true })
     .click();
   await expect(page.getByRole("status")).toContainText(
     "Credential submitted for review",
+    { timeout: 120000 },
   );
   const item = page.locator(".activity-item").filter({ hasText: label });
   await expect(item).toBeVisible();
@@ -46,13 +45,11 @@ test("provider uploads a full 5 MiB private credential and rejects disguised con
   await page
     .getByLabel("Expiry date", { exact: true })
     .fill(new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10));
-  await page
-    .getByLabel("PDF, JPEG or PNG")
-    .setInputFiles({
-      name: "disguised.pdf",
-      mimeType: "application/pdf",
-      buffer: Buffer.from("This is not a PDF"),
-    });
+  await page.getByLabel("PDF, JPEG or PNG").setInputFiles({
+    name: "disguised.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("This is not a PDF"),
+  });
   await page
     .getByRole("button", { name: "Upload credential", exact: true })
     .click();

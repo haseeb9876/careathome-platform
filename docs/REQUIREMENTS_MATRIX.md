@@ -159,4 +159,4 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 
 ## Evidence update ? October 16
 
-Neon migrations 000?009 are applied. Docker is no longer required. Public Vercel deployment is authorised and hosted checks are underway. See current [test evidence](TEST_RESULTS.md). Database acceptance is distinct from complete UI acceptance. Deferred and conditional SRS features are not silently promoted to completed status.
+Neon migrations 000-009 are applied. Docker is no longer required. Public Vercel deployment is authorised and the previous release passed hosted checks. Cleanup regression status is recorded separately. See current [test evidence](TEST_RESULTS.md). Database acceptance is distinct from complete UI acceptance. Deferred and conditional SRS features are not silently promoted to completed status.

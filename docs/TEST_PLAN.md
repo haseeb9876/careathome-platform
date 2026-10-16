@@ -1,15 +1,19 @@
-# Test plan
+# Verification plan
 
-Foundation automated checks:
-- Vitest: registration validation including forbidden admin role, provider profession, length constraints; booking input and terminal transition rules.
-- Integration: real local Auth/RLS/RPCs; tampered metadata, cross-patient reads/writes, server price ownership, duplicate request idempotency, invalid dates, terminal cancellation, direct role mutation rejection.
-- Playwright: public navigation, mobile/tablet/desktop overflow, patient registration/login/profile/request/cancel/logout, pending provider access, admin queue.
-- TypeScript strict checks, ESLint, production build.
+## Routine checks
 
-Later mandatory acceptance: credential object access/content validation; verified eligibility; availability/travel buffer; concurrent assignments to the same slot; suspension/reassignment; rescheduling; patient/provider record ownership; amendments; duplicate payment callbacks; review eligibility/moderation; PDF source fidelity; report expiry/revocation; reminder retries/dedup; adapter failure; account deactivation and admin MFA.
+Run TypeScript, ESLint, Vitest and optimized production build for code changes. Use existing tests for behavior-preserving refactors rather than tests that merely mirror new file structure.
 
-Performance: document machine, seeded row counts, concurrent clients, warmed/cold state and measured p50/p95; target SRS NFR-007 p95 <3s. No performance claims until measured.
+## Live synthetic regression
 
-Persistence: create data, restart application and database without reset, assert records remain. Backup database and private Storage separately, restore to isolated local targets, verify counts/object hashes. Never restore over current work.
+- Foundation: registration roles, ownership/RLS, server-controlled booking prices, idempotency and terminal states.
+- Care: credentials and verification, eligibility, availability/travel buffer, simultaneous assignment, rescheduling and suspension, clinical ownership/amendments, simulated payments, reviews, reports/private shares and support.
+- Authentication: logout, password recovery, MFA, backup codes and persistent throttling.
+- Storage: byte equality, private access, signed 5 MiB transfer, overwrite protection, content validation and orphan cleanup.
+- Browser: all roles and major workflows, responsive widths 390/768/1440, accessible primary screens, PDF/share flows, uploads and mobile navigation.
 
-Browsers: Chromium automated initially; Firefox/WebKit compatibility pending. Visual review at 390×844, 768×1024, 1440×1000. Inspect focus, overflow, label readability, navigation and all meaningful states.
+Run against the explicitly configured synthetic Neon target. Never reset or clean up unknown patient data. See package scripts and the local runbook for commands.
+
+## Additional acceptance
+
+Document hardware, seeded row counts, concurrent clients, warm/cold state and p50/p95 for load tests. Preserve database and object backups separately, restore to isolated targets and verify content hashes. Repeat operational recovery regularly after a retention policy exists. Complete Firefox/WebKit, keyboard and screen-reader checks; automated Chrome/axe checks do not cover these.

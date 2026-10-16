@@ -5,8 +5,6 @@ node_modules/
 .tools/
 docs/reference/
 *.pdf
-supabase/.temp/
-supabase/.branches/
 playwright-report/
 test-results/
 coverage/
