@@ -4,8 +4,14 @@ const config: NextConfig = {
   experimental: { serverActions: { bodySizeLimit: "6mb" } },
   serverExternalPackages: ["playwright", "@sparticuz/chromium"],
   outputFileTracingIncludes: {
-    "/api/reports/*/pdf": ["./node_modules/@sparticuz/chromium/bin/**/*"],
-    "/api/payments/*/receipt": ["./node_modules/@sparticuz/chromium/bin/**/*"],
+    "/api/reports/*/pdf": [
+      "./node_modules/@sparticuz/chromium/bin/**/*",
+      "./node_modules/playwright-core/**/*",
+    ],
+    "/api/payments/*/receipt": [
+      "./node_modules/@sparticuz/chromium/bin/**/*",
+      "./node_modules/playwright-core/**/*",
+    ],
   },
   async headers() {
     return [

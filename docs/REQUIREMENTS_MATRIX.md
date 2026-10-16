@@ -6,22 +6,22 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 
 | ID | Requirement | Status | Milestone | Verification |
 |---|---|---|---|---|
-| FR-001 | The system shall allow patients to register by providing the required registration fields (name, email address and/or phone number, and password). | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-002 | The system shall allow nurses and physiotherapists to register as providers. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
+| FR-001 | The system shall allow patients to register by providing the required registration fields (name, email address and/or phone number, and password). | Browser-tested locally | 1 | Patient registration, profile, booking/cancellation/logout Chrome journey. |
+| FR-002 | The system shall allow nurses and physiotherapists to register as providers. | Browser-tested locally | 1 | Provider registration and Pending-state Chrome journey. |
 | FR-003 | The system shall validate required fields and the format of email addresses and phone numbers. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
-| FR-004 | The system shall authenticate users before granting access to protected functions. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
-| FR-005 | The system should provide a secure password-recovery mechanism. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
-| FR-006 | The system shall allow users to log out and shall invalidate the applicable session or token on logout. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
+| FR-004 | The system shall authenticate users before granting access to protected functions. | Auth and browser tested | 1 | 8 live HTTP auth scenarios; protected-page redirect and role workspace tests. |
+| FR-005 | The system should provide a secure password-recovery mechanism. | Development recovery tested; delivery pending | 1 | 3 encrypted-inbox recovery checks; no external email service configured. |
+| FR-006 | The system shall allow users to log out and shall invalidate the applicable session or token on logout. | Auth and browser tested | 1 | HTTP logout invalidation and patient logout journey. |
 | FR-007 | The system shall enforce role-based access control for patient, provider, and administrator functions. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-008 | The system shall allow patients to view and update permitted profile fields. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
+| FR-008 | The system shall allow patients to view and update permitted profile fields. | Browser-tested locally | 1 | Patient saves profile in registration/booking journey. |
 | FR-009 | The system shall store the service address or service area needed for home visits. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-010 | The system should support an optional emergency-contact field, subject to supervisor approval. | conditional | 1 | accounts integration + patient journey |
 | FR-011 | The system shall collect only the health and recovery information needed for defined functions. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
 | FR-012 | The system shall allow patients to view their own bookings and authorised records and reports. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-013 | Providers shall submit their profession, qualifications, experience, specialisation, service area, and contact details. | DB-tested; UI acceptance pending | 2 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-014 | Providers shall submit credential evidence (for example, a registration or licence certificate) in the form supported by the system. | DB-tested; UI acceptance pending | 2 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-015 | New provider applications shall default to the Pending status. | DB-tested; UI acceptance pending | 2 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-016 | Authorised administrators shall be able to approve, reject, or suspend providers. | implemented; verification pending | 2 | Source implemented; acceptance pass not established. |
+| FR-014 | Providers shall submit credential evidence (for example, a registration or licence certificate) in the form supported by the system. | Hosted browser tested | 2 | 5 MiB signed upload and byte-exact download; disguised content rejected. |
+| FR-015 | New provider applications shall default to the Pending status. | DB and browser tested | 2 | Provider registration remains Pending; live care regression. |
+| FR-016 | Authorised administrators shall be able to approve, reject, or suspend providers. | DB tested; full decision UI pending | 2 | 59 Neon care checks: authorized review, verification prerequisites and suspension. |
 | FR-017 | The system shall record the verification status, decision timestamp, and reviewing administrator for each decision. | implemented; verification pending | 2 | Source implemented; acceptance pass not established. |
 | FR-018 | Providers whose status is Pending, Rejected, or Suspended shall not receive confirmed bookings. | DB-tested; UI acceptance pending | 2 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-019 | The system should allow a reason to be recorded for a rejection or suspension. | implemented; verification pending | 2 | Source implemented; acceptance pass not established. |
@@ -81,45 +81,45 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 | FR-073 | The system may support user complaints or support requests. | DB-tested; UI acceptance pending | 3–4 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-074 | The system shall display in-app booking status updates to the relevant users. | DB-tested; UI acceptance pending | 3–4 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-075 | The system should notify relevant users of booking confirmation, cancellation, and reassignment. | DB-tested; UI acceptance pending | 3–4 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-076 | Email, SMS, or push notifications may be enabled when the corresponding integrations are configured. | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
+| FR-076 | Email, SMS, or push notifications may be enabled when the corresponding integrations are configured. | Development sink tested; external delivery pending | 3–4 | 20 encrypted synthetic messages captured. No SMS/push/email provider enabled. |
 | FR-077 | A notification failure shall not reverse or corrupt the underlying booking state. | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
 | FR-078 | Administrators shall be able to view, search, activate, and deactivate user accounts, according to their permissions. | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
 | FR-079 | Administrators shall be able to view and manage all bookings, including cancellation and reassignment (see Sections 3.7 and 3.8). | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
 | FR-080 | The system should provide summaries of users, verified providers, bookings, cancellations, and completed services to administrators and, where defined, to the platform owner. | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
 | FR-081 | The system shall log security-sensitive administrative actions. | implemented; verification pending | 3–4 | Source implemented; acceptance pass not established. |
 | FR-082 | Administrative functions shall be restricted to authorised accounts. | DB-tested; UI acceptance pending | 3–4 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| NFR-001 | Security The system shall enforce authentication and role- based authorisation for all protected resources. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
+| NFR-001 | Security The system shall enforce authentication and role- based authorisation for all protected resources. | Automated boundary checks passed | 1–5 | 18 foundation, 8 auth, 59 care, private storage ownership/unsigned URL denial. |
 | NFR-002 | Password storage The system shall store passwords only as salted hashes produced by a modern password-hashing algorithm and shall never store plaintext passwords. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-003 | Session security The system should expire inactive sessions after a defined period and restrict repeated failed login attempts (thresholds to be defined during design). | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-004 | Transport security The system shall use HTTPS/TLS for all client-server communication in deployed environments. | conditional | 1–5 | security / resilience / performance / backup suite (planned) |
+| NFR-003 | Session security The system should expire inactive sessions after a defined period and restrict repeated failed login attempts (thresholds to be defined during design). | Rate limit tested; time expiry acceptance pending | 1–5 | HTTP auth limit checks; 30-minute session and 24-hour absolute limit configured. |
+| NFR-004 | Transport security The system shall use HTTPS/TLS for all client-server communication in deployed environments. | Hosted HTTPS verified | 1–5 | Public Vercel HTTPS; verified TLS PostgreSQL and HTTPS private S3 transfers. |
 | NFR-005 | Privacy The system shall limit the collection, display, and sharing of personal and health data to defined purposes and authorised roles. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
 | NFR-006 | Auditability The system shall log credential decisions, administrative changes, and significant booking transitions, recording the actor and timestamp. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-007 | Performance Under a documented test load, 95% of ordinary non- AI requests should complete within 3 seconds, excluding network and external-service latency. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
+| NFR-007 | Performance Under a documented test load, 95% of ordinary non- AI requests should complete within 3 seconds, excluding network and external-service latency. | Small warm test passed; load test pending | 1–5 | 15 sequential local production requests: median 751 ms, p95 829 ms including network latency. |
 | NFR-008 | AI resilience Where AI features are implemented, the system shall display progress or a clear timeout or error state and shall keep stored records accessible if the AI service fails. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
 | NFR-009 | Usability The system should provide clear labels, validation messages, and status feedback for core tasks. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-010 | Accessibility The system should use readable colour contrast, keyboard-operable controls, and labelled form fields. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-011 | Compatibility The system should support the current versions of the mainstream browsers selected in the test plan. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-012 | Reliability The system shall persist booking and payment changes consistently and, where feasible, guard against duplicate submissions. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-013 | Scheduling integrity The system shall enforce appointment-conflict checks on the server and shall not rely solely on the user interface. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
+| NFR-010 | Accessibility The system should use readable colour contrast, keyboard-operable controls, and labelled form fields. | Partial automated evidence | 1–5 | Chrome axe on home/patient and 390/768/1440 overflow checks; manual assistive-tech review pending. |
+| NFR-011 | Compatibility The system should support the current versions of the mainstream browsers selected in the test plan. | Chrome tested; other engines pending | 1–5 | Responsive Chrome journeys; Firefox/WebKit not run. |
+| NFR-012 | Reliability The system shall persist booking and payment changes consistently and, where feasible, guard against duplicate submissions. | DB tested | 1–5 | Atomic completion and conflict tests; duplicate simulated payment protection. |
+| NFR-013 | Scheduling integrity The system shall enforce appointment-conflict checks on the server and shall not rely solely on the user interface. | DB concurrency tested | 1–5 | Two conflicting assignments produce exactly one success; server availability/buffer/timeoff checks. |
 | NFR-014 | Maintainability The system should separate presentation, business logic, data access, and external integrations. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
 | NFR-015 | Scalability The system should allow growth in users and providers without a complete redesign. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| NFR-016 | Backup and recovery The system should be backed up at a frequency suitable for the prototype, and recovery from backup should be tested. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
+| NFR-016 | Backup and recovery The system should be backed up at a frequency suitable for the prototype, and recovery from backup should be tested. | Recovery drill passed; schedule pending | 1–5 | Isolated database checkpoint restoration and encrypted object SHA-256 verification. |
 | NFR-017 | AI transparency Where AI features are implemented, the system shall label AI content and make it reviewable and, where practicable, traceable to its source records. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
 | NFR-018 | Interoperability The system should use documented APIs and handle unavailable external services gracefully. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
 | NFR-019 | Localisation The system may support configurable date/time formats and currency; language support is to be confirmed. | pending | 1–5 | security / resilience / performance / backup suite (planned) |
-| BR-001 | Only providers with Verified status may be assigned to confirmed bookings. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-002 | A provider must be eligible for the selected service and service area. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-003 | A provider shall not have overlapping confirmed appointments. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-004 | A booking must have a valid patient, service, time, and location before it is confirmed. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-005 | Booking status and payment status shall be maintained separately. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-006 | Only completed bookings are eligible for patient reviews. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-007 | Recovery records are visible only to authorised users with a valid access relationship or patient authorisation. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-008 | AI-generated text is assistive only and shall not constitute a diagnosis or prescription. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
+| BR-001 | Only providers with Verified status may be assigned to confirmed bookings. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-002 | A provider must be eligible for the selected service and service area. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-003 | A provider shall not have overlapping confirmed appointments. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-004 | A booking must have a valid patient, service, time, and location before it is confirmed. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-005 | Booking status and payment status shall be maintained separately. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-006 | Only completed bookings are eligible for patient reviews. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-007 | Recovery records are visible only to authorised users with a valid access relationship or patient authorisation. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-008 | AI-generated text is assistive only and shall not constitute a diagnosis or prescription. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
 | BR-009 | AI assignment recommendations must be overridable by an authorised human. | deferred | 2–5 | database invariants suite (planned) |
-| BR-010 | Provider credential files must not be publicly accessible. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-011 | The price shown at booking time shall be retained as a price snapshot. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-012 | Cancelled and reassigned bookings must retain an auditable status history. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
-| BR-013 | When a provider is suspended, that provider's future confirmed bookings shall be set to Reassignment Required. | DB-tested; final regression pending | 2–5 | Care workflow suite; migration 004 regression remains pending. |
+| BR-010 | Provider credential files must not be publicly accessible. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-011 | The price shown at booking time shall be retained as a price snapshot. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-012 | Cancelled and reassigned bookings must retain an auditable status history. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
+| BR-013 | When a provider is suspended, that provider's future confirmed bookings shall be set to Reassignment Required. | Neon regression passed | 2–5 | 59 live HTTP care checks and private S3 tests, October 16. |
 
 ## Acceptance criteria
 
@@ -144,19 +144,19 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 
 | ID | Requirement | Status | Verification |
 |---|---|---|---|
-| UB-01 | Local-only setup, synthetic data, no deployment | pending | environment + repository review |
+| UB-01 | Local-only setup, synthetic data, no deployment | Updated scope | October 16 user authorised public Vercel synthetic demonstration; no Docker. |
 | UB-02 | Admin MFA and account deactivation | pending | Auth MFA and inactive-session tests |
-| UB-03 | Credential content/size validation and configurable expiry | pending | private Storage and assignment integration |
-| UB-04 | Configurable travel buffer and transactional assignment | pending | two simultaneous reservations |
-| UB-05 | Patient-controlled expiring/revocable report sharing | pending | hashed-token/access-log integration |
+| UB-03 | Credential content/size validation and configurable expiry | Storage and hosted browser tested | 5 MiB size/content checks, private authorization; DB expiry assignment enforcement. |
+| UB-04 | Configurable travel buffer and transactional assignment | DB concurrency tested | 59 care checks include buffer and exactly one winner for simultaneous conflicting assignments. |
+| UB-05 | Patient-controlled expiring/revocable report sharing | DB and local browser tested | Patient sharing, review prerequisite, token hashing, expiry and revocation. |
 | UB-06 | Local PDF generation and review | pending | PDF content and browser export |
 | UB-07 | Local template summary and configurable remote adapter | pending | no-network adapter + failure test |
 | UB-08 | Reminder scheduling, email sink, retry/dedup | pending | worker restart/failure integration |
-| UB-09 | Backup/restore database and files separately | pending | isolated restoration + object hashes |
+| UB-09 | Backup/restore database and files separately | Isolated drill passed | Database restored from backup branch; separately encrypted object recovered with matching hash. |
 | UB-10 | Responsive visual review and performance measurements | pending | three viewport screenshots + measured load |
 | UB-11 | Native apps/GPS/video/real gateway/packages/delegation | deferred | roadmap only |
 
 
-## Evidence update ? October 15
+## Evidence update ? October 16
 
-Database evidence is separate from complete UI acceptance. Migrations 001?003 ran; migration 004 is pending. The existing local runtime is stopped and its former Docker executable is missing. Twelve unit tests and four public browser tests pass. Homepage axe/overflow checks pass. Authenticated browser, recovery and performance acceptance remain open. Deferred and conditional scope remains unchanged.
+Neon migrations 000?009 are applied. Docker is no longer required. Public Vercel deployment is authorised and hosted checks are underway. See current [test evidence](TEST_RESULTS.md). Database acceptance is distinct from complete UI acceptance. Deferred and conditional SRS features are not silently promoted to completed status.
