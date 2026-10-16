@@ -1,19 +1,17 @@
-﻿# Architecture
+# Architecture
 
-A local Next.js modular monolith: App Router server components, narrow client components for navigation/booking steps/sharing/MFA, Zod-validated server actions, Supabase cookie Auth and PostgreSQL RPC/RLS boundaries.
+CareAtHome is a Next.js modular monolith hosted on Vercel, with Neon PostgreSQL and private Neon S3 storage in Singapore. React server components render the workspace; narrow client components handle navigation, booking steps, uploads, sharing and MFA. Server actions validate input with Zod.
 
-- accounts: authentication, recovery, active-account checks, MFA.
-- bookings: request input and original pricing.
-- care: provider operations, scheduling, clinical records, payments, reviews/support, settings and administrative screens.
-- reports: explicit local-only summary-adapter configuration. SQL creates immutable source snapshots and labels the deterministic summary.
-- shared infrastructure: cookie-bound Supabase client, formatting and local Chromium PDF rendering.
-- background worker: local notification outbox and reminders, using a server-only service credential and loopback Mailpit API.
+- Accounts: Better Auth, restricted identity database role, signed session cookies, active-account checks, TOTP, backup codes and persistent authentication throttling.
+- Business data: restricted application role. Atomic HTTPS transactions set a server-derived identity and local PostgreSQL role before each query. Row-level security and explicit procedure grants enforce authorization.
+- Bookings and care: transactional procedures preserve eligibility, price snapshots, status history, immutable clinical records, independent simulated payments, support and reviews.
+- Storage: private bucket; server-authorized short-lived signed upload/download URLs. Uploads are capped at 5 MiB and content signatures are checked before registration. Conditional PUT prevents overwriting an uploaded credential. No permanent public URL is exposed.
+- PDFs: escaped HTML, JavaScript disabled, network requests blocked. Installed Chrome serves local development; packaged Linux Chromium serves Vercel. Report export requires authorized access and prior review.
+- Sharing: patient-created 256-bit bearer token in the URL fragment; only its SHA-256 hash is stored. POST retrieval enforces expiry/revocation and logs access.
+- Notifications: transactional outbox and restricted worker. The current development worker captures encrypted synthetic emails; no external transport or public inbox is enabled.
 
-Application mutations use the user's database identity. The service-role key is reserved for local provisioning, fixture scripts, recovery and the email worker. Runtime page/actions never use it to bypass clinical RLS.
+Assignment locks provider/booking rows and rechecks service, area, credentials, availability and time off. A PostgreSQL exclusion constraint prevents overlapping visits including the travel buffer. Completed and Cancelled are terminal. Clinical access requires a relationship; administrators have no automatic clinical access.
 
-PDF rendering disables JavaScript and aborts browser network requests; all source text is HTML-escaped. Report download first checks user access and review state. Sharing uses a random 256-bit token in a URL fragment, stores only its SHA-256 hash and transmits the token in a POST body. Expiry/revocation are checked in PostgreSQL with access logging. These paths still need final browser acceptance.
+Owner/worker secrets are excluded from Vercel runtime environment variables. Git ignores local secrets and private reference documents. Explicit deployment exclusions also keep local environment files, tools, backups and reference documents out of CLI source uploads. Source is held in a private GitHub repository; its master branch deploys to Vercel automatically.
 
-Booking assignment locks provider/booking rows, rechecks service/area/credentials/availability/time off, and is protected by a PostgreSQL GiST exclusion constraint including travel buffer. Completed and Cancelled are terminal. Payments use integer minor units and stay separate from booking state.
-
-The developer environment uses loopback HTTP. Deployment/TLS/cloud operations remain outside current authorisation. Installed Next.js documentation, Supabase MFA reference, Playwright PDF documentation and Mailpit API documentation informed implementation; dependencies are pinned in the lockfile.
-
+The deterministic report summary is labelled and does not call an external AI service. Payments are simulated. See [test evidence](TEST_RESULTS.md) and [requirements matrix](REQUIREMENTS_MATRIX.md) for acceptance limits.

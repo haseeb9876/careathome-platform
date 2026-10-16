@@ -74,7 +74,7 @@ export async function ProfileSections({
                 professional sees the information needed for your visit.
               </p>
               <Link className="text-link mt-5" href="/dashboard/settings">
-                Manage account security â†’
+                Manage account security →
               </Link>
             </Panel>
           </div>
@@ -231,7 +231,7 @@ export async function ProfileSections({
                       {d.reviewed_at ? "Reviewed" : "Awaiting review"}
                     </p>
                     <a className="text-link" href={"/api/credentials/" + d.id}>
-                      Open private document â†’
+                      Open private document →
                     </a>
                   </div>
                 </div>
@@ -440,7 +440,7 @@ export async function ProfileSections({
               verification code.
             </p>
             <Link className="text-link" href="/auth/password">
-              Change your password â†’
+              Change your password →
             </Link>
           </Panel>
           {profile.role === "admin" ? (

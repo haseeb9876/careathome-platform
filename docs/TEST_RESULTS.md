@@ -1,3 +1,11 @@
+# Public release checkpoint ? October 16, 2026
+
+Live: https://careathome-platform.vercel.app. Private GitHub source: haseeb9876/careathome-platform. Public access was checked without Vercel authentication. All 13 hosted Chrome scenarios passed across runs after correcting the missing Playwright PDF runtime; a separate hosted receipt PDF check passed. GitHub CI passed for commit 0298b20.
+
+The first CLI source bundle included local-only files in private deployment storage. Public path checks returned 404. That deployment was removed. Explicit .vercelignore exclusions were added; replacement CLI source inspection found no local-only files (empty directory entries were excluded from that check). Subsequent deployment comes from the private GitHub repository, which excludes those files.
+
+Updated warm local production measurement after HTTP migration: 15 sequential requests, median 751 ms, p95 829 ms. This is not a concurrent load test. See REVIEW_GUIDE.md for the review walkthrough and remaining service limitations. Final presentation-copy/documentation changes are being published next.
+
 # Latest evidence ? October 16, 2026
 
 This section supersedes pending claims in historical notes below.

@@ -27,7 +27,7 @@ export default async function Auth({
           time.
         </p>
         <div className="care-note">
-          Local development environment
+          CareAtHome demonstration
           <br />
           <strong>Synthetic accounts only</strong>
         </div>
@@ -50,8 +50,8 @@ export default async function Auth({
         </p>
         {!configured() && (
           <p className="notice">
-            Local authentication is not configured. Follow the local setup guide
-            before signing in.
+            Authentication is not configured. Follow the setup guide before
+            signing in.
           </p>
         )}
         {p.message && (
