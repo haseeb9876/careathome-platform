@@ -45,7 +45,7 @@ export default async function Auth({
           {mode === "register"
             ? "Create a patient account or apply as a care provider."
             : mode === "recover"
-              ? "We’ll send a recovery link to the local email inbox."
+              ? "This demonstration saves recovery links in a private test inbox; it does not send email."
               : "Sign in to your personal care workspace."}
         </p>
         {!configured() && (
