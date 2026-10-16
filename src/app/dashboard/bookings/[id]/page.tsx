@@ -1,3 +1,4 @@
+import { bookingStatusGuidance } from "@/modules/bookings/validation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
@@ -79,6 +80,7 @@ export default async function Visit({
         description={dateTime(b.starts_at, tz) + " · " + tz}
         action={<Badge status={b.status} />}
       />
+      <p className="notice">{bookingStatusGuidance(b.status)}</p>
       {q.message && (
         <p className="notice" role="status">
           {q.message}

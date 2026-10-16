@@ -94,3 +94,90 @@ td,
 [hidden] {
   display: none !important;
 }
+
+/* Comfortable reading and touch controls, including small-screen forms. */
+body {
+  font-size: 16px;
+}
+.form-stack label,
+.filter-grid label,
+.hint,
+.feedback.error {
+  font-size: 14px;
+}
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+.primary-link,
+.secondary-link,
+.icon-button,
+.text-button {
+  min-height: 44px;
+}
+.icon-button {
+  min-width: 44px;
+}
+.workspace-heading p:not(.eyebrow),
+.welcome-banner p,
+.detail-list,
+.visit-main > p,
+.visit-meta,
+.empty-state,
+.form-stack small,
+.choice-card p,
+.choice-card small,
+.sidebar nav a {
+  font-size: 14px;
+}
+.booking-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.form-field {
+  display: grid;
+  gap: 7px;
+}
+.booking-fields:disabled {
+  opacity: 0.75;
+}
+.step-indicator span {
+  font-size: 13px;
+}
+.notice.error:focus {
+  outline: 3px solid #924d40;
+  outline-offset: 4px;
+}
+@media (max-width: 760px) {
+  .sidebar {
+    visibility: hidden;
+  }
+  .sidebar.is-open {
+    visibility: visible;
+  }
+  .workspace-heading p:not(.eyebrow),
+  .workspace-content .muted {
+    font-size: 14px;
+  }
+  .step-indicator {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.search-form label,
+.notice {
+  font-size: 14px;
+}

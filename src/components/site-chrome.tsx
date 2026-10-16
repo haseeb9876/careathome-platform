@@ -34,7 +34,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
           </nav>
         </header>
       )}
-      <div id="content">{children}</div>
+      <div
+        id={workspace ? undefined : "content"}
+        tabIndex={workspace ? undefined : -1}
+      >
+        {children}
+      </div>
       {!workspace && (
         <footer>
           <Brand />

@@ -5,6 +5,8 @@ import {
 } from "../../src/modules/accounts/validation";
 import {
   bookingSchema,
+  visitInstant,
+  visitTimeError,
   canTransition,
   states,
 } from "../../src/modules/bookings/validation";
@@ -84,5 +86,35 @@ describe("booking validation", () => {
     expect(canTransition("Requested", "Confirmed")).toBe(false);
     expect(canTransition("Requested", "Pending Assignment")).toBe(true);
     expect(canTransition("Reassignment Required", "Confirmed")).toBe(true);
+  });
+});
+
+describe("visit date boundaries", () => {
+  const now = Date.parse("2026-10-16T10:00:00Z");
+  it("rejects rollover dates and unsupported timezones", () => {
+    expect(visitInstant("2027-02-30T12:00", "UTC")).toBeNull();
+    expect(visitInstant("2026-10-16T24:00", "UTC")).toBeNull();
+    expect(visitInstant("2026-10-16T12:00", "Unknown")).toBeNull();
+    expect(visitInstant("2028-02-29T12:00", "UTC")?.toISOString()).toBe(
+      "2028-02-29T12:00:00.000Z",
+    );
+  });
+  it("uses service timezone, not the browser timezone", () => {
+    expect(visitTimeError("2026-10-16T14:59", "Asia/Karachi", now)).toContain(
+      "future",
+    );
+    expect(visitTimeError("2026-10-16T15:01", "Asia/Karachi", now)).toBeNull();
+    expect(visitInstant("2026-10-16T14:00", "Asia/Dubai")?.getTime()).toBe(now);
+  });
+  it("accepts the 180 day boundary and rejects later requests", () => {
+    const boundary = new Date(now + 180 * 86400000).toISOString().slice(0, 16);
+    expect(visitTimeError(boundary, "UTC", now)).toBeNull();
+    expect(
+      visitTimeError(
+        new Date(now + 180 * 86400000 + 60000).toISOString().slice(0, 16),
+        "UTC",
+        now,
+      ),
+    ).toContain("180");
   });
 });

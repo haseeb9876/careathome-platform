@@ -10,6 +10,8 @@ Create a patient account from the sign-in page to try registration and bookings.
 
 ## Walkthrough
 
+For the current SRS review, see [SRS_REVIEW.md](SRS_REVIEW.md). In particular, try a past booking date, correct it, review the cancellation policy and use the mobile menu with Tab and Escape. Booking failures should retain your entered details. The provider directory now explains invalid filters separately from no matching results.
+
 1. Explore the home page, services and provider directory at desktop and phone widths.
 2. Patient: request a visit, edit profile, inspect booking history and cancellation, open care records, review a report, download its PDF, create a private link and revoke it.
 3. Provider: edit professional details, submit a credential, manage availability/time off, inspect assigned visits and enter session records. Upload supports PDF/JPEG/PNG up to 5 MiB.

@@ -19,13 +19,18 @@ export default async function NewBooking({
   const [s, patient, config] = await Promise.all([
     client.from("services").select("*").eq("active", true),
     client.from("patient_profiles").select("*").eq("id", profile.id).single(),
-    client.from("settings").select("timezone").single(),
+    client
+      .from("settings")
+      .select("timezone,cancellation_cutoff_hours")
+      .single(),
   ]);
+  if (s.error || patient.error || config.error || !config.data)
+    throw new Error("Unable to load booking details. Please try again.");
   return (
     <>
       <PageHeading
-        title="Make room for your care."
-        description="A few thoughtful details help us arrange the right visit."
+        title="Book a home visit"
+        description="Choose your care, tell us when and where, then review your request."
       />
       {p.error && (
         <p className="notice error" role="alert">
@@ -40,7 +45,8 @@ export default async function NewBooking({
           area={patient.data?.area ?? ""}
           selected={p.service}
           preferred={p.provider}
-          timezone={config.data?.timezone ?? "Asia/Karachi"}
+          timezone={config.data.timezone}
+          cancellationHours={config.data.cancellation_cutoff_hours}
         />
         <aside className="surface">
           <p className="eyebrow">WHAT HAPPENS NEXT</p>

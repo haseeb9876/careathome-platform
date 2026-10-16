@@ -28,6 +28,35 @@ test("patient registers, requests, saves profile, cancels and signs out", async 
   await page
     .getByLabel("Visit address", { exact: true })
     .fill("Synthetic browser test address");
+  await page.getByLabel("Date and time").fill("2020-01-01T10:00");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "future date" }),
+  ).toContainText("future date");
+  await expect(page.getByLabel("Visit address", { exact: true })).toHaveValue(
+    "Synthetic browser test address",
+  );
+  await page
+    .getByLabel("Date and time")
+    .fill(new Date(Date.now() + 96 * 3600000).toISOString().slice(0, 16));
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  // A service can become unavailable between selection and submission.
+  const selectedService = page.locator('input[name="service"]:checked');
+  const realService = await selectedService.inputValue();
+  await selectedService.evaluate((input: HTMLInputElement) => {
+    input.value = "10000000-0000-4000-8000-000000000099";
+  });
+  await page.getByRole("button", { name: "Send visit request" }).click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "could not save" }),
+  ).toContainText("could not save");
+  await page.getByRole("button", { name: "Check visit details" }).click();
+  await expect(page.getByLabel("Visit address", { exact: true })).toHaveValue(
+    "Synthetic browser test address",
+  );
+  await selectedService.evaluate((input: HTMLInputElement, value) => {
+    input.value = value;
+  }, realService);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Send visit request" }).click();
   await expect(page.getByRole("status")).toContainText("Request saved");

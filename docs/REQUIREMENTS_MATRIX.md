@@ -123,6 +123,8 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 
 ## Acceptance criteria
 
+The [October 16 SRS review](SRS_REVIEW.md#srs-acceptance-evidence-map) maps all fourteen criteria to implemented paths and executed suites. The pending labels below refer to full stakeholder acceptance; they do not mean the mapped database and browser coverage is absent. External email delivery, automated backup scheduling and broader nonfunctional acceptance remain open.
+
 | ID | Status | Evidence required |
 |---|---|---|
 | AC-01 | pending | SRS section 11 criterion; mapped feature suites above, no acceptance pass yet. |

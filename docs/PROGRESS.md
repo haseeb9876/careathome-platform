@@ -2,6 +2,12 @@
 
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
+## SRS usability release
+
+Re-read the supplied 40-page SRS and documented all fourteen acceptance criteria in [SRS_REVIEW.md](SRS_REVIEW.md), with primary W3C/NHS design references and explicit operational dependencies. Improved booking validation/error recovery, review details and state explanations; mobile focus/keyboard/skip navigation; form readability; provider filter validation, results and failure feedback. Retired identified old test providers/services from public discovery through audited procedures while preserving history.
+
+36 unit tests and 59 live Neon workflows passed. Fourteen Chrome scenarios have passing evidence across the optimized suite and the corrected patient-journey rerun. Initial failures and exact limitations are in [TEST_RESULTS.md](TEST_RESULTS.md). Final release publication/hosted verification is the next step. External email delivery, backup scheduling, broader nonfunctional acceptance and conditional scope remain open; this does not declare complete clinical or stakeholder acceptance.
+
 ## Cleanup release
 
 Removed retired Supabase configuration, migrations, scripts and integration suites from the active tree; their history remains in Git. Applied Neon migrations 000-009 are unchanged. Removed the unused application pool, superseded upload action, duplicate visual capture tool, obsolete matrix generator and unused Nodemailer packages.

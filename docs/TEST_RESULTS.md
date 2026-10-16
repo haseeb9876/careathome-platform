@@ -1,5 +1,16 @@
 # Test evidence
 
+## SRS usability review — October 16
+
+- 36 unit tests passed, including rollover dates, timezone conversion and the 180-day booking boundary.
+- All 59 live Neon care workflows passed again. No applied migrations changed.
+- Zero-warning ESLint and the final optimized production build passed. The build's TypeScript check passed after fixing the booking-status lookup type.
+- Initial development-server browser run: the new patient assertion matched both the intended error and Next.js's route announcer; the selector was corrected. Provider sign-in exceeded the test deadline during a slow development run. The run was stopped and switched to the optimized server; neither failure is counted as a pass.
+- Optimized-server Chrome suite: 13 of 14 scenarios passed in the main run (5.5 minutes). The address assertion failed after a controlled-textarea update; the address now has a separate explicit label. Its complete patient journey passed on targeted rerun in 31.6 seconds, including past-date rejection, address retention after a rejected server request, successful retry, profile update, cancellation and logout. All 14 scenarios therefore have passing evidence across these runs, not one uninterrupted green run.
+- Passing coverage includes 5 MiB private upload/download and disguised-content rejection, provider registration, administrator queue, all three role workspaces, mobile focus trapping/Escape/restore, report PDF/sharing/revocation, invalid provider filters and responsive public layouts. Axe scans found no violations in their configured primary-screen scope; this is not a full manual accessibility certification.
+- Five identified historical test-provider accounts and two duplicate test services were deactivated through audited application procedures. Their records remain available. The directory was rechecked and shows the curated demonstration professional and two intended services.
+- Hosted deployment verification is pending at this checkpoint.
+
 ## Resume verification
 
 - `npm.cmd run test:storage`: all six scenarios passed, including 5 MiB byte-exact signed upload/download, overwrite denial, private authorization, size bounds and orphan cleanup.

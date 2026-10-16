@@ -45,3 +45,19 @@ test("unauthenticated workspace redirects to sign in", async ({ page }) => {
   await page.goto("/dashboard");
   await expect(page).toHaveURL(/auth/);
 });
+
+test("provider search explains invalid filters and offers a reset", async ({
+  page,
+}) => {
+  await page.goto("/providers?price=-1&start=2027-02-30T12%3A00");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Check your filters" }),
+  ).toContainText("Check your filters");
+  await expect(
+    page.getByText("0 verified professionals match your search."),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Clear filters" }).click();
+  await expect(page.getByRole("status")).toHaveText(
+    /\d+ verified professionals? match(?:es)? your search\./,
+  );
+});

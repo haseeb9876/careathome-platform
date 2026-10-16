@@ -3,30 +3,38 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAccount } from "@/modules/accounts/session";
-import { bookingSchema } from "./validation";
-export async function requestBooking(form: FormData) {
+import {
+  bookingSchema,
+  visitInstant,
+  visitTimeError,
+  type BookingFormState,
+} from "./validation";
+export async function requestBooking(
+  _previous: BookingFormState,
+  form: FormData,
+): Promise<BookingFormState> {
   const { client, profile } = await requireAccount();
   if (profile.role !== "patient")
     redirect("/dashboard?message=Only%20patients%20can%20request%20visits.");
   const parsed = bookingSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success)
-    redirect("/dashboard/new?error=Check%20the%20booking%20details.");
+    return {
+      error:
+        "Check the service, date, area and address before sending your request.",
+    };
   const v = parsed.data;
-  const { data: settings } = await client
+  const { data: settings, error: settingsError } = await client
     .from("settings")
     .select("timezone")
     .single();
-  const start = new Date(
-    v.start +
-      ":00" +
-      (settings?.timezone === "UTC"
-        ? "Z"
-        : settings?.timezone === "Asia/Dubai"
-          ? "+04:00"
-          : "+05:00"),
-  );
-  if (!Number.isFinite(start.getTime()) || start.getTime() <= Date.now())
-    redirect("/dashboard/new?error=Choose%20a%20future%20visit.");
+  if (settingsError || !settings)
+    return {
+      error:
+        "We could not check the visit settings. Your details are still here; please try again.",
+    };
+  const timeError = visitTimeError(v.start, settings.timezone);
+  if (timeError) return { error: timeError };
+  const start = visitInstant(v.start, settings.timezone)!;
   const { data: id, error } = await client.rpc("request_booking", {
     p_service: v.service,
     p_start: start.toISOString(),
@@ -34,10 +42,11 @@ export async function requestBooking(form: FormData) {
     p_area: v.area,
     p_request_key: v.requestKey,
   });
-  if (error)
-    redirect(
-      "/dashboard/new?error=Unable%20to%20save%20request.%20Check%20the%20service%20and%20choose%20a%20time%20within%20180%20days.",
-    );
+  if (error || !id)
+    return {
+      error:
+        "We could not save your request. Your details are still here. Check that the service is available and try again, or contact your care team.",
+    };
   const preferred = z.uuid().safeParse(form.get("preferred"));
   if (preferred.success)
     await client.rpc("prefer_provider", {

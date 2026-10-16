@@ -5,6 +5,7 @@ import { Avatar, Empty, Panel } from "@/components/care-ui";
 import { money } from "@/lib/utils";
 import type { Provider } from "@/modules/care/types";
 import { z } from "zod";
+import { visitInstant } from "@/modules/bookings/validation";
 export default async function Providers({
   searchParams,
 }: {
@@ -12,34 +13,52 @@ export default async function Providers({
 }) {
   const p = await searchParams;
   const client = await db();
-  const { data: services } = await client
+  const { data: services, error: servicesError } = await client
     .from("services")
     .select("id,name")
     .eq("active", true);
-  const { data: settings } = await client
+  const { data: settings, error: settingsError } = await client
     .from("settings")
-    .select("timezone")
+    .select("timezone,currency")
     .single();
-  const offset =
-    settings?.timezone === "UTC"
-      ? "Z"
-      : settings?.timezone === "Asia/Dubai"
-        ? "+04:00"
-        : "+05:00";
-  const start = p.start ? new Date(p.start + ":00" + offset) : null;
-  const { data, error } = await client.rpc("discover_providers", {
-    p_profession: p.profession ?? "",
-    p_service: z.uuid().safeParse(p.service).success ? p.service : null,
-    p_area: p.area ?? "",
-    p_specialisation: p.specialisation ?? "",
-    p_max_price:
-      p.price && Number.isFinite(Number(p.price))
-        ? Math.round(Number(p.price) * 100)
-        : null,
-    p_min_rating: p.rating ? Number(p.rating) : null,
-    p_start:
-      start && Number.isFinite(start.getTime()) ? start.toISOString() : null,
-  });
+  const filters = z
+    .object({
+      profession: z.enum(["", "nurse", "physiotherapist"]).default(""),
+      service: z.union([z.literal(""), z.uuid()]).default(""),
+      area: z.string().trim().max(100).default(""),
+      specialisation: z.string().trim().max(200).default(""),
+      price: z
+        .string()
+        .refine(
+          (value) =>
+            value === "" ||
+            (/^\d+(\.\d{1,2})?$/.test(value) && Number(value) <= 1000000),
+        )
+        .default(""),
+      rating: z.enum(["", "3", "4"]).default(""),
+      start: z.string().default(""),
+    })
+    .safeParse(p);
+  const start = p.start
+    ? visitInstant(p.start, settings?.timezone ?? "")
+    : null;
+  const invalid = !filters.success || (!!p.start && !start);
+  const unavailable = servicesError || settingsError || !settings;
+  const values = filters.success ? filters.data : null;
+  const { data, error } =
+    !invalid && !unavailable && values
+      ? await client.rpc("discover_providers", {
+          p_profession: values.profession,
+          p_service: values.service || null,
+          p_area: values.area,
+          p_specialisation: values.specialisation,
+          p_max_price: values.price
+            ? Math.round(Number(values.price) * 100)
+            : null,
+          p_min_rating: values.rating ? Number(values.rating) : null,
+          p_start: start?.toISOString() ?? null,
+        })
+      : { data: null, error: null };
   return (
     <main className="page-shell">
       <div className="page-title">
@@ -94,11 +113,12 @@ export default async function Providers({
             <input name="start" type="datetime-local" defaultValue={p.start} />
           </label>
           <label>
-            Maximum price, PKR
+            Maximum price, {settings?.currency ?? "PKR"}
             <input
               name="price"
               type="number"
               min={0}
+              step="0.01"
               max={1000000}
               defaultValue={p.price}
               placeholder="Any price"
@@ -120,9 +140,23 @@ export default async function Providers({
           </Link>
         </form>
       </Panel>
-      {error ? (
-        <p className="notice error">
-          The directory could not be loaded. Try adjusting your filters.
+      {invalid && (
+        <p className="notice error" role="alert">
+          Check your filters: use a valid date, a price between 0 and 1,000,000,
+          and the available service, profession and rating options.
+        </p>
+      )}
+      {!invalid && !error && !unavailable && (
+        <p className="muted mt-6" role="status">
+          {data?.length ?? 0} verified{" "}
+          {data?.length === 1 ? "professional matches" : "professionals match"}{" "}
+          your search.
+        </p>
+      )}
+      {error || unavailable ? (
+        <p className="notice error" role="alert">
+          The directory is temporarily unavailable. Please try again shortly.
+          Your filters are preserved.
         </p>
       ) : (
         <div className="provider-grid">
@@ -153,7 +187,7 @@ export default async function Providers({
                     ? Number(p.rating).toFixed(1) +
                       " (" +
                       p.review_count +
-                      " reviews)"
+                      (Number(p.review_count) === 1 ? " review)" : " reviews)")
                     : "No reviews yet"}
                 </span>
               </div>
@@ -175,7 +209,10 @@ export default async function Providers({
                   "/dashboard/new?provider=" +
                   p.id +
                   "&service=" +
-                  (p.services?.[0]?.id ?? "")
+                  (p.services?.find((service) => service.id === values?.service)
+                    ?.id ??
+                    p.services?.[0]?.id ??
+                    "")
                 }
               >
                 Request this professional <ArrowUpRight size={16} />
@@ -184,7 +221,7 @@ export default async function Providers({
           ))}
         </div>
       )}
-      {!error && !data?.length && (
+      {!invalid && !unavailable && !error && !data?.length && (
         <Panel className="mt-6">
           <Empty
             title="Let’s widen the search"

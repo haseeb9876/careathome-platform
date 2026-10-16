@@ -108,7 +108,21 @@ for (const role of ["patient", "provider", "admin"])
       }
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto("/dashboard");
-      await page.getByRole("button", { name: "Open navigation" }).click();
+      const menu = page.getByRole("button", { name: "Open navigation" });
+      await menu.click();
+      await expect(page.locator(".workspace-body")).toHaveAttribute(
+        "inert",
+        "",
+      );
+      await page.getByRole("button", { name: "Sign out" }).focus();
+      await page.keyboard.press("Tab");
+      await expect(
+        page.locator("#workspace-navigation a").first(),
+      ).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(menu).toBeFocused();
+      await expect(page.locator("#workspace-navigation")).toBeHidden();
+      await menu.click();
       await page
         .getByRole("navigation", { name: "Workspace navigation" })
         .getByRole("link", { name: "Help & support" })

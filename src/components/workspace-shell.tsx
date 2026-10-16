@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -124,6 +124,50 @@ export function WorkspaceShell({
 }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
+  const navigation = useRef<HTMLElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const trigger = menuButton.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusable = () =>
+      Array.from(
+        navigation.current?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled])",
+        ) ?? [],
+      ).filter((element) => element.getClientRects().length > 0);
+    focusable()[0]?.focus();
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      const first = items[0],
+        last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+    const media = matchMedia("(max-width: 760px)");
+    const onResize = () => {
+      if (!media.matches) setOpen(false);
+    };
+    media.addEventListener("change", onResize);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      media.removeEventListener("change", onResize);
+      trigger?.focus();
+    };
+  }, [open]);
   const active = links.find(
     (l) => l.path && path.startsWith("/dashboard/" + l.path),
   );
@@ -132,9 +176,15 @@ export function WorkspaceShell({
       <button
         className={"sidebar-scrim " + (open ? "visible" : "")}
         aria-label="Close navigation"
+        tabIndex={-1}
+        aria-hidden="true"
         onClick={() => setOpen(false)}
       />
-      <aside className={"sidebar " + (open ? "is-open" : "")}>
+      <aside
+        id="workspace-navigation"
+        ref={navigation}
+        className={"sidebar " + (open ? "is-open" : "")}
+      >
         <div className="sidebar-brand">
           <Brand />
           <button
@@ -196,11 +246,13 @@ export function WorkspaceShell({
           </form>
         </div>
       </aside>
-      <div className="workspace-body">
+      <div className="workspace-body" inert={open}>
         <header className="workspace-topbar">
           <div>
             <button
               className="icon-button mobile-only"
+              ref={menuButton}
+              aria-controls="workspace-navigation"
               aria-label="Open navigation"
               aria-expanded={open}
               onClick={() => setOpen(true)}
@@ -228,7 +280,9 @@ export function WorkspaceShell({
             <span className="avatar">{initials(profile.name)}</span>
           </div>
         </header>
-        <main className="workspace-content">{children}</main>
+        <main id="content" tabIndex={-1} className="workspace-content">
+          {children}
+        </main>
         <div className="workspace-footer">
           <span>CareAtHome · Care, thoughtfully connected.</span>
           <span>Private workspace · Synthetic data</span>
