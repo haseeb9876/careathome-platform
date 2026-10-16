@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   prepareCredential,
   finishCredential,
@@ -82,9 +83,9 @@ export function CredentialUpload() {
           disabled={busy}
         />
       </label>
-      <button className="btn btn-primary" type="submit" disabled={busy}>
+      <Button type="submit" disabled={busy}>
         {busy ? "Uploading…" : "Upload credential"}
-      </button>
+      </Button>
       {message && (
         <p role="status" className="muted text-sm mt-3">
           {message}
