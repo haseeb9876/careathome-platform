@@ -19,7 +19,7 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 | FR-011 | The system shall collect only the health and recovery information needed for defined functions. | implemented; verification pending | 1 | Source implemented; acceptance pass not established. |
 | FR-012 | The system shall allow patients to view their own bookings and authorised records and reports. | DB-tested; UI acceptance pending | 1 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
 | FR-013 | Providers shall submit their profession, qualifications, experience, specialisation, service area, and contact details. | DB-tested; UI acceptance pending | 2 | Foundation/care suites or synthetic seed; see TEST_RESULTS.md for exact scope. |
-| FR-014 | Providers shall submit credential evidence (for example, a registration or licence certificate) in the form supported by the system. | Previous pass; current large-upload acceptance blocked | 2 | Earlier hosted 5 MiB transfer/content checks passed. Cleanup regression encountered timeouts and Neon storage HTTP 500; see TEST_RESULTS.md. |
+| FR-014 | Providers shall submit credential evidence (for example, a registration or licence certificate) in the form supported by the system. | Hosted upload rerun passed; intermittent failures recorded | 2 | Resume: private-storage suite and hosted 5 MiB transfer/content checks passed. Earlier intermittent timeouts/HTTP 500 remain recorded in TEST_RESULTS.md. |
 | FR-015 | New provider applications shall default to the Pending status. | DB and browser tested | 2 | Provider registration remains Pending; live care regression. |
 | FR-016 | Authorised administrators shall be able to approve, reject, or suspend providers. | DB tested; full decision UI pending | 2 | 59 Neon care checks: authorized review, verification prerequisites and suspension. |
 | FR-017 | The system shall record the verification status, decision timestamp, and reviewing administrator for each decision. | implemented; verification pending | 2 | Source implemented; acceptance pass not established. |
@@ -146,7 +146,7 @@ See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_R
 |---|---|---|---|
 | UB-01 | Local-only setup, synthetic data, no deployment | Updated scope | October 16 user authorised public Vercel synthetic demonstration; no Docker. |
 | UB-02 | Admin MFA and account deactivation | pending | Auth MFA and inactive-session tests |
-| UB-03 | Credential content/size validation and configurable expiry | Previous pass; large-upload regression blocked | Private ownership/expiry checks pass. Current 5 MiB transfer encountered timeouts/Neon storage HTTP 500; see TEST_RESULTS.md. |
+| UB-03 | Credential content/size validation and configurable expiry | Storage and hosted upload rerun passed | Private ownership/expiry checks pass. Resume: 5 MiB signed transfer and hosted content rejection passed; monitor earlier intermittent storage failures. |
 | UB-04 | Configurable travel buffer and transactional assignment | DB concurrency tested | 59 care checks include buffer and exactly one winner for simultaneous conflicting assignments. |
 | UB-05 | Patient-controlled expiring/revocable report sharing | DB and local browser tested | Patient sharing, review prerequisite, token hashing, expiry and revocation. |
 | UB-06 | Local PDF generation and review | pending | PDF content and browser export |

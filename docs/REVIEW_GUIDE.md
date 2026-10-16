@@ -18,7 +18,7 @@ Create a patient account from the sign-in page to try registration and bookings.
 
 ## Current cleanup release
 
-The code has been modularized and legacy tooling removed; see [maintenance guidance](MAINTENANCE.md). Core/static regression passes. Current 5 MiB credential transfers encountered timeouts and a Neon storage HTTP 500 despite passing in the earlier release. The upload UI now stops after 90 seconds and offers a retry. Treat large-upload acceptance as open until the storage issue is resolved; see [latest results](TEST_RESULTS.md).
+The code has been modularized and legacy tooling removed; see [maintenance guidance](MAINTENANCE.md). Static checks, unit tests, database workflows and core browser regression passed. The previously failing 5 MiB transfer passed both the private-storage suite and a targeted public Chrome rerun, including byte-exact download and disguised-content rejection. Earlier intermittent timeouts/HTTP 500 responses are retained in [latest results](TEST_RESULTS.md); their underlying cause is unconfirmed. Uploads stop after 90 seconds and offer retry guidance.
 
 ## Previous verified hosted behavior
 

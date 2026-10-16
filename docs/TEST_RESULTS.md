@@ -1,5 +1,12 @@
 # Test evidence
 
+## Resume verification
+
+- `npm.cmd run test:storage`: all six scenarios passed, including 5 MiB byte-exact signed upload/download, overwrite denial, private authorization, size bounds and orphan cleanup.
+- Public Chrome `credentials.spec.ts`: passed (40.4 seconds; runner 46.6 seconds). Full-size credential upload, byte-exact private download and disguised-content rejection succeeded against https://careathome-platform.vercel.app.
+- This is a successful rerun of the previously blocked cleanup scenario, not evidence that an underlying service/network fault was fixed. Earlier timeouts/HTTP 500 responses remain recorded below. No storage implementation or timeout setting changed in this resume.
+- GitHub CI passed for cleanup and follow-up commits through 04db270. Applied migrations remain unchanged against the pre-cleanup checkpoint; working tree was clean before this evidence update.
+
 ## Cleanup regression
 
 - TypeScript, zero-warning ESLint, 33 unit tests and optimized build passed.
