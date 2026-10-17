@@ -8,7 +8,8 @@
 - A separate normal (non-incognito) Chrome profile returned an empty `Page.getInstallabilityErrors` list and displayed a real Install app button. Its temporary profile was removed after inspection. The initial incognito diagnostic returned only `in-incognito`, as expected; incognito behavior is not evidence of an app packaging defect.
 - Initial floating install-card regression blocked a registration control. Replaced it with an inline panel, then reran the complete suite successfully. This was a UI correction, not a test bypass.
 - Physical iPhone/Android OS installation, home-screen icon rendering and lifecycle behavior remain manual device acceptance. The tests simulate iOS identification and a native install response; they do not claim real-device installation.
-- Hosted deployment verification is pending at this checkpoint.
+- Release `7688592` passed GitHub Application checks and deployed Ready (`dpl_5xvavxCNACT4ZBPZbnMxjQXZFGQ6`) to https://careathome-platform.vercel.app. The uncached public version endpoint returned the exact release Git SHA.
+- All six targeted hosted Chrome scenarios passed in 30.6 seconds: the five PWA cases plus responsive primary-screen accessibility. This includes a real service worker and offline fallback on the HTTPS production origin. Native iPhone/Android installation remains the physical-device check described above.
 
 ## SRS usability review — October 16
 

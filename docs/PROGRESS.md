@@ -6,7 +6,7 @@ Public demonstration: https://careathome-platform.vercel.app. Private source: ha
 
 Added installable CareAtHome manifest, home/care-pulse icons (Android and Apple), an inline first-visit invitation, iOS installation instructions, a dismiss/reopen preference, and installed-mode suppression. Public-only offline fallback caches two resources; care data and submitted forms are not cached. New launches request current HTML, and open apps check for a release and offer refresh without clearing unfinished work automatically. See [PWA.md](PWA.md).
 
-Typecheck, zero-warning lint, 36 unit tests, production build and all 19 Chrome scenarios passed. A normal Chrome profile reported no installability errors and exposed the real install button. Publication and hosted verification are next; physical Android/iPhone OS installation remains a device acceptance step, distinct from browser simulation. Existing email/backup/nonfunctional acceptance dependencies below remain unchanged.
+Typecheck, zero-warning lint, 36 unit tests, production build and all 19 Chrome scenarios passed. A normal Chrome profile reported no installability errors and exposed the real install button. Release `7688592` passed GitHub checks and deployed Ready; all six targeted public PWA/accessibility scenarios passed in 30.6 seconds. The public version endpoint matches the release Git SHA. Physical Android/iPhone OS installation and home-screen appearance are the next device acceptance step, distinct from browser simulation. Existing email/backup/nonfunctional acceptance dependencies below remain unchanged.
 
 ## SRS usability release
 
