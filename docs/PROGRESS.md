@@ -2,6 +2,10 @@
 
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
+## Dark by default — October 17
+
+Dark is now the first-visit and invalid/missing-storage fallback, including server-rendered HTML and the offline screen. Explicit saved Light/Dark/System choices are preserved. Typecheck, zero-warning lint, 36 unit tests, the optimized build and three targeted browser scenarios passed: default dark on a light-mode device, saved choices/cross-tab/system changes, blocked storage and offline fallback. The offline cache version is advanced so installed apps receive the new fallback. Next acceptance remains physical-phone appearance/installation review and the service work below.
+
 ## Appearance release — October 17
 
 Added Light, Dark and System appearance across public pages and all role workspaces, with pre-paint preference restoration, live device-theme changes, cross-tab synchronization and a blocked-storage fallback. Added larger-text reading comfort, accessible modal controls and the same controls in account settings. Dark surfaces include forms, status badges, installation/update notices and the public offline fallback; print remains light. No new dependencies or database changes. See [APPEARANCE.md](APPEARANCE.md).

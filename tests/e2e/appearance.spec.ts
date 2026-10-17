@@ -13,7 +13,7 @@ test("appearance persists, synchronizes tabs and follows system without clearing
   page,
   context,
 }) => {
-  await page.emulateMedia({ colorScheme: "dark" });
+  await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/auth");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.getByLabel("Email address").fill("unfinished@example.test");
@@ -61,7 +61,7 @@ test("appearance remains usable when browser storage is blocked", async ({
       },
     });
   });
-  await page.emulateMedia({ colorScheme: "dark" });
+  await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/auth");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   const dialog = await openAppearance(page);

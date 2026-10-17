@@ -2,7 +2,7 @@
 
 Use **Appearance settings** in the public header or workspace top bar. The same preferences are available under **Settings & security** for patients, providers and administrators.
 
-- Light and Dark are explicit choices. System (the default) follows the device setting, including changes while the application is open.
+- Dark is the default when no valid preference has been saved. Existing Light, Dark and System choices are preserved. System follows the device setting, including changes while the application is open.
 - Larger text increases supporting copy, navigation, labels and forms. Browser zoom remains available.
 - Changes apply immediately without navigation or clearing unfinished form fields. Preferences persist in this browser and synchronize with other tabs on the same origin. Installed-app storage sharing depends on the browser/OS; preferences are not synchronized through the account.
 - If browser storage is blocked, controls still work for the current document and explain that saving was unavailable.

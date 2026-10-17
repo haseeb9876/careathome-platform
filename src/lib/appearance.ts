@@ -2,11 +2,11 @@ export type Theme = "light" | "dark" | "system";
 export const APPEARANCE_KEY = "careathome-appearance";
 export const READING_KEY = "careathome-large-text";
 export function validTheme(value: string | null | undefined): Theme {
-  return value === "light" || value === "dark" ? value : "system";
+  return value === "light" || value === "system" ? value : "dark";
 }
 
 // Runs before paint; contains only application constants, never user input.
-export const appearanceScript = `(function(){var t='system',r=false;try{t=localStorage.getItem('${APPEARANCE_KEY}');r=localStorage.getItem('${READING_KEY}')==='true'}catch(e){}t=t==='dark'||t==='light'?t:'system';var d=document.documentElement;d.dataset.appearance=t;d.dataset.theme=t==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;d.dataset.largeText=String(r)})()`;
+export const appearanceScript = `(function(){var t='dark',r=false;try{t=localStorage.getItem('${APPEARANCE_KEY}');r=localStorage.getItem('${READING_KEY}')==='true'}catch(e){}t=t==='system'||t==='light'?t:'dark';var d=document.documentElement;d.dataset.appearance=t;d.dataset.theme=t==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;d.dataset.largeText=String(r)})()`;
 
 export function applyAppearance(theme: Theme, large: boolean) {
   const root = document.documentElement;
@@ -29,7 +29,7 @@ export function applyAppearance(theme: Theme, large: boolean) {
 export function appearanceSnapshot() {
   return `${validTheme(document.documentElement.dataset.appearance)}:${document.documentElement.dataset.largeText === "true"}`;
 }
-export const serverAppearanceSnapshot = () => "system:false";
+export const serverAppearanceSnapshot = () => "dark:false";
 
 export function subscribeAppearance(notify: () => void) {
   const root = document.documentElement;

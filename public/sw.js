@@ -1,5 +1,5 @@
 /* Cache only the public offline screen and its icon, never care data or forms. */
-const CACHE = "careathome-offline-v2";
+const CACHE = "careathome-offline-v3";
 const PUBLIC_FILES = ["/offline.html", "/icons/app-192.png"];
 self.addEventListener("install", (event) => {
   event.waitUntil(

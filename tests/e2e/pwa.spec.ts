@@ -94,18 +94,9 @@ test("offline navigation uses only the public fallback and reconnects", async ({
   page,
   context,
 }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
-  await page
-    .getByRole("button", { name: "Appearance settings", exact: true })
-    .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Dark", exact: true })
-    .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Done", exact: true })
-    .click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });

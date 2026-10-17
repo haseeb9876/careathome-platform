@@ -1,24 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#195c50" />
+    <meta name="theme-color" content="#101c19" />
     <title>Connect to continue · CareAtHome</title>
     <script>
       (() => {
-        let theme = "system",
+        let theme = "dark",
           large = false;
         try {
           theme = localStorage.getItem("careathome-appearance");
           large = localStorage.getItem("careathome-large-text") === "true";
         } catch {}
         document.documentElement.dataset.theme =
-          theme === "light" || theme === "dark"
-            ? theme
-            : matchMedia("(prefers-color-scheme: dark)").matches
+          theme === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
               ? "dark"
-              : "light";
+              : "light"
+            : theme === "light"
+              ? "light"
+              : "dark";
         document.documentElement.dataset.largeText = String(large);
       })();
     </script>

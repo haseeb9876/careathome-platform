@@ -1,5 +1,10 @@
 # Test evidence
 
+## Default dark — October 17
+
+- Typecheck, zero-warning lint, 36 unit tests and optimized production build passed.
+- Three targeted Chrome scenarios passed locally in 54.9 seconds: first visit uses dark even with a light device setting; saved preferences and System behavior remain usable; denied storage still defaults dark; the real service-worker offline fallback also defaults dark. Existing tests were updated to exercise a light device without a saved theme.
+
 ## Appearance — October 17
 
 - Typecheck, zero-warning lint, 36 unit tests and production build passed.

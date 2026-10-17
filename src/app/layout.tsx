@@ -6,7 +6,7 @@ import { SiteChrome } from "@/components/site-chrome";
 import type { Viewport } from "next";
 import { AppInstall } from "@/components/app-install";
 import { appearanceScript } from "@/lib/appearance";
-export const viewport: Viewport = { themeColor: "#195c50" };
+export const viewport: Viewport = { themeColor: "#101c19" };
 export const metadata: Metadata = {
   applicationName: "CareAtHome",
   appleWebApp: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
       </head>
