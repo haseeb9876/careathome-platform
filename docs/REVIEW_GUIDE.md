@@ -10,6 +10,8 @@ Create a patient account from the sign-in page to try registration and bookings.
 
 ## Walkthrough
 
+For mobile installation, open the website in Chrome on Android or Safari on iPhone. The first-visit panel provides installation guidance; [PWA.md](PWA.md) explains installation, automatic delivery on reopening, and safe refresh of an already-open app. Care functions require internet. Physical phone acceptance is still needed.
+
 For the current SRS review, see [SRS_REVIEW.md](SRS_REVIEW.md). In particular, try a past booking date, correct it, review the cancellation policy and use the mobile menu with Tab and Escape. Booking failures should retain your entered details. The provider directory now explains invalid filters separately from no matching results.
 
 1. Explore the home page, services and provider directory at desktop and phone widths.

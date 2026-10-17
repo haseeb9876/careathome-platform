@@ -1,5 +1,15 @@
 # Test evidence
 
+## PWA — October 17
+
+- Standalone TypeScript, zero-warning ESLint, 36 unit tests and optimized production build passed.
+- All 19 Chrome scenarios passed in one optimized-server run (3.0 minutes), including the existing patient/provider/admin, upload, PDF, sharing, responsive and accessibility journeys.
+- Five new PWA cases passed: manifest/icons/worker headers/version endpoint; iPhone instructions and dismissal/reopening; a simulated native installation event gated by a user click and installed-mode suppression; real-worker offline navigation/reconnection with only the two allowed public resources cached; and release detection that preserves an unfinished form.
+- A separate normal (non-incognito) Chrome profile returned an empty `Page.getInstallabilityErrors` list and displayed a real Install app button. Its temporary profile was removed after inspection. The initial incognito diagnostic returned only `in-incognito`, as expected; incognito behavior is not evidence of an app packaging defect.
+- Initial floating install-card regression blocked a registration control. Replaced it with an inline panel, then reran the complete suite successfully. This was a UI correction, not a test bypass.
+- Physical iPhone/Android OS installation, home-screen icon rendering and lifecycle behavior remain manual device acceptance. The tests simulate iOS identification and a native install response; they do not claim real-device installation.
+- Hosted deployment verification is pending at this checkpoint.
+
 ## SRS usability review — October 16
 
 - 36 unit tests passed, including rollover dates, timezone conversion and the 180-day booking boundary.

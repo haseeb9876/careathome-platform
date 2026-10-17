@@ -4,7 +4,7 @@ The user selected Neon, GitHub and Vercel, removed Docker, and authorised public
 
 | Topic | Current decision |
 | --- | --- |
-| Platform | Responsive Next.js/TypeScript web app; native apps deferred. |
+| Platform | Responsive Next.js/TypeScript web app with user-requested PWA installation (October 17); separate native apps remain deferred. |
 | Identity | Patient, provider (nurse/physiotherapist), administrator. No separate doctor/platform-owner account. Better Auth with Neon. |
 | Assignment | Administrator assigns; no autonomous assignment or provider acceptance step. |
 | Packages | Multi-session care packages deferred by user brief (FR-031/041). |

@@ -1,0 +1,94 @@
+.app-install-access {
+  padding: 12px 24px;
+  display: flex;
+  justify-content: center;
+}
+.app-install-access button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-install-card,
+.app-update {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(370px, calc(100vw - 32px));
+  z-index: 30;
+  background: #fff;
+  border: 1px solid #c8d8cd;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 48px #153b3326;
+  max-height: calc(100svh - 32px);
+  overflow-y: auto;
+  color: #234238;
+}
+.app-install-card img {
+  border-radius: 14px;
+}
+.app-install-card {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  z-index: auto;
+  width: min(720px, calc(100% - 32px));
+  margin: 16px auto;
+  max-height: none;
+  overflow: visible;
+  box-shadow: 0 3px 18px #153b3310;
+}
+@media (min-width: 761px) {
+  body:has(.workspace) .app-install-card {
+    width: min(720px, calc(100% - 300px));
+    margin-left: max(280px, calc((100% - 720px) / 2));
+  }
+  body:has(.workspace) .app-install-access {
+    margin-left: 260px;
+  }
+}
+.app-install-card h2 {
+  font-size: 21px;
+  margin: 14px 36px 10px 0;
+}
+.app-install-card p,
+.app-install-card li,
+.app-update p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.app-install-card ol {
+  list-style: decimal;
+  padding-left: 22px;
+  margin: 12px 0;
+}
+.app-install-card li {
+  margin: 6px 0;
+}
+.app-install-card small {
+  display: block;
+  font-size: 13px;
+  margin: 12px 0 4px;
+  color: #52675c;
+}
+.app-install-card .primary-link {
+  margin-top: 12px;
+}
+.app-install-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.app-update {
+  z-index: 31;
+}
+.app-update button {
+  margin-top: 12px;
+}
+@media print {
+  .app-install-access,
+  .app-install-card,
+  .app-update {
+    display: none;
+  }
+}

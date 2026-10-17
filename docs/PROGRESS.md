@@ -2,6 +2,12 @@
 
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
+## PWA release — October 17
+
+Added installable CareAtHome manifest, home/care-pulse icons (Android and Apple), an inline first-visit invitation, iOS installation instructions, a dismiss/reopen preference, and installed-mode suppression. Public-only offline fallback caches two resources; care data and submitted forms are not cached. New launches request current HTML, and open apps check for a release and offer refresh without clearing unfinished work automatically. See [PWA.md](PWA.md).
+
+Typecheck, zero-warning lint, 36 unit tests, production build and all 19 Chrome scenarios passed. A normal Chrome profile reported no installability errors and exposed the real install button. Publication and hosted verification are next; physical Android/iPhone OS installation remains a device acceptance step, distinct from browser simulation. Existing email/backup/nonfunctional acceptance dependencies below remain unchanged.
+
 ## SRS usability release
 
 Re-read the supplied 40-page SRS and documented all fourteen acceptance criteria in [SRS_REVIEW.md](SRS_REVIEW.md), with primary W3C/NHS design references and explicit operational dependencies. Improved booking validation/error recovery, review details and state explanations; mobile focus/keyboard/skip navigation; form readability; provider filter validation, results and failure feedback. Retired identified old test providers/services from public discovery through audited procedures while preserving history.

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#195c50" />
+    <title>Connect to continue · CareAtHome</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f8f6;
+        color: #234238;
+        font:
+          18px/1.6 system-ui,
+          sans-serif;
+        display: grid;
+        min-height: 100svh;
+        place-items: center;
+      }
+      main {
+        max-width: 440px;
+        padding: 32px;
+      }
+      img {
+        border-radius: 20px;
+      }
+      h1 {
+        font-size: 28px;
+        line-height: 1.2;
+      }
+      a {
+        display: inline-block;
+        background: #195c50;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+      }
+      a:focus-visible {
+        outline: 3px solid #195c50;
+        outline-offset: 4px;
+      }
+      small {
+        display: block;
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/icons/app-192.png" width="72" height="72" alt="CareAtHome" />
+      <h1>Connect to continue your care</h1>
+      <p>
+        You appear to be offline. Connect to the internet, then try again to
+        view your latest visits and records.
+      </p>
+      <p>
+        If you were submitting a change, check its status when you reconnect
+        before trying again.
+      </p>
+      <a href="/dashboard">Try again</a
+      ><small>CareAtHome · Demonstration<br />Not an emergency service.</small>
+    </main>
+  </body>
+</html>

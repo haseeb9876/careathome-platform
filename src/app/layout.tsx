@@ -3,7 +3,17 @@ import "@fontsource-variable/inter";
 import "@fontsource-variable/manrope";
 import "./globals.css";
 import { SiteChrome } from "@/components/site-chrome";
+import type { Viewport } from "next";
+import { AppInstall } from "@/components/app-install";
+export const viewport: Viewport = { themeColor: "#195c50" };
 export const metadata: Metadata = {
+  applicationName: "CareAtHome",
+  appleWebApp: {
+    capable: true,
+    title: "CareAtHome",
+    statusBarStyle: "default",
+  },
+  icons: { icon: "/icons/app-192.png", apple: "/icons/apple-touch-icon.png" },
   title: {
     default: "CareAtHome | A little closer to feeling better",
     template: "%s · CareAtHome",
@@ -16,6 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <AppInstall />
         <SiteChrome>{children}</SiteChrome>
       </body>
     </html>

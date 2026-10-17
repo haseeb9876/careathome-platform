@@ -1,5 +1,9 @@
 ﻿import type { NextConfig } from "next";
 const config: NextConfig = {
+  env: {
+    NEXT_PUBLIC_APP_VERSION:
+      process.env.VERCEL_GIT_COMMIT_SHA || `local-${Date.now()}`,
+  },
   poweredByHeader: false,
   experimental: { serverActions: { bodySizeLimit: "6mb" } },
   serverExternalPackages: ["playwright", "@sparticuz/chromium"],
@@ -15,6 +19,20 @@ const config: NextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+          { key: "Service-Worker-Allowed", value: "/" },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self'; connect-src 'self'",
+          },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [
