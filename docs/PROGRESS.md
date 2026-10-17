@@ -2,6 +2,12 @@
 
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
+## Appearance release — October 17
+
+Added Light, Dark and System appearance across public pages and all role workspaces, with pre-paint preference restoration, live device-theme changes, cross-tab synchronization and a blocked-storage fallback. Added larger-text reading comfort, accessible modal controls and the same controls in account settings. Dark surfaces include forms, status badges, installation/update notices and the public offline fallback; print remains light. No new dependencies or database changes. See [APPEARANCE.md](APPEARANCE.md).
+
+Typecheck, zero-warning lint, 36 unit tests and the optimized build passed. All six new appearance browser scenarios passed, including mobile/desktop contrast scans and all three role settings. The existing suite passed 18 of 19 scenarios: the 5 MiB credential test timed out at document validation after transferring the file. The targeted retry completed upload/validation but hit the four-minute test deadline during download. Hosted verification is pending; do not count that scenario as passing. Visual screenshots were reviewed. Next: publish this appearance release and verify the public origin; retain the storage reliability issue if it recurs.
+
 ## PWA release — October 17
 
 Added installable CareAtHome manifest, home/care-pulse icons (Android and Apple), an inline first-visit invitation, iOS installation instructions, a dismiss/reopen preference, and installed-mode suppression. Public-only offline fallback caches two resources; care data and submitted forms are not cached. New launches request current HTML, and open apps check for a release and offer refresh without clearing unfinished work automatically. See [PWA.md](PWA.md).

@@ -23,6 +23,7 @@ import {
   HeartHandshake,
 } from "lucide-react";
 import { Brand } from "./site-chrome";
+import { AppearanceControl } from "./appearance";
 import { logout } from "@/modules/accounts/actions";
 import { initials } from "@/lib/format";
 import type { Profile } from "@/modules/care/types";
@@ -269,6 +270,7 @@ export function WorkspaceShell({
               <i />
               Demonstration
             </span>
+            <AppearanceControl />
             <Link
               className="icon-button notification-button"
               href="/dashboard/notifications"

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HeartPulse, ArrowUpRight } from "lucide-react";
+import { AppearanceControl } from "./appearance";
 export function Brand() {
   return (
     <Link className="brand" href="/">
@@ -22,6 +23,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       {!workspace && (
         <header className="header">
           <Brand />
+          <div className="public-appearance">
+            <AppearanceControl />
+          </div>
           <nav aria-label="Main navigation">
             <Link href="/services">Our services</Link>
             <Link href="/providers">Find a professional</Link>

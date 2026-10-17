@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteChrome } from "@/components/site-chrome";
 import type { Viewport } from "next";
 import { AppInstall } from "@/components/app-install";
+import { appearanceScript } from "@/lib/appearance";
 export const viewport: Viewport = { themeColor: "#195c50" };
 export const metadata: Metadata = {
   applicationName: "CareAtHome",
@@ -24,7 +25,10 @@ export const metadata: Metadata = {
 };
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
+      </head>
       <body>
         <AppInstall />
         <SiteChrome>{children}</SiteChrome>

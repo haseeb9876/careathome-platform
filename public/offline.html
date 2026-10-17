@@ -5,7 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#195c50" />
     <title>Connect to continue · CareAtHome</title>
+    <script>
+      (() => {
+        let theme = "system",
+          large = false;
+        try {
+          theme = localStorage.getItem("careathome-appearance");
+          large = localStorage.getItem("careathome-large-text") === "true";
+        } catch {}
+        document.documentElement.dataset.theme =
+          theme === "light" || theme === "dark"
+            ? theme
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.dataset.largeText = String(large);
+      })();
+    </script>
     <style>
+      html[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      html[data-theme="dark"] body {
+        background: #101c19;
+        color: #e7f1ec;
+      }
+      html[data-theme="dark"] a:focus-visible {
+        outline-color: #9fdbbc;
+      }
+      html[data-large-text="true"] body {
+        font-size: 20px;
+      }
       body {
         margin: 0;
         background: #f5f8f6;

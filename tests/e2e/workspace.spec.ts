@@ -60,6 +60,7 @@ for (const role of ["patient", "provider", "admin"])
     role + " workspace pages load and mobile navigation works",
     async ({ page }) => {
       test.setTimeout(300000);
+      await page.emulateMedia({ colorScheme: "dark" });
       await login(page, role);
       const sections =
         role === "patient"

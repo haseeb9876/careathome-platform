@@ -95,6 +95,17 @@ test("offline navigation uses only the public fallback and reconnects", async ({
   context,
 }) => {
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Appearance settings", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Dark", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Done", exact: true })
+    .click();
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
@@ -103,6 +114,7 @@ test("offline navigation uses only the public fallback and reconnects", async ({
     .toBe(true);
   await context.setOffline(true);
   await page.goto("/dashboard?offline-check=1");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(
     page.getByRole("heading", { name: "Connect to continue your care" }),
   ).toBeVisible();

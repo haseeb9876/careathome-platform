@@ -1,5 +1,13 @@
 # Test evidence
 
+## Appearance — October 17
+
+- Typecheck, zero-warning lint, 36 unit tests and production build passed.
+- Six new Chrome scenarios passed in 4.3 minutes: persistence/system changes/tab synchronization/form preservation; blocked local storage; public pages and modal at 390/1440 widths with automated WCAG A/AA scans; patient/provider/admin dark workspaces and larger-text settings. Mobile modal, homepage and patient settings screenshots were visually reviewed.
+- Existing optimized-server suite: 18 of 19 passed in 10.1 minutes. All three role navigation cases now run in dark mode; existing light-mode responsive/accessibility checks remain. Booking, registration, admin queue, report PDF/sharing/revocation and all five PWA cases passed. Offline navigation additionally verifies the selected dark theme.
+- The 5 MiB credential scenario timed out after 120 seconds waiting for completion, displaying `Checking your document…` after its transfer phase. This repeats the previously recorded intermittent path; it is not attributed to the appearance change without evidence. The targeted retry completed upload/validation but hit the four-minute test deadline during the private download (download canceled when the test ended). Hosted verification is pending. No upload code was changed.
+- Physical-device and broader manual accessibility acceptance remain separate from Chrome emulation and automated scans.
+
 ## PWA — October 17
 
 - Standalone TypeScript, zero-warning ESLint, 36 unit tests and optimized production build passed.
