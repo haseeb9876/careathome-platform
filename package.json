@@ -24,7 +24,8 @@
     "test:storage": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-storage.mjs",
     "test:auth": "node tests/integration/neon-auth-http.mjs",
     "test:recovery": "node --env-file=.env.neon tests/integration/neon-recovery.mjs",
-    "local:inbox": "node --env-file=.env.neon scripts/neon-inbox.mjs"
+    "local:inbox": "node --env-file=.env.neon scripts/neon-inbox.mjs",
+    "test:account-security": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-account-security.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1152.0",

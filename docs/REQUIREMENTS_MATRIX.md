@@ -162,3 +162,14 @@ The [October 16 SRS review](SRS_REVIEW.md#srs-acceptance-evidence-map) maps all 
 ## Evidence update ? October 16
 
 Neon migrations 000-009 are applied. Docker is no longer required. Public Vercel deployment is authorised and the previous release passed hosted checks. Cleanup regression status is recorded separately. See current [test evidence](TEST_RESULTS.md). Database acceptance is distinct from complete UI acceptance. Deferred and conditional SRS features are not silently promoted to completed status.
+
+## Additional account administration requirements — October 18
+
+| Requirement | Implementation | Acceptance |
+| --- | --- | --- |
+| Change own password | Current-password confirmation, password policy, session retirement and audit | Implemented; current evidence in TEST_RESULTS.md |
+| Change own login email | Verify new address before applying; expiring/cancellable single-use link | Synthetic delivery implemented; real sender configuration pending |
+| Add another administrator | Dedicated new account, verified MFA for inviter, recipient-chosen password, expiring/revocable invitation | Database protection and browser activation checked; real delivery pending |
+| Manage active sessions | Own-session list and password-protected revocation of other sessions | Database ownership and token non-disclosure checked |
+
+Migration 010 adds these controls without changing migrations 000–009. Operational setup and remaining quality acceptance are tracked in [ACCOUNT_SECURITY.md](ACCOUNT_SECURITY.md).

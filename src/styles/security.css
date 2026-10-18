@@ -1,0 +1,48 @@
+.password-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.password-control input {
+  flex: 1;
+}
+.password-control button {
+  flex-shrink: 0;
+}
+.account-link-panel {
+  max-width: 620px;
+  margin: auto;
+  display: grid;
+  gap: 24px;
+}
+.account-link-panel h1 {
+  font-size: clamp(28px, 4vw, 38px);
+}
+.security-current {
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+.security-list {
+  display: grid;
+  gap: 16px;
+  margin: 24px 0;
+}
+.security-item {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.security-item p {
+  margin-top: 8px;
+}
+.security-item details {
+  margin-top: 12px;
+}
+.security-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}

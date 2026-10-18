@@ -4,7 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { Pool } from "pg";
 import { headers } from "next/headers";
 import { cache } from "react";
-import { createCipheriv, randomBytes } from "node:crypto";
+import { sendAccountMail } from "@/modules/accounts/email";
 import { authenticationOptions } from "./auth-options";
 import { applicationDatabaseConfig } from "./config";
 
@@ -39,29 +39,12 @@ function makeAuth() {
     emailAndPassword: {
       ...options.emailAndPassword,
       sendResetPassword: async ({ user, url }) => {
-        // Development sink: encrypted at rest; no real email is sent by tests.
-        const nonce = randomBytes(12);
-        const cipher = createCipheriv(
-          "aes-256-gcm",
-          Buffer.from(secret.slice(0, 64), "hex"),
-          nonce,
-        );
-        const body = Buffer.concat([
-          cipher.update(
-            JSON.stringify({ subject: "Reset your CareAtHome password", url }),
-            "utf8",
-          ),
-          cipher.final(),
-        ]);
-        const payload = Buffer.concat([
-          nonce,
-          cipher.getAuthTag(),
-          body,
-        ]).toString("base64");
-        await connection.query(
-          "insert into private.development_email(recipient,payload_encrypted) values($1,$2)",
-          [user.email, payload],
-        );
+        await sendAccountMail(connection, {
+          to: user.email,
+          subject: "Reset your CareAtHome password",
+          text: "Use this single-use link to reset your password. Ignore it if you did not request a reset.",
+          url,
+        });
       },
     },
     databaseHooks: {

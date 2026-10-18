@@ -2,6 +2,12 @@
 
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
+## Account administration and session security — October 18
+
+Implemented current-password-protected password changes, verified email changes, MFA-protected administrator invitations and session listing/revocation. Migration 010 is applied. Invitations are single-use, expiring and revocable; public signup cannot choose admin. Email changes preserve the original login until verification. Password and email changes retire all sessions and create audit evidence. Added an encrypted synthetic inbox/shared Resend transport adapter with explicit delivery status; real email delivery remains unconfigured. See [ACCOUNT_SECURITY.md](ACCOUNT_SECURITY.md).
+
+Typecheck, zero-warning lint, 39 unit tests, production build, 17 database security checks, eight HTTP authentication checks and three recovery checks passed. Both new production-browser workflows passed, including mobile settings accessibility. Initial browser selector failures were corrected; rapid authentication checks encountered the existing rate limit, which is preserved and respected by the new test. All three role workspace regressions passed in 57.1 seconds; the mobile settings screenshot was reviewed. Public release verification is next. Afterwards: configure a verified outbound sender and perform real delivery acceptance, then the remaining operations/device acceptance listed in the security guide.
+
 ## Dark by default — October 17
 
 Dark is now the first-visit and invalid/missing-storage fallback, including server-rendered HTML and the offline screen. Explicit saved Light/Dark/System choices are preserved. Typecheck, zero-warning lint, 36 unit tests, the optimized build and three targeted browser scenarios passed: default dark on a light-mode device, saved choices/cross-tab/system changes, blocked storage and offline fallback. The offline cache version is advanced so installed apps receive the new fallback. Next acceptance remains physical-phone appearance/installation review and the service work below.
@@ -39,3 +45,4 @@ The previous release passed 13 hosted Chrome scenarios plus receipt PDF export, 
 ## Remaining product/service work
 
 External email transport, scheduled backups, broader performance/browser/accessibility acceptance and the conditional/deferred SRS features remain open. Payments are simulated and summaries deterministic. The phrase "other app" still needs a project name/path before work can begin in another repository.
+

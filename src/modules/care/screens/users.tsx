@@ -1,5 +1,6 @@
 import { PageHeading, Panel, Badge, ActionForm } from "@/components/care-ui";
 import type { SectionProps } from "./types";
+import { AdministratorInvitations } from "@/components/account-security";
 
 export async function UsersSection({ account, query }: SectionProps) {
   const { client } = account;
@@ -24,6 +25,9 @@ export async function UsersSection({ account, query }: SectionProps) {
         </label>
         <button className="primary-link">Search accounts</button>
       </form>
+      <div className="mb-6">
+        <AdministratorInvitations />
+      </div>
       <Panel>
         <div className="table-scroll">
           <table>

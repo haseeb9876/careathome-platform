@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { configured } from "@/lib/database/server";
 import { getAuth } from "@/lib/database/auth-server";
+import { accountEmailMode } from "./email";
 import { loginSchema, registrationSchema } from "./validation";
 function message(text: string, mode = "login"): never {
   redirect("/auth?mode=" + mode + "&message=" + encodeURIComponent(text));
@@ -56,7 +57,9 @@ export async function authenticate(form: FormData) {
       /* Preserve the same public response to avoid account enumeration. */
     }
     message(
-      "If the address is registered, recovery instructions are available through the development email inbox.",
+      accountEmailMode() === "resend"
+        ? "If the address is registered, recovery instructions will arrive by email. Check your inbox and spam folder."
+        : "Real email delivery is not configured yet. Contact your administrator for help. Synthetic recovery messages are available in the private demonstration inbox.",
       "recover",
     );
   }

@@ -71,6 +71,11 @@ await call("/sign-out", {});
 assert.equal((await call("/get-session")).data, null);
 console.log("PASS sign-out invalidates session");
 const login = await call("/sign-in/email", { email, password });
+assert.equal(
+  login.status,
+  200,
+  `MFA login response: ${login.data.code ?? login.status}`,
+);
 assert.equal(login.data.twoFactorRedirect, true);
 assert.equal((await call("/get-session")).data, null);
 console.log("PASS password alone cannot open a session after MFA enrollment");

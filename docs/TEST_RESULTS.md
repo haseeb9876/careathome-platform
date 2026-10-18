@@ -73,3 +73,13 @@ HTTP adapter, local optimized server: 15 warm sequential requests, median 751 ms
 ## Limits
 
 Chrome coverage is not Firefox/WebKit acceptance. Automated axe checks are not full keyboard/screen-reader accessibility acceptance. Outbound email, backup scheduling and real clinical operations are not complete. Database evidence is distinct from UI acceptance; see the [requirements matrix](REQUIREMENTS_MATRIX.md).
+# Account security — October 18
+
+- Typecheck, zero-warning lint, optimized production build: passed.
+- Unit tests: 39 passed, including encrypted synthetic mail isolation, refusal of unconfigured real delivery and provider failure handling.
+- Neon migration 010: applied successfully. Account security suite: 17 passed (role isolation, MFA, token delivery/expiry/revocation/replay/concurrency, email verification, session ownership and audits).
+- Password recovery: all three checks passed. HTTP authentication: all eight checks passed on the separate rerun. The first concurrent run failed at the post-enrollment login assertion; subsequent rapid browser sign-ins returned HTTP 429. Better Auth's existing three-request/ten-second route limit was confirmed in installed source and remains unchanged.
+- New Chrome production-browser workflows: two passed in 1.2 minutes. Administrator invitation MFA denial, invitation acceptance, administrator access and link replay rejection; incorrect/correct current password, other-device session invalidation, verified email change and subsequent sign-in; 390px settings overflow and axe checks.
+- Initial browser runs failed on ambiguous label/alert selectors, including the hidden Next.js route announcer. Tests now use exact labels/scoped alerts. Valid login retries respect HTTP 429 instead of weakening throttling.
+- Real email delivery, physical phone acceptance and complete nonfunctional/SRS acceptance remain pending. All three role workspace regressions passed in 57.1 seconds, including mobile layout, larger text and accessibility scans; the administrator mobile screenshot was reviewed. Public deployment verification is pending.
+

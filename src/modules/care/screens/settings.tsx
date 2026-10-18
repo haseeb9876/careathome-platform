@@ -2,6 +2,10 @@ import Link from "next/link";
 import { PageHeading, Panel, ActionForm } from "@/components/care-ui";
 import { MfaPanel } from "@/components/mfa-panel";
 import { AppearancePreferences } from "@/components/appearance";
+import {
+  AccountEmailPanel,
+  AccountSessionsPanel,
+} from "@/components/account-security";
 import type { SectionProps } from "./types";
 
 export async function SettingsSection({ account }: SectionProps) {
@@ -15,6 +19,8 @@ export async function SettingsSection({ account }: SectionProps) {
         description="Manage account security and the rules that guide your care workspace."
       />
       <div className="grid-2">
+        <AccountEmailPanel email={account.user.email} />
+        <AccountSessionsPanel />
         <Panel title="Appearance & reading comfort">
           <AppearancePreferences />
         </Panel>
