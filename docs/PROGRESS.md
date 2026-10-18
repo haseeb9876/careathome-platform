@@ -6,7 +6,7 @@ Public demonstration: https://careathome-platform.vercel.app. Private source: ha
 
 Implemented current-password-protected password changes, verified email changes, MFA-protected administrator invitations and session listing/revocation. Migration 010 is applied. Invitations are single-use, expiring and revocable; public signup cannot choose admin. Email changes preserve the original login until verification. Password and email changes retire all sessions and create audit evidence. Added an encrypted synthetic inbox/shared Resend transport adapter with explicit delivery status; real email delivery remains unconfigured. See [ACCOUNT_SECURITY.md](ACCOUNT_SECURITY.md).
 
-Typecheck, zero-warning lint, 39 unit tests, production build, 17 database security checks, eight HTTP authentication checks and three recovery checks passed. Both new production-browser workflows passed, including mobile settings accessibility. Initial browser selector failures were corrected; rapid authentication checks encountered the existing rate limit, which is preserved and respected by the new test. All three role workspace regressions passed in 57.1 seconds; the mobile settings screenshot was reviewed. Public release verification is next. Afterwards: configure a verified outbound sender and perform real delivery acceptance, then the remaining operations/device acceptance listed in the security guide.
+Typecheck, zero-warning lint, 39 unit tests, production build, 17 database security checks, eight HTTP authentication checks and three recovery checks passed. Both new production-browser workflows passed, including mobile settings accessibility. Initial browser selector failures were corrected; rapid authentication checks encountered the existing rate limit, which is preserved and respected by the new test. All three role workspace regressions passed in 57.1 seconds; the mobile settings screenshot was reviewed. Release 5a02333 passed GitHub checks and deployed to the public Vercel alias. All five hosted account-security and role-workspace scenarios passed in 1.4 minutes; the public version endpoint matched the release. Afterwards: configure a verified outbound sender and perform real delivery acceptance, then the remaining operations/device acceptance listed in the security guide.
 
 ## Dark by default — October 17
 
@@ -45,4 +45,5 @@ The previous release passed 13 hosted Chrome scenarios plus receipt PDF export, 
 ## Remaining product/service work
 
 External email transport, scheduled backups, broader performance/browser/accessibility acceptance and the conditional/deferred SRS features remain open. Payments are simulated and summaries deterministic. The phrase "other app" still needs a project name/path before work can begin in another repository.
+
 
