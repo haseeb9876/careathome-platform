@@ -29,7 +29,7 @@ Integration tests retain labelled synthetic records for audit. They are not prod
 
 ## Development email
 
-npm.cmd run local:notifications processes one batch into the encrypted development inbox. No external email is sent. Password recovery also writes to that inbox. External email delivery requires a separate provider configuration; the public demonstration does not send email.
+npm.cmd run local:notifications processes one reminder batch into the encrypted development inbox. Reserved `.test` account-security emails also stay in that inbox. Production Gmail account-security delivery is configured and real OTP sign-in has been verified. Local email configuration is separate; see [EMAIL_OTP.md](EMAIL_OTP.md). Do not copy Production secrets into tracked files.
 
 ## Recovery and retained references
 

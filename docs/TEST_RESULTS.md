@@ -2,6 +2,8 @@
 
 ## Email OTP — October 19, local acceptance
 
+Release `7dff75f` deployed to https://careathome-platform.vercel.app and the public version endpoint matched the Git merge commit. GitHub checks passed. All four targeted hosted Chrome scenarios passed in 2.4 minutes: administrator invitation/MFA/recipient activation; password and verified-email changes/session retirement; authenticator enrollment/recovery-code replacement/audit; and email verification/wrong-code handling/remembered-device/password recovery. Synthetic tests included mobile automated accessibility checks. This is targeted security acceptance, not a rerun of the entire SRS suite. The owner separately confirmed real Gmail OTP sign-in. Temporary delivery accounts were deactivated and the temporary review alias removed.
+
 - Typecheck, optimized build and 43 unit tests passed, including Gmail transport configuration, encrypted synthetic delivery and denial when the shared send budget is exhausted.
 - All 11 OTP database checks and 17 account-security database checks passed with migrations 011–015 applied. Migration 016 adds atomic recovery-code audit recording; the targeted browser test verifies its audit entry.
 - All five updated HTTP authentication checks passed: no automatic registration session, unforgeable verification flags, closed bypass endpoints, private-report denial for pending sessions and sign-out invalidation.

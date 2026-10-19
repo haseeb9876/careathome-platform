@@ -2,6 +2,8 @@
 
 ## Using the controls
 
+These sensitive operations now also require a fresh email OTP. Enter the requested details, request the code, then submit it with the operation. Email changes verify both addresses, and invitation acceptance verifies the recipient. See [EMAIL_OTP.md](EMAIL_OTP.md) for the current policy.
+
 - Open **Settings & security → Change password**. Enter the current password and a new password of 12–128 characters. Success signs out every session, including the current one.
 - In **Your login email**, enter a new address and the current password. Confirm the delivered link while signed into the original account. The original email remains active until confirmation; confirmation signs out all sessions. Links expire after 30 minutes and can be cancelled.
 - An administrator opens **Users → Invite an administrator** after enrolling and verifying two-step security. Enter a new, dedicated email and the current password. The recipient follows the 24-hour invitation and chooses their own password. Invitations can be revoked, cannot be reused and lose authority if the sender is deactivated. Public registration cannot choose the administrator role.
@@ -11,7 +13,7 @@
 
 The default is an encrypted demonstration inbox. Reserved `.test` recipients never leave that inbox, even when real delivery is configured. The UI explains this limitation. Real-address changes and invitations are refused until delivery is configured.
 
-To enable real mail, the owner must supply a verified sending domain/address and configure `EMAIL_DELIVERY=resend`, `EMAIL_FROM` and `RESEND_API_KEY` privately in Vercel. Redeploy after changing environment variables. Never put keys in Git or chat. Verify domain ownership and perform a real delivery acceptance check with an owner-controlled recipient. This setup is still pending; adding a transport adapter does not establish deliverability.
+Production uses the owner-configured Gmail SMTP adapter. Real Gmail OTP delivery and sign-in were confirmed on October 19. Credentials are stored privately in Vercel; never put them in Git or chat. The Resend adapter remains available for a future transactional sender. See [Gmail setup and limits](EMAIL_OTP.md).
 
 ## Implementation and review
 
@@ -25,7 +27,7 @@ Security decisions follow [OWASP authentication guidance](https://cheatsheetseri
 
 | Priority | Remaining work | Acceptance evidence needed |
 | --- | --- | --- |
-| 1 | Configure a verified transactional sender | Real owner-controlled verification, invitation and recovery messages delivered; failure behavior checked |
+| 1 | Monitor email delivery and broaden recipient coverage | Gmail OTP delivery/sign-in confirmed; continue checking spam placement, delivery failures and real invitation/recovery messages across mailbox providers |
 | 2 | Schedule reminder processing and backup/retention operations | Scheduled execution, monitoring, retry and a fresh restoration drill |
 | 3 | Physical Android/iPhone PWA acceptance | Installation, home-screen icon, sign-in, theme and update behavior on real devices |
 | 4 | Broader browser/accessibility/performance acceptance | Firefox/WebKit, keyboard and assistive technology review, realistic concurrent-load measurements |

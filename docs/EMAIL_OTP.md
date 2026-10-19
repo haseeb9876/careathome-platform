@@ -2,7 +2,7 @@
 
 ## Release status
 
-Implementation and local acceptance are in progress. Gmail is configured privately in Vercel Production. The owner confirmed real email delivery and successful OTP sign-in on the staged deployment. Public promotion is in progress. Database migrations 011–016 are applied; compatibility handling preserves the existing deployed application's session policy until rollout.
+Implementation and targeted local/hosted acceptance are complete. Gmail is configured privately in Vercel Production. The owner confirmed real email delivery and successful OTP sign-in on the staged deployment. Release 7dff75f is live at https://careathome-platform.vercel.app; all four targeted hosted security workflows passed. Database migrations 011–016 are applied; compatibility handling preserves the existing deployed application's session policy until rollout.
 
 ## Verification policy
 

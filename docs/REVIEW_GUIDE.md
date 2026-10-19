@@ -1,6 +1,6 @@
 # Review CareAtHome
 
-The email OTP upgrade passed local security acceptance, and the owner confirmed real Gmail delivery and OTP sign-in. Public promotion is in progress; current release evidence is in TEST_RESULTS.md. See [owner setup and OTP review](EMAIL_OTP.md).
+The email OTP upgrade passed local security acceptance, and the owner confirmed real Gmail delivery and OTP sign-in. The upgrade is live at the public link below; all four hosted security workflows passed. See [test evidence](TEST_RESULTS.md). See [owner setup and OTP review](EMAIL_OTP.md).
 
 Public application: https://careathome-platform.vercel.app
 
@@ -36,4 +36,4 @@ All 13 Chrome scenarios passed across hosted runs after the PDF packaging correc
 
 ## Remaining limitations
 
-External recovery/notification emails are not sent; they are captured in a private development inbox. Payments are simulated. Automatic backup scheduling, broader load testing and Firefox/WebKit/manual accessibility acceptance remain open. Optional/deferred SRS features, including native apps, care packages and automated provider recommendations, are recorded in the requirements matrix. This guide does not declare every SRS item accepted.
+Real-address account-security emails use the configured Gmail sender; reserved `.test` messages stay in the private development inbox. Reminder processing remains a separate operational task. Payments are simulated. Automatic backup scheduling, broader load testing and Firefox/WebKit/manual accessibility acceptance remain open. Optional/deferred SRS features, including native apps, care packages and automated provider recommendations, are recorded in the requirements matrix. This guide does not declare every SRS item accepted.
