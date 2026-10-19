@@ -131,10 +131,6 @@ export async function manageMfa(
         session.user.email,
         "Your authenticator recovery codes were replaced. Old recovery codes no longer work.",
       );
-      await authenticationPool().query(
-        "insert into public.audit_log(actor,action,target) values($1,'mfa_recovery_codes_changed',$1)",
-        [session.user.id],
-      );
       return {
         backupCodes: result.backupCodes,
         message:

@@ -116,6 +116,14 @@ test("authenticator enrollment and recovery-code replacement require email OTP",
         )
       ).rows[0].twoFactorEnabled,
     ).toBe(true);
+    expect(
+      (
+        await pool.query(
+          "select 1 from public.audit_log where actor=$1 and action='authenticator_recovery_codes_updated'",
+          [id],
+        )
+      ).rowCount,
+    ).toBeGreaterThan(0);
   } finally {
     if (id) {
       await pool.query("update public.profiles set active=false where id=$1", [

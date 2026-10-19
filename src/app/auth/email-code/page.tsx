@@ -5,7 +5,9 @@ import { SessionEmailForm } from "@/components/email-code-forms";
 import { logout } from "@/modules/accounts/actions";
 import { DeliveryNotice } from "@/components/account-security";
 export default async function EmailCodePage() {
-  const session = await getAuth().api.getSession({ headers: await headers() });
+  // Establish request-time rendering before accessing runtime credentials.
+  const requestHeaders = await headers();
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
   if (!session) redirect("/auth");
   if (session.session.emailOtpVerified) redirect("/dashboard");
   const [local, domain] = session.user.email.split("@");
