@@ -7,6 +7,8 @@
 - All five PWA Chrome scenarios passed in 13.1 seconds with the new response headers, including offline behavior and update notification preserving an unfinished form.
 - Production dependency audit: zero known advisories. Development-only advisories and scope limitations remain documented in [SECURITY_REVIEW.md](SECURITY_REVIEW.md).
 - All six targeted security/browser scenarios passed in 3.0 minutes on the optimized local server: invitations, password/email changes, authenticator maintenance, automatic OTP/remembered-device/recovery, request rejection and response headers. The OTP scenario verifies refresh reuse, expiry/resend and a fresh dashboard navigation without clicking the logo. Hosted release validation follows publication.
+- Release `fe08464b6956cc25c9f20bb3b2ed416775d90123` passed GitHub checks (run `39290152156`) and deployed Ready (`dpl_GqojRNswB61yVjkgzT9fnnwQJsmw`). The public version endpoint matched that SHA.
+- Hosted run: 10 of 11 passed in 3.5 minutes. The account-change test reached automatic sending before its disposable-fixture cooldown acceleration, so the server correctly rejected a rapid repeat request. The helper now prepares only its strictly named synthetic fixture before navigating. Production cooldowns are unchanged. The targeted rerun passed (44.9 seconds for the scenario; 1.1 minutes total). Thus all eleven have passing hosted evidence across runs, not a single uninterrupted pass. Typecheck and zero-warning lint passed after the test-only correction.
 
 ## Email OTP — October 19, local acceptance
 

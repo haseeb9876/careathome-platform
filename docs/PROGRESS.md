@@ -1,10 +1,10 @@
 # Current progress
 
-## Automatic OTP and security hardening — October 19 (ready for release)
+## Automatic OTP and security hardening — October 19 (released)
 
 Sign-in OTP now sends automatically, survives refresh without sending another email, shows the actual expiry countdown and enables manual resend after expiry. Successful verification opens a fresh dashboard document; notification delivery no longer delays navigation. Added byte-counted public request limits, session-bound password-check throttling, a shared hosted source-IP authentication budget and browser restrictions. No database migration or new dependency is required. See [SECURITY_REVIEW.md](SECURITY_REVIEW.md).
 
-Typecheck, zero-warning lint, 48 unit tests, optimized build, 17 account-security database checks, 11 OTP database checks and five HTTP authentication checks passed. All six targeted security/browser scenarios passed in 3.0 minutes, including automatic delivery, refresh reuse, expiry/resend and dashboard navigation. All five PWA scenarios passed separately. See [TEST_RESULTS.md](TEST_RESULTS.md). Next: release to master and verify the public version and hosted flows.
+Typecheck, zero-warning lint, 48 unit tests, optimized build, 17 account-security database checks, 11 OTP database checks and five HTTP authentication checks passed. All six targeted security/browser scenarios passed in 3.0 minutes, including automatic delivery, refresh reuse, expiry/resend and dashboard navigation. All five PWA scenarios passed separately. Release fe08464 passed GitHub checks and is deployed to the public link; all eleven hosted scenarios have passing evidence across the main run and one corrected-fixture rerun. See [TEST_RESULTS.md](TEST_RESULTS.md). Next: scheduled backup/reminder configuration, monitoring and physical-device acceptance, as detailed in the security review. Gmail inbox placement remains recipient-dependent.
 
 ## Email OTP implementation — October 19 (released)
 

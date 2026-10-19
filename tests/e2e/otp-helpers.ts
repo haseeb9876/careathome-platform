@@ -55,7 +55,7 @@ export async function readTestCode(pool: Pool, email: string, id: string) {
   }
   throw new Error("Synthetic OTP message not found");
 }
-export async function fillEmailCode(form: Locator, pool: Pool, email: string) {
+async function ageFixtureRequests(pool: Pool, email: string) {
   if (
     !/^(otp-ui-|admin-ui-|invited-admin-ui-|security-ui-|changed-security-ui-)/.test(
       email,
@@ -70,6 +70,9 @@ export async function fillEmailCode(form: Locator, pool: Pool, email: string) {
     "update private.email_challenges set created_at=now()-interval '61 minutes' where email=$1",
     [email],
   );
+}
+export async function fillEmailCode(form: Locator, pool: Pool, email: string) {
+  await ageFixtureRequests(pool, email);
   if (!(await form.locator('[data-auto-send="true"]').count())) {
     await form
       .getByRole("button", {
@@ -108,6 +111,8 @@ export async function verifyEmailGate(
     await page.goto("/dashboard");
     return;
   }
+  // Auto-send can run before fillEmailCode; prepare the fixture before navigation.
+  await ageFixtureRequests(pool, email);
   await page.goto("/auth/email-code");
   const form = page.locator("form").filter({
     has: page.getByRole("button", {
