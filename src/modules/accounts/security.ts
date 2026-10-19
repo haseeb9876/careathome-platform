@@ -112,6 +112,8 @@ export async function accountSessions() {
 export function securityError(error: unknown) {
   const message = error instanceof Error ? error.message : "";
   const allowed = [
+    "Enter the six-digit email code before continuing.",
+    "Code is incorrect, expired or already used. Request a new code if needed.",
     "Sign in again to continue",
     "Check your current password and try again",
     "Check your current password, or wait a minute before retrying",

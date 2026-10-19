@@ -2,11 +2,12 @@ import "server-only";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { Pool } from "pg";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { cache } from "react";
 import { sendAccountMail } from "@/modules/accounts/email";
 import { authenticationOptions } from "./auth-options";
 import { applicationDatabaseConfig } from "./config";
+import { otpDigest } from "@/modules/accounts/otp-crypto";
 
 let pool: Pool | undefined;
 export function authenticationPool() {
@@ -59,9 +60,26 @@ function makeAuth() {
             const verifiedPath =
               context?.path === "/two-factor/verify-totp" ||
               context?.path === "/two-factor/verify-backup-code";
+            const trusted = context?.headers
+              ?.get("cookie")
+              ?.split(";")
+              .map((v) => v.trim())
+              .find((v) => v.startsWith("careathome_device="))
+              ?.slice("careathome_device=".length);
+            const remembered =
+              trusted && /^[a-f0-9]{64}$/.test(trusted)
+                ? await connection.query(
+                    'select 1 from private.trusted_email_devices d join public.identity_users u on u.id=d.actor where d.token_hash=$1 and d.actor=$2 and d.expires_at>now() and u."emailVerified"',
+                    [otpDigest(trusted, secret), session.userId],
+                  )
+                : null;
             return {
               data: {
                 ...session,
+                emailOtpVerified:
+                  Boolean(remembered?.rowCount) ||
+                  (verifiedPath && session.emailOtpVerified === true),
+                otpPolicyRequired: true,
                 mfaVerified:
                   result.rows[0].twoFactorEnabled === true && verifiedPath,
               },
@@ -76,13 +94,21 @@ let instance: ReturnType<typeof makeAuth> | undefined;
 export function getAuth() {
   return (instance ??= makeAuth());
 }
+// Server actions may rotate a session cookie before rendering the updated page.
+// Read the mutable cookie store so that render does not reuse the retired token.
+export async function authenticationHeaders() {
+  const current = new Headers(await headers());
+  current.set("cookie", (await cookies()).toString());
+  return current;
+}
 export const verifiedSession = cache(async () => {
   const session = await getAuth().api.getSession({
-    headers: await headers(),
+    headers: await authenticationHeaders(),
     query: { disableCookieCache: true },
   });
   if (
     !session ||
+    (session.session.otpPolicyRequired && !session.session.emailOtpVerified) ||
     Date.now() - new Date(session.session.createdAt).getTime() >= 24 * 3600000
   )
     return null;

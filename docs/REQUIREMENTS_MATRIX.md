@@ -1,5 +1,9 @@
 # Requirements-to-tests matrix
 
+## Email OTP extension — October 19
+
+The additional email-security requirement is implemented locally with migrations 011–015. New/untrusted sign-ins, password recovery, email/password changes, invitations, session revocation, administrator settings/account access and authenticator maintenance require purpose-bound email codes. Administrators retain authenticator requirements. Real Gmail delivery and hosted OTP acceptance are **pending**. See [EMAIL_OTP.md](EMAIL_OTP.md) and current [test evidence](TEST_RESULTS.md); this extension does not mark deferred SRS features complete.
+
 Source: supplied SRS v1.1 draft, 40 pages, read locally. Status is acceptance status, not file existence. All written but unverified code remains **pending**. Each SRS FR, NFR and BR is listed individually.
 
 See [decisions](DECISIONS.md) for scope reconciliation and [test results](TEST_RESULTS.md) for executed evidence.

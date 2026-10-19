@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { PageHeading, Panel, ActionForm } from "@/components/care-ui";
-import { MfaPanel } from "@/components/mfa-panel";
+import { MfaPanel, MfaMaintenance } from "@/components/mfa-panel";
 import { AppearancePreferences } from "@/components/appearance";
 import {
   AccountEmailPanel,
   AccountSessionsPanel,
+  CloseAccountPanel,
 } from "@/components/account-security";
 import type { SectionProps } from "./types";
 
@@ -21,11 +22,13 @@ export async function SettingsSection({ account }: SectionProps) {
       <div className="grid-2">
         <AccountEmailPanel email={account.user.email} />
         <AccountSessionsPanel />
+        {profile.role !== "admin" && <CloseAccountPanel />}
         <Panel title="Appearance & reading comfort">
           <AppearancePreferences />
         </Panel>
         <Panel title="Two-step account security">
-          <MfaPanel />
+          <MfaPanel enabled={account.user.twoFactorEnabled === true} />
+          {account.user.twoFactorEnabled && <MfaMaintenance />}
           <p className="security-note">
             Use an authenticator app to protect your account with a one-time
             verification code.

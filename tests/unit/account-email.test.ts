@@ -2,6 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createDecipheriv } from "node:crypto";
 import type { Pool } from "pg";
 vi.mock("server-only", () => ({}));
+const smtp = vi.hoisted(() => ({
+  sendMail: vi.fn(),
+  close: vi.fn(),
+  createTransport: vi.fn(),
+}));
+vi.mock("nodemailer", () => ({
+  default: { createTransport: smtp.createTransport },
+}));
 import {
   sendAccountMail,
   canDeliverAccountEmail,
@@ -10,8 +18,57 @@ import {
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
+  vi.clearAllMocks();
 });
 describe("account email transport", () => {
+  it("does not contact SMTP after the shared daily budget is exhausted", async () => {
+    vi.stubEnv("EMAIL_DELIVERY", "gmail");
+    vi.stubEnv("GMAIL_USER", "sender@gmail.com");
+    vi.stubEnv("GMAIL_APP_PASSWORD", "synthetic-password");
+    const query = vi.fn().mockResolvedValue({ rows: [{ allowed: false }] });
+    await expect(
+      sendAccountMail({ query } as unknown as Pool, {
+        to: "recipient@example.com",
+        subject: "Security",
+        text: "Test",
+      }),
+    ).rejects.toThrow();
+    expect(smtp.createTransport).not.toHaveBeenCalled();
+  });
+  it("uses encrypted Gmail SMTP and safely escapes the message template", async () => {
+    vi.stubEnv("EMAIL_DELIVERY", "gmail");
+    vi.stubEnv("GMAIL_USER", "sender@gmail.com");
+    vi.stubEnv("GMAIL_APP_PASSWORD", "synt hetic app password");
+    smtp.createTransport.mockReturnValue(smtp);
+    smtp.sendMail.mockResolvedValue({});
+    await sendAccountMail(
+      {
+        query: vi.fn().mockResolvedValue({ rows: [{ allowed: true }] }),
+      } as unknown as Pool,
+      {
+        to: "recipient@example.com",
+        subject: "Security <test>",
+        text: "Your code: 123456 <script>",
+      },
+    );
+    expect(smtp.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        disableFileAccess: true,
+        disableUrlAccess: true,
+      }),
+    );
+    const message = smtp.sendMail.mock.calls[0][0];
+    expect(message.from).toEqual({
+      name: "CareAtHome Security",
+      address: "sender@gmail.com",
+    });
+    expect(message.html).toContain("&lt;script&gt;");
+    expect(message.html).not.toContain("<script>");
+    expect(smtp.close).toHaveBeenCalled();
+  });
   it("keeps synthetic messages encrypted and never sends them externally", async () => {
     vi.stubEnv("BETTER_AUTH_SECRET", "a".repeat(64));
     vi.stubEnv("EMAIL_DELIVERY", "resend");

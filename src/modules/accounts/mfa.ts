@@ -1,9 +1,15 @@
 "use server";
 import { requireAccount } from "./session";
-import { getAuth, authenticationPool } from "@/lib/database/auth-server";
+import {
+  getAuth,
+  authenticationPool,
+  authenticationHeaders,
+} from "@/lib/database/auth-server";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import QRCode from "qrcode";
+import { securitySession } from "./security";
+import { consumeOtp, securityNotice } from "./otp";
 
 type MfaState = {
   error?: string;
@@ -33,6 +39,13 @@ export async function mfaAction(
         error: "Enter your current password to set up an authenticator.",
       };
     try {
+      const current = await securitySession(password);
+      await consumeOtp(
+        form,
+        current.user.email,
+        "mfa-enroll",
+        current.session.id,
+      );
       const result = await auth.api.enableTwoFactor({
         headers: requestHeaders,
         body: { password },
@@ -57,14 +70,21 @@ export async function mfaAction(
   if (!/^\d{6}$/.test(code))
     return { factor: "totp", error: "Enter the six-digit authenticator code." };
   try {
-    const verified = await auth.api.verifyTOTP({
+    await auth.api.verifyTOTP({
       headers: requestHeaders,
       body: { code, trustDevice: false },
     });
-    // Upgrade only the session returned by successful verification, never all user sessions.
+    // Enrollment rotates the cookie; the library response can contain the old token.
+    // Upgrade only the authenticated session now held by this request.
+    const verified = await auth.api.getSession({
+      headers: await authenticationHeaders(),
+      query: { disableCookieCache: true },
+    });
+    if (!verified || verified.user.id !== user.id)
+      throw new Error("Session unavailable");
     await authenticationPool().query(
-      'update public.identity_sessions set "mfaVerified"=true where token=$1 and "userId"=$2',
-      [verified.token, user.id],
+      'update public.identity_sessions set "mfaVerified"=true, "emailOtpVerified"=true where token=$1 and "userId"=$2',
+      [verified.session.token, user.id],
     );
   } catch {
     return {
@@ -73,8 +93,81 @@ export async function mfaAction(
     };
   }
   revalidatePath("/dashboard", "layout");
+  await securityNotice(
+    user.email,
+    "Authenticator verification was completed for your account.",
+  );
   return {
     verified: true,
     message: "Authenticator verified. Two-step verification is enabled.",
   };
+}
+
+export async function manageMfa(
+  _state: MfaState,
+  form: FormData,
+): Promise<MfaState> {
+  try {
+    const password = String(form.get("current_password") ?? "");
+    const session = await securitySession(password);
+    if (!session.user.twoFactorEnabled || !session.session.mfaVerified)
+      return { error: "Verify your current authenticator before changing it." };
+    const operation = String(form.get("operation"));
+    if (operation !== "disable" && operation !== "backup")
+      return { error: "Invalid operation." };
+    await consumeOtp(
+      form,
+      session.user.email,
+      operation === "disable" ? "mfa-disable" : "mfa-backup",
+      session.session.id,
+    );
+    const auth = getAuth();
+    if (operation === "backup") {
+      const result = await auth.api.generateBackupCodes({
+        headers: await headers(),
+        body: { password },
+      });
+      await securityNotice(
+        session.user.email,
+        "Your authenticator recovery codes were replaced. Old recovery codes no longer work.",
+      );
+      await authenticationPool().query(
+        "insert into public.audit_log(actor,action,target) values($1,'mfa_recovery_codes_changed',$1)",
+        [session.user.id],
+      );
+      return {
+        backupCodes: result.backupCodes,
+        message:
+          "Store these new codes privately. Your previous codes no longer work.",
+      };
+    }
+    const admin = await authenticationPool().query(
+      "select role from public.profiles where id=$1",
+      [session.user.id],
+    );
+    if (admin.rows[0]?.role === "admin")
+      return {
+        error:
+          "Administrators must retain authenticator protection. Use recovery codes if replacing your device.",
+      };
+    await auth.api.disableTwoFactor({
+      headers: await headers(),
+      body: { password },
+    });
+    await authenticationPool().query(
+      'delete from public.identity_sessions where "userId"=$1',
+      [session.user.id],
+    );
+    await securityNotice(
+      session.user.email,
+      "Authenticator protection was disabled. All sessions were signed out.",
+    );
+    revalidatePath("/dashboard", "layout");
+    return { message: "Authenticator disabled. Sign in again to continue." };
+  } catch {
+    return {
+      error:
+        "Unable to change authenticator protection. Check your password, current authenticator and email code.",
+    };
+  }
 }

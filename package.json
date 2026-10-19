@@ -22,10 +22,11 @@
     "db:plan": "node --env-file=.env.neon scripts/neon-migrate.mjs",
     "db:migrate": "node --env-file=.env.neon scripts/neon-migrate.mjs --apply",
     "test:storage": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-storage.mjs",
-    "test:auth": "node tests/integration/neon-auth-http.mjs",
-    "test:recovery": "node --env-file=.env.neon tests/integration/neon-recovery.mjs",
+    "test:auth": "node --env-file=.env.neon tests/integration/neon-auth-http.mjs",
+    "test:recovery": "playwright test tests/e2e/email-otp.spec.ts --grep \"protects recovery\"",
     "local:inbox": "node --env-file=.env.neon scripts/neon-inbox.mjs",
-    "test:account-security": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-account-security.mjs"
+    "test:account-security": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-account-security.mjs",
+    "test:otp": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-email-otp.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1152.0",
@@ -40,6 +41,7 @@
     "clsx": "2.1.1",
     "lucide-react": "1.57.0",
     "next": "16.4.0",
+    "nodemailer": "10.1.2",
     "pg": "8.23.1",
     "playwright": "1.64.1",
     "qrcode": "1.5.4",
@@ -54,6 +56,7 @@
     "@playwright/test": "1.64.1",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.5",
+    "@types/nodemailer": "8.0.2",
     "@types/pg": "8.23.1",
     "@types/qrcode": "1.5.6",
     "@types/react": "19.3.0",

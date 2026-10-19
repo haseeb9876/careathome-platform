@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { careAction } from "@/modules/care/actions";
 import { SubmitButton } from "./submit-button";
+import { EmailOtp } from "./email-otp";
+import { PasswordField } from "./security-form";
 import { money } from "@/lib/utils";
 import { dateTime, initials } from "@/lib/format";
 import type { Booking, Service } from "@/modules/care/types";
@@ -142,6 +144,12 @@ export function ActionForm({
         <input key={key} type="hidden" name={key} value={value} />
       ))}
       {children}
+      {(op === "settings" || op === "account") && (
+        <>
+          <PasswordField />
+          <EmailOtp purpose={op} />
+        </>
+      )}
       <SubmitButton variant={variant}>{label}</SubmitButton>
     </form>
   );

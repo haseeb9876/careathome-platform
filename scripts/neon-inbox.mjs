@@ -44,15 +44,16 @@ try {
         decipher.final(),
       ]).toString(),
     );
-    const link = new URL(message.url);
+    const link = message.url ? new URL(message.url) : null;
     if (
+      link &&
       ![
         "http://127.0.0.1:3000",
         "https://careathome-platform.vercel.app",
       ].includes(link.origin)
     )
       throw new Error("Unexpected inbox link");
-    return `<article><small>${escape(row.recipient)} · ${escape(row.created_at.toISOString())}</small><h2>${escape(message.subject)}</h2><p>${escape(message.text)}</p><a href="${escape(link.toString())}">Open in CareAtHome</a></article>`;
+    return `<article><small>${escape(row.recipient)} · ${escape(row.created_at.toISOString())}</small><h2>${escape(message.subject)}</h2><p>${escape(message.text ?? "")}</p>${link ? `<a href="${escape(link.toString())}">Open in CareAtHome</a>` : ""}</article>`;
   });
   mkdirSync(".tools", { recursive: true });
   writeFileSync(

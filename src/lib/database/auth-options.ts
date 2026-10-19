@@ -95,6 +95,16 @@ export function authenticationOptions(
       updateAge: 60,
       cookieCache: { enabled: false },
       additionalFields: {
+        emailOtpVerified: {
+          type: "boolean" as const,
+          defaultValue: false,
+          input: false,
+        },
+        otpPolicyRequired: {
+          type: "boolean" as const,
+          defaultValue: true,
+          input: false,
+        },
         mfaVerified: {
           type: "boolean" as const,
           defaultValue: false,

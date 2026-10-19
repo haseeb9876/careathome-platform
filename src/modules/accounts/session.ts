@@ -2,6 +2,8 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { db, configured } from "@/lib/database/server";
+import { getAuth } from "@/lib/database/auth-server";
+import { headers } from "next/headers";
 export const requireAccount = cache(async function requireAccount() {
   if (!configured())
     redirect(
@@ -11,7 +13,16 @@ export const requireAccount = cache(async function requireAccount() {
   const {
     data: { user },
   } = await client.auth.getUser();
-  if (!user) redirect("/auth");
+  if (!user) {
+    const pending = await getAuth().api.getSession({
+      headers: await headers(),
+    });
+    redirect(
+      pending && !pending.session.emailOtpVerified
+        ? "/auth/email-code"
+        : "/auth",
+    );
+  }
   const { data: profile } = await client
     .from("profiles")
     .select("id,name,role,active")

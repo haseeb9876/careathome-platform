@@ -1,5 +1,13 @@
 # Test evidence
 
+## Email OTP — October 19, local acceptance
+
+- Typecheck, optimized build and 43 unit tests passed, including Gmail transport configuration, encrypted synthetic delivery and denial when the shared send budget is exhausted.
+- All 11 OTP database checks and 17 account-security database checks passed with migrations 011–015 applied.
+- All five updated HTTP authentication checks passed: no automatic registration session, unforgeable verification flags, closed bypass endpoints, private-report denial for pending sessions and sign-out invalidation.
+- The earlier browser run passed administrator invitation, password/email changes and remembered-device/password recovery; authenticator enrollment exposed session rotation handling and is being rechecked after the fix. Initial redirect-timing errors in the test helper were also corrected. Browser traces are disabled to protect verification material.
+- Gmail App Password configuration and real delivery are pending. No real mail was sent, and no OTP release has been published. Historical hosted results below describe earlier versions.
+
 ## Default dark — October 17
 
 - Typecheck, zero-warning lint, 36 unit tests and optimized production build passed.

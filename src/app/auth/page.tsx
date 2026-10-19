@@ -2,12 +2,14 @@ import Link from "next/link";
 import { authenticate } from "@/modules/accounts/actions";
 import { configured } from "@/lib/database/server";
 import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
 export default async function Auth({
   searchParams,
 }: {
   searchParams: Promise<{ mode?: string; message?: string }>;
 }) {
   const p = await searchParams;
+  if (p.mode === "recover") redirect("/auth/recovery");
   const mode =
     p.mode === "register"
       ? "register"
