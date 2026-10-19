@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { configured } from "@/lib/database/server";
 import { getAuth } from "@/lib/database/auth-server";
-import { accountEmailMode } from "./email";
 import { loginSchema, registrationSchema } from "./validation";
 function message(text: string, mode = "login"): never {
   redirect("/auth?mode=" + mode + "&message=" + encodeURIComponent(text));
@@ -30,6 +29,10 @@ export async function authenticate(form: FormData) {
           ...(v.role === "provider" ? { profession: v.profession } : {}),
         },
       });
+      await auth.api.signInEmail({
+        headers: requestHeaders,
+        body: { email: v.email, password: v.password },
+      });
     } catch {
       failed = true;
     }
@@ -38,30 +41,10 @@ export async function authenticate(form: FormData) {
         "Registration could not be completed. Check your details or try again later.",
         "register",
       );
-    message("Registration received. You can now sign in.");
+    redirect("/auth/email-code");
   }
   if (mode === "recover") {
-    const email = z.email().safeParse(form.get("email"));
-    if (!email.success) message("Enter a valid email address.", "recover");
-    try {
-      await auth.api.requestPasswordReset({
-        headers: requestHeaders,
-        body: {
-          email: email.data,
-          redirectTo:
-            (process.env.APP_ORIGIN ?? "http://127.0.0.1:3000") +
-            "/auth/password",
-        },
-      });
-    } catch {
-      /* Preserve the same public response to avoid account enumeration. */
-    }
-    message(
-      accountEmailMode() === "resend"
-        ? "If the address is registered, recovery instructions will arrive by email. Check your inbox and spam folder."
-        : "Real email delivery is not configured yet. Contact your administrator for help. Synthetic recovery messages are available in the private demonstration inbox.",
-      "recover",
-    );
+    redirect("/auth/recovery");
   }
   const parsed = loginSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) message("Enter a valid email address and password.");
@@ -86,32 +69,9 @@ export async function logout() {
   redirect("/auth");
 }
 export async function changePassword(form: FormData) {
-  const parsed = z
-    .object({
-      password: z.string().min(12).max(128),
-      token: z.string().min(10).max(256),
-    })
-    .safeParse(Object.fromEntries(form));
-  if (!parsed.success)
-    message(
-      "Use a valid recovery link and a password with 12 to 128 characters.",
-      "recover",
-    );
-  let failed = false;
-  try {
-    await getAuth().api.resetPassword({
-      headers: await headers(),
-      body: { newPassword: parsed.data.password, token: parsed.data.token },
-    });
-  } catch {
-    failed = true;
-  }
-  if (failed)
-    message(
-      "Recovery link is invalid or expired. Request a new link.",
-      "recover",
-    );
-  message("Password updated. Sign in again.");
+  // Retired link-reset action cannot bypass OTP recovery.
+  void form;
+  redirect("/auth/recovery");
 }
 export async function verifyLogin(form: FormData) {
   const code = z

@@ -1,5 +1,11 @@
 # Current progress
 
+## Email OTP implementation — October 19 (not released)
+
+Implemented email verification for new/untrusted sign-ins, password recovery, sensitive account/admin settings, invitations, session revocation and authenticator maintenance. Added a Gmail SMTP adapter, encrypted synthetic inbox, bounded attempts, expiry, single-use/context-bound codes and remembered-device retirement. See [EMAIL_OTP.md](EMAIL_OTP.md). Migrations 011–016 are applied; 013 preserves compatibility with the older public server until the OTP release. New sessions from the OTP server explicitly require verification.
+
+The owner configured all three Gmail variables privately in Vercel Production. A staged deployment sent a real verification email, and the owner confirmed successful OTP sign-in on October 19. Credentials and codes were not shared in chat. The release is being promoted to the public application; verify its version and hosted security workflows before reporting completion. Current verification evidence is in [TEST_RESULTS.md](TEST_RESULTS.md).
+
 Public demonstration: https://careathome-platform.vercel.app. Private source: haseeb9876/careathome-platform. Vercel automatically deploys master. No Docker.
 
 ## Account administration and session security — October 18

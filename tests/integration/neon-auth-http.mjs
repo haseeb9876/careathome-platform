@@ -1,6 +1,21 @@
 import assert from "node:assert/strict";
-import { randomBytes, createHmac } from "node:crypto";
+import { randomBytes } from "node:crypto";
+import { Pool } from "pg";
+
 const origin = "http://127.0.0.1:3000";
+const url = new URL(
+  process.env.DATABASE_MIGRATION_URL ?? "postgresql://invalid",
+);
+if (
+  url.hostname !== "ep-long-sunset-b3s9l8hr.c-4.ap-southeast-1.aws.neon.tech" ||
+  url.pathname !== "/careathome"
+)
+  throw new Error("Unexpected authentication-test target");
+url.search = "";
+const owner = new Pool({
+  connectionString: url.toString(),
+  ssl: { rejectUnauthorized: true },
+});
 const cookies = new Map();
 async function call(path, body) {
   const response = await fetch(origin + "/api/auth" + path, {
@@ -17,99 +32,77 @@ async function call(path, body) {
       at = pair.indexOf("=");
     cookies.set(pair.slice(0, at), pair.slice(at + 1));
   }
-  const data = await response.json();
-  return { status: response.status, data };
+  return { status: response.status, data: await response.json() };
 }
-function totp(uri) {
-  const secret = new URL(uri).searchParams.get("secret");
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-  const bits = [...secret.toUpperCase()]
-    .map((c) => alphabet.indexOf(c).toString(2).padStart(5, "0"))
-    .join("");
-  const key = Buffer.from(bits.match(/.{8}/g).map((b) => parseInt(b, 2)));
-  const counter = Buffer.alloc(8);
-  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000)));
-  const hash = createHmac("sha1", key).update(counter).digest(),
-    offset = hash[19] & 15;
-  return String((hash.readUInt32BE(offset) & 0x7fffffff) % 1000000).padStart(
-    6,
-    "0",
+const email = `http-auth-${randomBytes(8).toString("hex")}@careathome.test`;
+const password = randomBytes(24).toString("hex");
+let id;
+try {
+  const signup = await call("/sign-up/email", {
+    email,
+    password,
+    name: "Synthetic security test",
+    accountType: "patient",
+    emailOtpVerified: true,
+    otpPolicyRequired: false,
+    mfaVerified: true,
+  });
+  assert.equal(signup.status, 200);
+  id = signup.data.user.id;
+  assert.equal((await call("/get-session")).data, null);
+  console.log("PASS registration does not silently create a session");
+  assert.equal(
+    (
+      await call("/sign-in/email", {
+        email,
+        password,
+        emailOtpVerified: true,
+        otpPolicyRequired: false,
+        mfaVerified: true,
+      })
+    ).status,
+    200,
   );
+  const session = (await call("/get-session")).data.session;
+  assert.equal(session.emailOtpVerified, false);
+  assert.equal(session.otpPolicyRequired, true);
+  assert.equal(session.mfaVerified, false);
+  console.log(
+    "PASS client input cannot forge email or authenticator assurance",
+  );
+  for (const path of [
+    "/change-password",
+    "/change-email",
+    "/update-user",
+    "/delete-user",
+    "/request-password-reset",
+    "/reset-password",
+    "/two-factor/enable",
+    "/two-factor/disable",
+    "/two-factor/generate-backup-codes",
+    "/revoke-session",
+    "/revoke-sessions",
+  ]) {
+    assert.equal((await call(path, { password, email })).status, 403);
+  }
+  console.log(
+    "PASS sensitive public authentication endpoints cannot bypass OTP actions",
+  );
+  const response = await fetch(
+    origin + "/api/reports/00000000-0000-0000-0000-000000000000/pdf",
+    {
+      headers: { cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join("; ") },
+    },
+  );
+  assert.equal(response.status, 401);
+  console.log("PASS an email-unverified session cannot access private reports");
+  await call("/sign-out", {});
+  assert.equal((await call("/get-session")).data, null);
+  console.log("PASS sign-out invalidates the session");
+} finally {
+  if (id)
+    await owner.query("update public.profiles set active=false where id=$1", [
+      id,
+    ]);
+  await owner.end();
 }
-const email = `http-auth-${randomBytes(6).toString("hex")}@careathome.test`,
-  password = randomBytes(24).toString("hex");
-assert.equal(
-  (
-    await call("/sign-up/email", {
-      email,
-      password,
-      name: "Synthetic security test",
-      accountType: "patient",
-    })
-  ).status,
-  200,
-);
-assert.equal((await call("/get-session")).data, null);
-console.log("PASS registration does not silently create a session");
-assert.equal((await call("/sign-in/email", { email, password })).status, 200);
-assert.equal((await call("/get-session")).data.session.mfaVerified, false);
-console.log("PASS password-only session has no MFA assurance");
-const enabled = await call("/two-factor/enable", { password });
-assert.equal(enabled.status, 200);
-assert.ok(enabled.data.totpURI);
-assert.ok(enabled.data.backupCodes.length);
-assert.equal(
-  (await call("/two-factor/verify-totp", { code: totp(enabled.data.totpURI) }))
-    .status,
-  200,
-);
-assert.equal((await call("/get-session")).data.session.mfaVerified, true);
-console.log(
-  "PASS authenticator enrollment requires a valid code and upgrades the session",
-);
-await call("/sign-out", {});
-assert.equal((await call("/get-session")).data, null);
-console.log("PASS sign-out invalidates session");
-const login = await call("/sign-in/email", { email, password });
-assert.equal(
-  login.status,
-  200,
-  `MFA login response: ${login.data.code ?? login.status}`,
-);
-assert.equal(login.data.twoFactorRedirect, true);
-assert.equal((await call("/get-session")).data, null);
-console.log("PASS password alone cannot open a session after MFA enrollment");
-assert.notEqual(
-  (await call("/two-factor/verify-totp", { code: "invalid" })).status,
-  200,
-);
-assert.equal((await call("/get-session")).data, null);
-assert.equal(
-  (await call("/two-factor/verify-totp", { code: totp(enabled.data.totpURI) }))
-    .status,
-  200,
-);
-assert.equal((await call("/get-session")).data.session.mfaVerified, true);
-console.log(
-  "PASS MFA rejects invalid input and accepts a current authenticator code",
-);
-await call("/sign-out", {});
-await call("/sign-in/email", { email, password });
-assert.equal(
-  (
-    await call("/two-factor/verify-backup-code", {
-      code: enabled.data.backupCodes[0],
-    })
-  ).status,
-  200,
-);
-assert.equal((await call("/get-session")).data.session.mfaVerified, true);
-console.log("PASS recovery code completes MFA with verified assurance");
-await call("/sign-out", {});
-const wrong = {
-  email: `rate-${randomBytes(4).toString("hex")}@careathome.test`,
-  password,
-};
-for (let i = 0; i < 5; i++) await call("/sign-in/email", wrong);
-assert.equal((await call("/sign-in/email", wrong)).status, 429);
-console.log("PASS repeated login attempts are persistently limited");

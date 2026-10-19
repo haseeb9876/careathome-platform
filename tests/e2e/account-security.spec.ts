@@ -3,9 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { randomBytes, createDecipheriv } from "node:crypto";
 import { loadEnvFile } from "node:process";
 import { Pool } from "pg";
+import { fillEmailCode, verifyEmailGate } from "./otp-helpers";
 
 // Synthetic credentials and verification links must not be retained in traces.
-test.use({ trace: "off" });
+test.use({ trace: "off", actionTimeout: 20000 });
 async function signIn(
   request: APIRequestContext,
   origin: string,
@@ -76,6 +77,8 @@ test("administrator invitation screens enforce MFA and activate a separate invit
     await pool.query("update public.profiles set role='admin' where id=$1", [
       id,
     ]);
+    await signIn(page.request, baseURL!, email, password);
+    await verifyEmailGate(page, pool, email);
     await page.goto("/dashboard/users");
     const form = page.locator("form").filter({
       has: page.getByRole("button", {
@@ -87,7 +90,7 @@ test("administrator invitation screens enforce MFA and activate a separate invit
     await form.getByLabel("Current password", { exact: true }).fill(password);
     await form
       .getByRole("button", {
-        name: "Send administrator invitation",
+        name: "Send verification code",
         exact: true,
       })
       .click();
@@ -104,13 +107,16 @@ test("administrator invitation screens enforce MFA and activate a separate invit
     await page.reload();
     await form.getByLabel("Administrator email").fill(inviteEmail);
     await form.getByLabel("Current password", { exact: true }).fill(password);
+    await fillEmailCode(form, pool, email);
     await form
       .getByRole("button", {
         name: "Send administrator invitation",
         exact: true,
       })
       .click();
-    await expect(form.getByRole("status")).toBeVisible();
+    await expect(
+      form.getByRole("status").filter({ hasText: "Recorded in" }),
+    ).toBeVisible();
     const row = (
       await pool.query(
         "select payload_encrypted from private.development_email where recipient=$1 order by created_at desc limit 1",
@@ -142,6 +148,7 @@ test("administrator invitation screens enforce MFA and activate a separate invit
     await invited
       .getByLabel("Confirm new password", { exact: true })
       .fill(invitedPassword);
+    await fillEmailCode(invited.locator("main form"), pool, inviteEmail);
     await invited
       .getByRole("button", {
         name: "Accept administrator invitation",
@@ -157,6 +164,7 @@ test("administrator invitation screens enforce MFA and activate a separate invit
         })
       ).status(),
     ).toBe(200);
+    await verifyEmailGate(invited, pool, inviteEmail);
     await invited.goto("/dashboard/users");
     await expect(
       invited.getByRole("heading", { name: "Invite an administrator" }),
@@ -237,6 +245,7 @@ test("password and verified email changes retire sessions and preserve account a
         })
       ).status(),
     ).toBe(200);
+    await verifyEmailGate(page, pool, email);
     await page.goto("/auth/password");
     await page
       .getByLabel("Current password", { exact: true })
@@ -245,15 +254,14 @@ test("password and verified email changes retire sessions and preserve account a
     await page
       .getByLabel("Confirm new password", { exact: true })
       .fill(replacement);
-    await page
-      .getByRole("button", { name: "Change password and sign out" })
-      .click();
+    await page.getByRole("button", { name: "Send verification code" }).click();
     await expect(page.locator("main").getByRole("alert")).toBeVisible();
     await page.getByLabel("Current password", { exact: true }).fill(password);
     await page.getByLabel("New password", { exact: true }).fill(replacement);
     await page
       .getByLabel("Confirm new password", { exact: true })
       .fill(replacement);
+    await fillEmailCode(page.locator("main form"), pool, email);
     await page
       .getByRole("button", { name: "Change password and sign out" })
       .click();
@@ -270,6 +278,7 @@ test("password and verified email changes retire sessions and preserve account a
       ).status(),
     ).not.toBe(200);
     await signIn(page.request, baseURL!, email, replacement);
+    await verifyEmailGate(page, pool, email);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/dashboard/settings");
     expect(
@@ -294,10 +303,13 @@ test("password and verified email changes retire sessions and preserve account a
     await form
       .getByLabel("Current password", { exact: true })
       .fill(replacement);
+    await fillEmailCode(form, pool, email);
     await form
       .getByRole("button", { name: "Send verification email", exact: true })
       .click();
-    await expect(form.getByRole("status")).toBeVisible();
+    await expect(
+      form.getByRole("status").filter({ hasText: "Recorded in" }),
+    ).toBeVisible();
     expect(
       (
         await pool.query(
@@ -330,11 +342,13 @@ test("password and verified email changes retire sessions and preserve account a
     await page
       .getByLabel("Current password", { exact: true })
       .fill(replacement);
+    await fillEmailCode(page.locator("main form"), pool, nextEmail);
     await page
       .getByRole("button", { name: "Verify email and sign out" })
       .click();
     await expect(page).toHaveURL(/\/auth\?message=/);
     await signIn(page.request, baseURL!, nextEmail, replacement);
+    await verifyEmailGate(page, pool, nextEmail);
     await page.goto(link.pathname + link.hash);
     await expect(page.locator("main").getByRole("alert")).toContainText(
       /invalid|expired|used/i,

@@ -89,6 +89,7 @@ export function AccountLink({ kind }: { kind: "email" | "admin" }) {
       <SecurityForm
         key={`${kind}-${existing}`}
         action={kind === "email" ? confirmEmailChange : acceptAdminInvitation}
+        otp={kind === "email" ? "email-confirm" : "invite-accept"}
         label={
           kind === "email"
             ? "Verify email and sign out"

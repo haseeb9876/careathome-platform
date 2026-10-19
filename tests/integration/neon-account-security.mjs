@@ -36,7 +36,7 @@ async function account(role = "patient", address = email()) {
 async function session(user, mfa = false) {
   const id = randomUUID();
   await owner.query(
-    'insert into public.identity_sessions(id,"userId",token,"expiresAt","createdAt","updatedAt","mfaVerified","userAgent") values($1,$2,$3,now()+interval \'1 hour\',now(),now(),$4,\'Synthetic security integration\')',
+    'insert into public.identity_sessions(id,"userId",token,"expiresAt","createdAt","updatedAt","mfaVerified","userAgent","emailOtpVerified") values($1,$2,$3,now()+interval \'1 hour\',now(),now(),$4,\'Synthetic security integration\',true)',
     [id, user, randomBytes(32).toString("hex"), mfa],
   );
   return id;

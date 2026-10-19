@@ -1,5 +1,7 @@
 # Review CareAtHome
 
+The email OTP upgrade passed local security acceptance, and the owner confirmed real Gmail delivery and OTP sign-in. Public promotion is in progress; current release evidence is in TEST_RESULTS.md. See [owner setup and OTP review](EMAIL_OTP.md).
+
 Public application: https://careathome-platform.vercel.app
 
 This is a synthetic demonstration. Do not enter real patient information or payment details. No Docker or local server is needed to open the hosted application.

@@ -1,7 +1,9 @@
 "use client";
-import { useActionState, useId, useState } from "react";
+import { startTransition, useActionState, useId, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { SubmitButton } from "./submit-button";
+import { Button } from "./ui/button";
+import { EmailOtp } from "./email-otp";
+import type { OtpPurpose } from "@/modules/accounts/otp";
 import {
   changeOwnPassword,
   type SecurityState,
@@ -49,16 +51,29 @@ export function SecurityForm({
   children,
   label,
   id,
+  otp,
 }: {
   action: (state: SecurityState, form: FormData) => Promise<SecurityState>;
   children: React.ReactNode;
   label: string;
   id?: string;
+  otp?: OtpPurpose;
 }) {
-  const [state, submit] = useActionState(action, {});
+  const [state, submit, pending] = useActionState(action, {});
   return (
-    <form action={submit} id={id} className="form-stack">
+    <form
+      action={submit}
+      onSubmit={(event) => {
+        event.preventDefault();
+        const values = new FormData(event.currentTarget);
+        startTransition(() => submit(values));
+      }}
+      id={id}
+      className="form-stack"
+      aria-busy={pending}
+    >
       {children}
+      {otp && <EmailOtp purpose={otp} />}
       {state.error && (
         <p role="alert" className="notice error">
           {state.error}
@@ -69,7 +84,9 @@ export function SecurityForm({
           {state.message}
         </p>
       )}
-      <SubmitButton>{label}</SubmitButton>
+      <Button type="submit" disabled={pending}>
+        {pending ? "Verifying…" : label}
+      </Button>
     </form>
   );
 }
@@ -78,6 +95,7 @@ export function ChangePasswordForm() {
     <SecurityForm
       action={changeOwnPassword}
       label="Change password and sign out"
+      otp="password"
     >
       <p className="hint">
         Use 12–128 characters. A long, unique passphrase is easier to remember.

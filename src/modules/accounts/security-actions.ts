@@ -11,6 +11,7 @@ import {
   tokenHash,
 } from "./security";
 import { sendAccountMail } from "./email";
+import { consumeOtp, securityNotice } from "./otp";
 
 export type SecurityState = { error?: string; message?: string };
 const passwordSchema = z
@@ -35,6 +36,7 @@ export async function changeOwnPassword(
     return { error: "Choose a password different from your current password" };
   try {
     const session = await securitySession(current);
+    await consumeOtp(form, session.user.email, "password", session.session.id);
     await getAuth().api.changePassword({
       headers: await headers(),
       body: {
@@ -48,6 +50,10 @@ export async function changeOwnPassword(
       'delete from public.identity_sessions where "userId"=$1',
       [session.user.id],
     );
+    await securityNotice(
+      session.user.email,
+      "Your password changed. All previous sessions and remembered devices were signed out.",
+    );
   } catch (error) {
     return { error: securityError(error) };
   }
@@ -58,6 +64,45 @@ export async function changeOwnPassword(
       ),
   );
 }
+
+export async function closeOwnAccount(
+  _state: SecurityState,
+  form: FormData,
+): Promise<SecurityState> {
+  if (form.get("confirm_close") !== "on")
+    return { error: "Confirm that you want to close your account." };
+  try {
+    const session = await securitySession(
+      String(form.get("current_password") ?? ""),
+    );
+    await consumeOtp(
+      form,
+      session.user.email,
+      "close-account",
+      session.session.id,
+    );
+    await authenticationPool().query("select private.close_own_account($1)", [
+      session.session.id,
+    ]);
+    await securityNotice(
+      session.user.email,
+      "Your account was closed and sessions were signed out. Existing records remain subject to retention requirements.",
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    return {
+      error: [
+        "Administrator accounts require a separate handover before closure",
+        "Resolve active bookings before closing your account",
+      ].includes(message)
+        ? message
+        : securityError(error),
+    };
+  }
+  redirect(
+    "/auth?message=Account%20closed.%20Contact%20your%20administrator%20if%20you%20need%20help.",
+  );
+}
 export async function requestEmailChange(
   _state: SecurityState,
   form: FormData,
@@ -65,6 +110,10 @@ export async function requestEmailChange(
   const email = emailSchema.safeParse(form.get("email"));
   if (!email.success) return { error: "Enter a valid new email address" };
   try {
+    const session = await securitySession(
+      String(form.get("current_password") ?? ""),
+    );
+    await consumeOtp(form, session.user.email, "email", session.session.id);
     const message = await requestAccountLink(
       "email",
       email.data,
@@ -84,6 +133,11 @@ export async function inviteAdministrator(
   if (!email.success)
     return { error: "Enter a valid invitation email address" };
   try {
+    const session = await securitySession(
+      String(form.get("current_password") ?? ""),
+      true,
+    );
+    await consumeOtp(form, session.user.email, "admin", session.session.id);
     const message = await requestAccountLink(
       "admin",
       email.data,
@@ -105,6 +159,12 @@ export async function revokeAccountLink(
     const session = await securitySession(
       String(form.get("current_password") ?? ""),
     );
+    await consumeOtp(
+      form,
+      session.user.email,
+      "revoke-link",
+      session.session.id,
+    );
     await authenticationPool().query(
       "select private.account_link_revoke($1,$2)",
       [session.session.id, id.data],
@@ -124,6 +184,11 @@ export async function revokeAccountSessions(
   try {
     const session = await securitySession(
       String(form.get("current_password") ?? ""),
+    );
+    await consumeOtp(form, session.user.email, "sessions", session.session.id);
+    await authenticationPool().query(
+      "delete from private.trusted_email_devices where actor=$1",
+      [session.user.id],
     );
     await authenticationPool().query(
       "select private.account_sessions_revoke($1,$2)",
@@ -159,6 +224,18 @@ export async function confirmEmailChange(
       String(form.get("current_password") ?? ""),
     );
     const pool = authenticationPool();
+    const link = await pool.query(
+      "select * from private.account_link_preview($1)",
+      [tokenHash(String(form.get("token") ?? ""))],
+    );
+    if (!link.rows[0] || link.rows[0].kind !== "email")
+      throw new Error("Link is invalid, expired or already used");
+    await consumeOtp(
+      form,
+      link.rows[0].email,
+      "email-confirm",
+      session.session.id,
+    );
     const result = await pool.query(
       "select private.account_email_confirm($1,$2) as old_email",
       [session.session.id, tokenHash(String(form.get("token") ?? ""))],
@@ -195,6 +272,7 @@ export async function acceptAdminInvitation(
     if (preview.kind !== "admin" || !preview.email)
       throw new Error("Link is invalid, expired or already used");
     let userId: string;
+    await consumeOtp(form, preview.email, "invite-accept");
     if (form.get("existing") === "true") {
       const session = await securitySession(
         String(form.get("current_password") ?? ""),

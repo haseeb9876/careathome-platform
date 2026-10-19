@@ -8,6 +8,7 @@ import {
   inviteAdministrator,
   revokeAccountLink,
   revokeAccountSessions,
+  closeOwnAccount,
 } from "@/modules/accounts/security-actions";
 import { dateTime } from "@/lib/format";
 
@@ -19,7 +20,11 @@ export async function AccountEmailPanel({ email }: { email: string }) {
         Current email: <strong>{email}</strong>
       </p>
       <DeliveryNotice />
-      <SecurityForm action={requestEmailChange} label="Send verification email">
+      <SecurityForm
+        action={requestEmailChange}
+        label="Send verification email"
+        otp="email"
+      >
         <label>
           New email address
           <input
@@ -52,6 +57,7 @@ export async function AccountEmailPanel({ email }: { email: string }) {
                 <SecurityForm
                   action={revokeAccountLink}
                   label="Cancel email change"
+                  otp="revoke-link"
                 >
                   <input type="hidden" name="id" value={link.id} />
                   <PasswordField />
@@ -72,6 +78,31 @@ export function DeliveryNotice() {
     </p>
   ) : null;
 }
+export function CloseAccountPanel() {
+  return (
+    <Panel title="Close your account">
+      <p className="hint">
+        Resolve any active bookings first. Closing your account disables access
+        and signs out your devices; retained care and audit records are not
+        erased.
+      </p>
+      <details className="security-item">
+        <summary>Review account closure</summary>
+        <SecurityForm
+          action={closeOwnAccount}
+          label="Close my account"
+          otp="close-account"
+        >
+          <PasswordField />
+          <label className="check-label">
+            <input name="confirm_close" type="checkbox" required />I understand
+            that my access will be disabled.
+          </label>
+        </SecurityForm>
+      </details>
+    </Panel>
+  );
+}
 export async function AdministratorInvitations() {
   const links = await accountLinks("admin");
   return (
@@ -91,6 +122,7 @@ export async function AdministratorInvitations() {
       <SecurityForm
         action={inviteAdministrator}
         label="Send administrator invitation"
+        otp="admin"
       >
         <label>
           Administrator email
@@ -123,6 +155,7 @@ export async function AdministratorInvitations() {
                 <SecurityForm
                   action={revokeAccountLink}
                   label="Revoke invitation"
+                  otp="revoke-link"
                 >
                   <input type="hidden" name="id" value={link.id} />
                   <PasswordField />
@@ -180,6 +213,7 @@ export async function AccountSessionsPanel() {
                 <SecurityForm
                   action={revokeAccountSessions}
                   label="Sign out selected session"
+                  otp="sessions"
                 >
                   <input type="hidden" name="id" value={session.id} />
                   <PasswordField />
@@ -195,6 +229,7 @@ export async function AccountSessionsPanel() {
           <SecurityForm
             action={revokeAccountSessions}
             label="Sign out other sessions"
+            otp="sessions"
           >
             <PasswordField />
           </SecurityForm>

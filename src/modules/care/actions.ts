@@ -6,6 +6,8 @@ import { randomBytes, createHash } from "node:crypto";
 import { requireAccount } from "@/modules/accounts/session";
 import { getSummaryAdapter } from "@/modules/reports/adapter";
 import { definitions } from "./action-definitions";
+import { securitySession } from "@/modules/accounts/security";
+import { consumeOtp, securityNotice } from "@/modules/accounts/otp";
 function back(form: FormData, fallback: string) {
   const path = String(form.get("return_to") ?? "");
   return /^\/dashboard\/(bookings\/[a-f0-9-]{36}|[a-z]+)$/.test(path)
@@ -31,7 +33,7 @@ function safeError(raw: string) {
     : "Unable to save. Check the fields, your access, and the current visit status. An overlapping time or duplicate entry may already exist.";
 }
 export async function careAction(form: FormData) {
-  const { client } = await requireAccount();
+  const { client, user } = await requireAccount();
   const op = String(form.get("op"));
   const definition = Object.hasOwn(definitions, op)
     ? definitions[op]
@@ -83,6 +85,23 @@ export async function careAction(form: FormData) {
           parsed.error.issues[0]?.message ?? "Check the form.",
         ),
     );
+  if (op === "settings" || op === "account") {
+    let denied = false;
+    try {
+      const session = await securitySession(
+        String(form.get("current_password") ?? ""),
+        true,
+      );
+      await consumeOtp(form, session.user.email, op, session.session.id);
+    } catch {
+      denied = true;
+    }
+    if (denied)
+      redirect(
+        destination +
+          "?error=Verify%20your%20password%2C%20authenticator%20and%20email%20code%20for%20these%20exact%20changes.",
+      );
+  }
   const { data, error } = await client.rpc(
     definition.rpc,
     parsed.data as Record<string, unknown>,
@@ -93,6 +112,11 @@ export async function careAction(form: FormData) {
   if (error)
     redirect(
       destination + "?error=" + encodeURIComponent(safeError(error.message)),
+    );
+  if (op === "settings" || op === "account")
+    await securityNotice(
+      user.email,
+      "Administrator security settings or account access were changed.",
     );
   if (op === "report")
     redirect(
