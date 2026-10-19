@@ -3,10 +3,11 @@
 ## Email OTP — October 19, local acceptance
 
 - Typecheck, optimized build and 43 unit tests passed, including Gmail transport configuration, encrypted synthetic delivery and denial when the shared send budget is exhausted.
-- All 11 OTP database checks and 17 account-security database checks passed with migrations 011–016 applied.
+- All 11 OTP database checks and 17 account-security database checks passed with migrations 011–015 applied. Migration 016 adds atomic recovery-code audit recording; the targeted browser test verifies its audit entry.
 - All five updated HTTP authentication checks passed: no automatic registration session, unforgeable verification flags, closed bypass endpoints, private-report denial for pending sessions and sign-out invalidation.
-- The earlier browser run passed administrator invitation, password/email changes and remembered-device/password recovery; authenticator enrollment exposed session rotation handling and is being rechecked after the fix. Initial redirect-timing errors in the test helper were also corrected. Browser traces are disabled to protect verification material.
-- Gmail App Password configuration and real delivery are pending. No real mail was sent, and no OTP release has been published. Historical hosted results below describe earlier versions.
+- All four targeted browser workflows have passing evidence across the final run and targeted rerun: administrator invitation, password/email changes, remembered-device/password recovery, and authenticator enrollment/recovery-code replacement. The last authenticator test passed in 55.6 seconds, including the audit entry. Earlier runs exposed session rotation and a restricted-role audit write; both were fixed. An interrupted-server run timed out before reaching authenticator enrollment. Initial redirect-timing errors in the test helper were also corrected. Browser traces are disabled to protect verification material.
+- GitHub static/unit/build checks pass for 4a52010, including a build without private environment files. The initial CI build exposed credential access before request-time rendering; the OTP page now awaits request headers first.
+- The owner privately configured Gmail in Vercel Production. A staged deployment sent a real email to an owner-controlled Gmail alias. After the first code/session expired, a fresh disposable test session sent another code; the owner confirmed successful OTP sign-in on October 19. No secret or code was shared in chat. Public promotion and hosted regression acceptance follow this result. Historical hosted results below describe earlier versions.
 
 ## Default dark — October 17
 

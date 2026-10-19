@@ -2,7 +2,7 @@
 
 ## Release status
 
-Implementation and local acceptance are in progress. Gmail credentials have not been configured and no real delivery has been verified. Keep the current public release until the sender is configured and the new authentication flows pass acceptance. Database migrations 011–016 are applied; compatibility handling preserves the existing deployed application's session policy until rollout.
+Implementation and local acceptance are in progress. Gmail is configured privately in Vercel Production. The owner confirmed real email delivery and successful OTP sign-in on the staged deployment. Public promotion is in progress. Database migrations 011–016 are applied; compatibility handling preserves the existing deployed application's session policy until rollout.
 
 ## Verification policy
 
