@@ -1,5 +1,13 @@
 # Test evidence
 
+## Automatic OTP and request security — October 19
+
+- Typecheck, zero-warning lint, 48 unit tests and optimized build passed. A new test initially had an inferred HeadersInit type mismatch; using explicit Headers objects corrected it before the final successful typecheck/build.
+- All 17 account-security and 11 OTP Neon database checks passed. All five HTTP authentication checks passed against the optimized local server.
+- All five PWA Chrome scenarios passed in 13.1 seconds with the new response headers, including offline behavior and update notification preserving an unfinished form.
+- Production dependency audit: zero known advisories. Development-only advisories and scope limitations remain documented in [SECURITY_REVIEW.md](SECURITY_REVIEW.md).
+- All six targeted security/browser scenarios passed in 3.0 minutes on the optimized local server: invitations, password/email changes, authenticator maintenance, automatic OTP/remembered-device/recovery, request rejection and response headers. The OTP scenario verifies refresh reuse, expiry/resend and a fresh dashboard navigation without clicking the logo. Hosted release validation follows publication.
+
 ## Email OTP — October 19, local acceptance
 
 Release `7dff75f` deployed to https://careathome-platform.vercel.app and the public version endpoint matched the Git merge commit. GitHub checks passed. All four targeted hosted Chrome scenarios passed in 2.4 minutes: administrator invitation/MFA/recipient activation; password and verified-email changes/session retirement; authenticator enrollment/recovery-code replacement/audit; and email verification/wrong-code handling/remembered-device/password recovery. Synthetic tests included mobile automated accessibility checks. This is targeted security acceptance, not a rerun of the entire SRS suite. The owner separately confirmed real Gmail OTP sign-in. Temporary delivery accounts were deactivated and the temporary review alias removed.

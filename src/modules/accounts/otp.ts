@@ -109,11 +109,18 @@ export async function issueOtp(
       }
     });
   } else await deliverCode();
+  const expiry = await pool.query(
+    "select expires_at from private.email_challenges where id=$1",
+    [otp.id],
+  );
   return {
     id: otp.id,
+    expiresAt: new Date(expiry.rows[0].expires_at).toISOString(),
     message: email.endsWith(".test")
       ? "If eligible, a code will be saved in the private demonstration inbox. No external email is sent."
-      : "If this request is eligible, a code will arrive by email. Check your inbox and spam folder.",
+      : purpose === "login"
+        ? "Your sign-in code has been sent. Check your inbox and enter the code below. If needed, check Spam."
+        : "If this request is eligible, a code will arrive by email. Check your inbox and spam folder.",
   };
 }
 export async function consumeOtp(

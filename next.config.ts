@@ -20,6 +20,24 @@ const config: NextConfig = {
   async headers() {
     return [
       {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "same-origin" },
+          { key: "X-Frame-Options", value: "DENY" },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+          },
+        ],
+      },
+      {
         source: "/sw.js",
         headers: [
           {
@@ -31,14 +49,6 @@ const config: NextConfig = {
             key: "Content-Security-Policy",
             value: "default-src 'self'; script-src 'self'; connect-src 'self'",
           },
-        ],
-      },
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "same-origin" },
-          { key: "X-Frame-Options", value: "DENY" },
         ],
       },
     ];

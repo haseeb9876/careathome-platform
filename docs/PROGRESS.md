@@ -1,5 +1,11 @@
 # Current progress
 
+## Automatic OTP and security hardening — October 19 (ready for release)
+
+Sign-in OTP now sends automatically, survives refresh without sending another email, shows the actual expiry countdown and enables manual resend after expiry. Successful verification opens a fresh dashboard document; notification delivery no longer delays navigation. Added byte-counted public request limits, session-bound password-check throttling, a shared hosted source-IP authentication budget and browser restrictions. No database migration or new dependency is required. See [SECURITY_REVIEW.md](SECURITY_REVIEW.md).
+
+Typecheck, zero-warning lint, 48 unit tests, optimized build, 17 account-security database checks, 11 OTP database checks and five HTTP authentication checks passed. All six targeted security/browser scenarios passed in 3.0 minutes, including automatic delivery, refresh reuse, expiry/resend and dashboard navigation. All five PWA scenarios passed separately. See [TEST_RESULTS.md](TEST_RESULTS.md). Next: release to master and verify the public version and hosted flows.
+
 ## Email OTP implementation — October 19 (released)
 
 Implemented email verification for new/untrusted sign-ins, password recovery, sensitive account/admin settings, invitations, session revocation and authenticator maintenance. Added a Gmail SMTP adapter, encrypted synthetic inbox, bounded attempts, expiry, single-use/context-bound codes and remembered-device retirement. See [EMAIL_OTP.md](EMAIL_OTP.md). Migrations 011–016 are applied; 013 preserves compatibility with the older public server until the OTP release. New sessions from the OTP server explicitly require verification.

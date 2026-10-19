@@ -6,6 +6,8 @@ Implementation and targeted local/hosted acceptance are complete. Gmail is confi
 
 ## Verification policy
 
+The sign-in verification screen automatically requests its first code after opening. Refreshing resumes an existing delivered, unexpired code bound to that session instead of sending another. The countdown uses the server expiry time; after expiry, the user can request a replacement. Security-change forms continue to request codes explicitly after the operation details are filled in. Successful sign-in verification performs a fresh dashboard document navigation so pending/anonymous router prefetches are discarded; the security notification is scheduled after the verification response.
+
 New sign-ins create restricted sessions. These cannot access care data, exports or privileged account operations until email verification succeeds. Registration signs in to this restricted verification screen. Existing sessions retain their original policy during the staged rollout and expire under the existing session rules. Public request fields cannot grant email or authenticator assurance.
 
 Users can explicitly remember a private device for 30 days. The cookie is HttpOnly, Secure in production and SameSite=Lax; the database holds only its keyed digest. It does not replace authenticator MFA or authorize security changes. Password/email/MFA changes, account deactivation, role changes and session-revocation actions retire relevant remembered-device trust.

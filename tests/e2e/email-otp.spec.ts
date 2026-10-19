@@ -200,6 +200,42 @@ test("email OTP gates new accounts, remembers devices and protects recovery", as
       }),
     });
     await fillEmailCode(form, pool, email);
+    const firstChallenge = await form
+      .locator('input[name="otp_id"]')
+      .inputValue();
+    await page.reload();
+    await expect(form.locator('input[name="otp_id"]')).toHaveValue(
+      firstChallenge,
+    );
+    expect(
+      (
+        await pool.query(
+          "select count(*)::int as n from private.email_challenges where actor=$1 and purpose='login'",
+          [id],
+        )
+      ).rows[0].n,
+    ).toBe(1);
+    // Shorten only this disposable challenge to exercise the real expiry/resend UI.
+    await pool.query(
+      "update private.email_challenges set expires_at=now()+interval '30 seconds' where id=$1",
+      [firstChallenge],
+    );
+    await page.reload();
+    await expect(form.locator('input[name="otp_id"]')).toHaveValue(
+      firstChallenge,
+    );
+    await expect(
+      form.getByText("Your code has expired. Request a new code to continue.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await form
+      .getByRole("button", { name: "Send a new code", exact: true })
+      .click();
+    await expect(form.locator('input[name="otp_id"]')).not.toHaveValue(
+      firstChallenge,
+    );
+    await fillEmailCode(form, pool, email);
     const code = await form.getByLabel("Six-digit email code").inputValue();
     await form
       .getByLabel("Six-digit email code")
@@ -210,10 +246,20 @@ test("email OTP gates new accounts, remembers devices and protects recovery", as
     await expect(form.getByRole("alert")).toContainText("incorrect");
     await form.getByLabel("Six-digit email code").fill(code);
     await form.getByLabel("Remember this private device for 30 days").check();
+    const dashboardDocument = page.waitForRequest(
+      (request) =>
+        request.isNavigationRequest() &&
+        new URL(request.url()).pathname === "/dashboard",
+    );
     await form
       .getByRole("button", { name: "Verify and continue", exact: true })
       .click();
     await expect(page).toHaveURL(/\/dashboard$/);
+    await dashboardDocument;
+    await expect(
+      page.getByRole("status", { name: "Loading workspace" }),
+    ).toHaveCount(0);
+    await expect(page.locator("main h1")).toBeVisible();
     expect(
       (
         await pool.query(

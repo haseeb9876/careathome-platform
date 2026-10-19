@@ -1,4 +1,5 @@
 import { getAuth } from "@/lib/database/auth-server";
+import { boundedRequestText, RequestBodyTooLarge } from "@/lib/request-body";
 // Sensitive mutations run only through application actions with operation-bound OTP.
 const publicRoutes = new Set([
   "get-session",
@@ -15,7 +16,20 @@ async function handle(request: Request) {
       { error: "Use the account security screen to verify this operation." },
       { status: 403 },
     );
-  return getAuth().handler(request);
+  if (request.method === "POST") {
+    try {
+      const body = await boundedRequestText(request, 8192);
+      request = new Request(request, { body });
+    } catch (error) {
+      return Response.json(
+        { error: "Invalid request" },
+        { status: error instanceof RequestBodyTooLarge ? 413 : 400 },
+      );
+    }
+  }
+  const response = await getAuth().handler(request);
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
 }
 export const GET = handle;
 export const POST = handle;

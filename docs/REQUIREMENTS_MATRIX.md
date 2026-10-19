@@ -1,5 +1,9 @@
 # Requirements-to-tests matrix
 
+## Automatic OTP and security follow-up — October 19
+
+Automatic sign-in delivery, refresh-safe challenge reuse, expiry/resend feedback and a fresh dashboard transition are implemented. Request limits, authentication throttling and browser restrictions are reviewed in [SECURITY_REVIEW.md](SECURITY_REVIEW.md). Current acceptance and deployment status are recorded in [TEST_RESULTS.md](TEST_RESULTS.md); no deferred SRS item is marked complete by this follow-up.
+
 ## Email OTP extension — October 19
 
 The additional email-security requirement is implemented locally with migrations 011–016. New/untrusted sign-ins, password recovery, email/password changes, invitations, session revocation, administrator settings/account access and authenticator maintenance require purpose-bound email codes. Administrators retain authenticator requirements. Real Gmail delivery and staged OTP sign-in were confirmed by the owner; all four targeted public hosted security workflows passed. See [EMAIL_OTP.md](EMAIL_OTP.md) and current [test evidence](TEST_RESULTS.md); this extension does not mark deferred SRS features complete.

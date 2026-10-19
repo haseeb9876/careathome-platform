@@ -70,9 +70,13 @@ export async function fillEmailCode(form: Locator, pool: Pool, email: string) {
     "update private.email_challenges set created_at=now()-interval '61 minutes' where email=$1",
     [email],
   );
-  await form
-    .getByRole("button", { name: /^(Send verification code|Send a new code)$/ })
-    .click();
+  if (!(await form.locator('[data-auto-send="true"]').count())) {
+    await form
+      .getByRole("button", {
+        name: /^(Send verification code|Send a new code)$/,
+      })
+      .click();
+  }
   const hidden = form.locator('input[name="otp_id"]');
   await expect(hidden).not.toHaveValue("");
   let code = "";
@@ -105,14 +109,12 @@ export async function verifyEmailGate(
     return;
   }
   await page.goto("/auth/email-code");
-  const form = page
-    .locator("form")
-    .filter({
-      has: page.getByRole("button", {
-        name: "Verify and continue",
-        exact: true,
-      }),
-    });
+  const form = page.locator("form").filter({
+    has: page.getByRole("button", {
+      name: "Verify and continue",
+      exact: true,
+    }),
+  });
   await fillEmailCode(form, pool, email);
   if (remember)
     await form.getByLabel("Remember this private device for 30 days").check();

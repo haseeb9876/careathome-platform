@@ -1,5 +1,6 @@
 import { db } from "@/lib/database/server";
 import { z } from "zod";
+import { boundedRequestText, RequestBodyTooLarge } from "@/lib/request-body";
 export async function POST(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > 1024)
     return new Response("Invalid request", { status: 413 });
@@ -8,9 +9,11 @@ export async function POST(request: Request) {
     return new Response("Not permitted", { status: 403 });
   let body;
   try {
-    body = await request.json();
-  } catch {
-    return new Response("Invalid request", { status: 400 });
+    body = JSON.parse(await boundedRequestText(request, 1024));
+  } catch (error) {
+    return new Response("Invalid request", {
+      status: error instanceof RequestBodyTooLarge ? 413 : 400,
+    });
   }
   const token = z
     .string()

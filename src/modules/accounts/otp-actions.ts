@@ -1,6 +1,7 @@
 "use server";
 import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { authenticationPool, getAuth } from "@/lib/database/auth-server";
@@ -43,7 +44,12 @@ function publicError(error: unknown) {
 export async function sendSecurityOtp(
   purposeInput: string,
   form: FormData,
-): Promise<{ id?: string; message?: string; error?: string }> {
+): Promise<{
+  id?: string;
+  expiresAt?: string;
+  message?: string;
+  error?: string;
+}> {
   try {
     if (!Object.hasOwn(otpPurposes, purposeInput))
       throw new Error("Not permitted");
@@ -100,13 +106,22 @@ export async function sendSecurityOtp(
       actor = session.user.id;
       sessionId = session.session.id;
     }
-    return await issueOtp(
-      email,
-      actor,
-      purpose,
-      otpContext(purpose, form, sessionId),
-      deliver,
-    );
+    const context = otpContext(purpose, form, sessionId);
+    if (purpose === "login") {
+      // Refreshing the verification screen must not send or invalidate a code.
+      const existing = await authenticationPool().query(
+        "select id, expires_at from private.email_challenges where actor=$1 and email=$2 and purpose='login' and context_hash=$3 and delivered_at is not null and consumed_at is null and revoked_at is null and attempts<5 and expires_at>now() order by created_at desc limit 1",
+        [actor, email.toLowerCase(), context],
+      );
+      if (existing.rows[0])
+        return {
+          id: existing.rows[0].id,
+          expiresAt: new Date(existing.rows[0].expires_at).toISOString(),
+          message:
+            "Your sign-in code has been sent. Check your inbox and enter the code below. If needed, check Spam.",
+        };
+    }
+    return await issueOtp(email, actor, purpose, context, deliver);
   } catch (error) {
     return { error: publicError(error) };
   }
@@ -114,7 +129,7 @@ export async function sendSecurityOtp(
 export async function verifySessionEmail(
   _state: { error?: string },
   form: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; verified?: boolean }> {
   try {
     const session = await pendingSession();
     await consumeOtp(form, session.user.email, "login", session.session.id);
@@ -141,14 +156,16 @@ export async function verifySessionEmail(
         maxAge: 30 * 86400,
       });
     }
-    await securityNotice(
-      session.user.email,
-      "Your email was verified for a new sign-in.",
+    after(() =>
+      securityNotice(
+        session.user.email,
+        "Your email was verified for a new sign-in.",
+      ),
     );
   } catch (error) {
     return { error: publicError(error) };
   }
-  redirect("/dashboard");
+  return { verified: true };
 }
 export async function recoverWithOtp(
   _state: { error?: string },
