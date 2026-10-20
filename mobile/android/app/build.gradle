@@ -55,7 +55,7 @@ android {
     namespace "app.careathome.demo"
     defaultConfig {
         applicationId "app.careathome.demo"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 36
         versionCode 1
         versionName "0.1.0"
