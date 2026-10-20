@@ -13,6 +13,13 @@
 /coverage/
 /database/
 /scripts/
+/mobile/
+/tooling/
+/release/
+*.keystore
+*.jks
+*.apk
+*.aab
 *.pdf
 *.log
 *.tsbuildinfo
