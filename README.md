@@ -19,6 +19,8 @@ See the [review guide](docs/REVIEW_GUIDE.md) for account access and a walkthroug
 - [Maintenance and contribution guide](docs/MAINTENANCE.md)
 - [Local runbook](docs/LOCAL_RUNBOOK.md)
 - [Progress and remaining work](docs/PROGRESS.md)
+- [Production and Android roadmap](docs/PRODUCTION_ROADMAP.md)
+- [Android test build and device checks](docs/ANDROID_TEST_GUIDE.md)
 - [Actual test results](docs/TEST_RESULTS.md)
 - [Requirement matrix](docs/REQUIREMENTS_MATRIX.md)
 - [Architecture](docs/ARCHITECTURE.md)

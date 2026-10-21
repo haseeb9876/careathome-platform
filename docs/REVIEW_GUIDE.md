@@ -1,6 +1,6 @@
 # Review CareAtHome
 
-The email OTP upgrade passed local security acceptance, and the owner confirmed real Gmail delivery and OTP sign-in. The upgrade is live at the public link below; all four hosted security workflows passed. See [test evidence](TEST_RESULTS.md). See [owner setup and OTP review](EMAIL_OTP.md).
+The operational-readiness and Android foundation release is live at the public link below. All 34 local browser scenarios and 12 targeted hosted checks passed. The owner previously confirmed real Gmail delivery and OTP sign-in. See [test evidence](TEST_RESULTS.md). See [owner setup and OTP review](EMAIL_OTP.md).
 
 Public application: https://careathome-platform.vercel.app
 
@@ -12,7 +12,7 @@ Create a patient account from the sign-in page to try registration and bookings.
 
 ## Walkthrough
 
-Account administration: open **Settings & security** to change your password, request a verified login-email change or sign out other sessions. Administrators can open **People & access** to invite a separate administrator after verifying two-step security. Invitations expire and can be revoked. Real email delivery still needs a verified sender; `.test` messages stay in the encrypted demonstration inbox. See [account security and remaining acceptance work](ACCOUNT_SECURITY.md).
+Account administration: open **Settings & security** to change your password, request a verified login-email change or sign out other sessions. Administrators can open **People & access** to invite a separate administrator after verifying two-step security. Invitations expire and can be revoked. Real-address account-security emails use the configured Gmail sender; `.test` messages stay in the encrypted demonstration inbox. See [account security and remaining acceptance work](ACCOUNT_SECURITY.md).
 
 Open **Appearance settings** in the header (the sliders icon on mobile). Try Light, Dark and System, then enable Larger text. Refresh and open another tab to check the saved preference. Theme changes should preserve unfinished forms. These controls are also in each role's **Settings & security** screen. See [appearance guidance](APPEARANCE.md).
 
@@ -36,4 +36,8 @@ All 13 Chrome scenarios passed across hosted runs after the PDF packaging correc
 
 ## Remaining limitations
 
-Real-address account-security emails use the configured Gmail sender; reserved `.test` messages stay in the private development inbox. Reminder processing remains a separate operational task. Payments are simulated. Automatic backup scheduling, broader load testing and Firefox/WebKit/manual accessibility acceptance remain open. Optional/deferred SRS features, including native apps, care packages and automated provider recommendations, are recorded in the requirements matrix. This guide does not declare every SRS item accepted.
+Real-address account-security emails use the configured Gmail sender; reserved `.test` messages stay in the private development inbox. Reminder processing remains a separate operational task. Payments are simulated. Automatic backup scheduling, broader load testing and Firefox/WebKit/manual accessibility acceptance remain open. An Android demonstration APK has been built; permanent signing, physical-device testing and Play review remain open. Care packages, automated provider recommendations and a separate iPhone App Store client remain scope decisions. This guide does not declare every SRS item accepted.
+
+## Android and production preparation
+
+See the [Android test build guide](ANDROID_TEST_GUIDE.md) for the generated demonstration APK and physical-device checks. See the [production roadmap](PRODUCTION_ROADMAP.md) for capacity, monitoring, signing and operating decisions. Build success is separate from Play approval or real-patient launch readiness.
