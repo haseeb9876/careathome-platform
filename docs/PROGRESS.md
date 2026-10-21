@@ -6,7 +6,7 @@ Owner chose Pakistan, initially 50 daily users and real payments; budget remains
 
 Safepay hosted-checkout preparation and a separate online ledger are implemented. Migration 017 is applied to the approved synthetic Neon database. Default mode remains simulation; no merchant credentials, live activation or real charge occurred. See [merchant setup and acceptance](PAKISTAN_PAYMENTS.md). Migration hashing now tolerates LF/CRLF encoding differences without rewriting historical hashes or accepting substantive changes.
 
-61 unit tests and 22 database checks pass; final build/browser/cloud checks are in progress. Provider sandbox acceptance, reconciliation, refund operations, production separation and Play signing/device acceptance remain pending. Next owner input: whether an approved merchant account exists (provider name only). No paid hosting selection is required yet.
+61 unit tests, 22 database checks, typecheck, zero-warning lint, optimized build and 12 local browser checks pass. Cloud application checks and Android packaging passed on `c7c389c`; the renamed APK is documented in the [Android guide](ANDROID_TEST_GUIDE.md). Provider sandbox acceptance, reconciliation, refund operations, production separation and Play signing/device acceptance remain pending. Next owner input: whether an approved merchant account exists (provider name only). No paid hosting selection is required yet.
 
 ## Readiness foundation release — October 21
 
