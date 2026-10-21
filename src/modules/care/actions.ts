@@ -8,6 +8,7 @@ import { getSummaryAdapter } from "@/modules/reports/adapter";
 import { definitions } from "./action-definitions";
 import { securitySession } from "@/modules/accounts/security";
 import { consumeOtp, securityNotice } from "@/modules/accounts/otp";
+import { paymentMode } from "@/modules/payments/safepay";
 function back(form: FormData, fallback: string) {
   const path = String(form.get("return_to") ?? "");
   return /^\/dashboard\/(bookings\/[a-f0-9-]{36}|[a-z]+)$/.test(path)
@@ -35,6 +36,7 @@ function safeError(raw: string) {
 export async function careAction(form: FormData) {
   const { client, user } = await requireAccount();
   const op = String(form.get("op"));
+  if (op === "pay" && paymentMode() !== "simulation") redirect("/dashboard/payments");
   const definition = Object.hasOwn(definitions, op)
     ? definitions[op]
     : undefined;

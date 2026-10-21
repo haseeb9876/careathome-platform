@@ -1,7 +1,9 @@
 {
   "mode": "synthetic-demonstration",
   "organization": null,
-  "countries": [],
+  "countries": [
+    "PK"
+  ],
   "monthlyBudgetApproved": false,
   "targetConcurrentUsers": null,
   "productionOrigin": null,
@@ -18,6 +20,14 @@
     "independentSecurityReview": null,
     "physicalAndroidAcceptance": null,
     "accessibilityAcceptance": null,
-    "playDeclarationsAndSigning": null
-  }
+    "playDeclarationsAndSigning": null,
+    "merchantOnboardingAndPaymentAcceptance": null,
+    "settlementRefundAndDisputeOperations": null
+  },
+  "brandName": "Sukoonara Care",
+  "expectedDailyUsers": 50,
+  "realPaymentsRequired": true,
+  "planningConcurrentUsers": 5,
+  "concurrencyAssumption": "Engineering starting test target; not inferred from daily users or yet accepted capacity.",
+  "paymentProviderCandidate": "Safepay"
 }

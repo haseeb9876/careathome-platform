@@ -28,6 +28,7 @@ const tables = new Set([
   "record_amendments",
   "notifications",
   "payments",
+  "gateway_payments",
   "payment_history",
   "reviews",
   "review_moderation",

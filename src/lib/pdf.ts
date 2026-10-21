@@ -38,7 +38,7 @@ export async function createPdf(body: string) {
     const page = await browser.newPage({ javaScriptEnabled: false });
     await page.route("**/*", (route) => route.abort());
     await page.setContent(
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>body{font:13px/1.7 Arial,sans-serif;color:#23483d}h1{font-size:29px}h2{font-size:20px}h3{font-size:12px;color:#6d8767}p{white-space:pre-wrap;overflow-wrap:anywhere}section{border-top:1px solid #dce5d6;margin-top:24px;padding-top:18px;break-inside:avoid}aside{background:#f1f5ec;padding:18px;white-space:pre-wrap;margin:15px 0}.label{font-size:10px;color:#6d8064}header{font-weight:bold;letter-spacing:1px;border-bottom:2px solid #517653;padding-bottom:16px}</style></head><body><header>CareAtHome · Personal care, connected.</header>${body}</body></html>`,
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>body{font:13px/1.7 Arial,sans-serif;color:#23483d}h1{font-size:29px}h2{font-size:20px}h3{font-size:12px;color:#6d8767}p{white-space:pre-wrap;overflow-wrap:anywhere}section{border-top:1px solid #dce5d6;margin-top:24px;padding-top:18px;break-inside:avoid}aside{background:#f1f5ec;padding:18px;white-space:pre-wrap;margin:15px 0}.label{font-size:10px;color:#6d8064}header{font-weight:bold;letter-spacing:1px;border-bottom:2px solid #517653;padding-bottom:16px}</style></head><body><header>Sukoonara Care · Personal care, connected.</header>${body}</body></html>`,
       { waitUntil: "load" },
     );
     return await page.pdf({
@@ -48,7 +48,7 @@ export async function createPdf(body: string) {
       displayHeaderFooter: true,
       headerTemplate: "<span></span>",
       footerTemplate:
-        '<div style="font-size:9px;color:#777;width:100%;text-align:center">CareAtHome · Confidential · <span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+        '<div style="font-size:9px;color:#777;width:100%;text-align:center">Sukoonara Care · Confidential · <span class="pageNumber"></span> / <span class="totalPages"></span></div>',
     });
   } finally {
     await browser?.close();

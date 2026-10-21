@@ -28,7 +28,8 @@
     "test:account-security": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-account-security.mjs",
     "test:otp": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-email-otp.mjs",
     "test:capacity": "node scripts/load-public.mjs",
-    "release:check": "node scripts/release-readiness.mjs"
+    "release:check": "node scripts/release-readiness.mjs",
+    "test:gateway": "node --env-file=.env.neon tests/integration/neon-gateway.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1152.0",

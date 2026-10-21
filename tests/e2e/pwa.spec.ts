@@ -7,7 +7,7 @@ test("install manifest, icons and worker headers are published", async ({
   expect(response.ok()).toBeTruthy();
   const manifest = await response.json();
   expect(manifest).toMatchObject({
-    short_name: "CareAtHome",
+    short_name: "Sukoonara Care",
     display: "standalone",
     start_url: "/dashboard",
     scope: "/",
@@ -47,7 +47,7 @@ test("iPhone guidance appears on first visit, remembers dismissal and can reopen
   await page.reload();
   await expect(card).toHaveCount(0);
   await page
-    .getByRole("button", { name: "Install CareAtHome", exact: true })
+    .getByRole("button", { name: "Install Sukoonara Care", exact: true })
     .click();
   await expect(card).toBeVisible();
 });
@@ -86,7 +86,7 @@ test("native install is invoked only after a user click and installed mode hides
   );
   await page.reload();
   await expect(
-    page.getByRole("button", { name: "Install CareAtHome", exact: true }),
+    page.getByRole("button", { name: "Install Sukoonara Care", exact: true }),
   ).toHaveCount(0);
 });
 

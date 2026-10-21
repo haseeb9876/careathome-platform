@@ -143,7 +143,7 @@ export function AppInstall() {
             className="text-button"
             onClick={() => setVisible(true)}
           >
-            <Download size={16} /> Install CareAtHome
+            <Download size={16} /> Install Sukoonara Care
           </button>
         </aside>
       )}
@@ -166,7 +166,7 @@ export function AppInstall() {
           />
           <h2 id="app-install-title">Your care, one tap away</h2>
           <p>
-            Add <strong>CareAtHome</strong> to your home screen for easy access
+            Add <strong>Sukoonara Care</strong> to your home screen for easy access
             to visits and your care team.
           </p>
           {available ? (
@@ -213,7 +213,7 @@ export function AppInstall() {
       {newVersion && (
         <aside className="app-update" aria-label="Application update">
           <p role="status">
-            <strong>A CareAtHome update is ready.</strong> Save your work before
+            <strong>A Sukoonara Care update is ready.</strong> Save your work before
             refreshing. Unsaved entries will be lost.
           </p>
           <button

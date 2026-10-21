@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'app.careathome.demo',
     hostName: 'careathome-platform.vercel.app', // The domain being opened in the TWA.
     launchUrl: '/dashboard', // The start path for the TWA. Must be relative to the domain.
-    name: 'CareAtHome Demo', // The application name.
-    launcherName: 'CareAtHome Demo', // The name shown on the Android Launcher.
+    name: 'Sukoonara Care Demo', // The application name.
+    launcherName: 'Sukoonara Care Demo', // The name shown on the Android Launcher.
     themeColor: '#195C50', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.

@@ -54,13 +54,18 @@ try {
       .filter((n) => /^\d{3}_[a-z_]+\.sql$/.test(n))
       .sort()) {
       const sql = await readFile(new URL(name, folder), "utf8");
-      const hash = createHash("sha256").update(sql).digest("hex");
+      // Git/Windows can convert LF to CRLF without changing SQL. Preserve old
+      // ledger hashes, accepting only exact content with either newline encoding.
+      const canonicalSql = sql.replace(/\r\n/g, "\n");
+      const digest = (value) => createHash("sha256").update(value).digest("hex");
+      const hash = digest(canonicalSql);
+      const equivalentHashes = new Set([digest(sql), hash, digest(canonicalSql.replace(/\n/g, "\r\n"))]);
       const prior = await client.query(
         "select sha256 from public.careathome_migrations where name=$1",
         [name],
       );
       if (prior.rows.length) {
-        if (prior.rows[0].sha256 !== hash)
+        if (!equivalentHashes.has(prior.rows[0].sha256))
           throw new Error("Previously applied migration was edited: " + name);
         continue;
       }

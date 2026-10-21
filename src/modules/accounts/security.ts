@@ -58,12 +58,12 @@ export async function requestAccountLink(
       to: email,
       subject:
         kind === "email"
-          ? "Verify your new CareAtHome email"
-          : "Your CareAtHome administrator invitation",
+          ? "Verify your new Sukoonara Care email"
+          : "Your Sukoonara Care administrator invitation",
       text:
         kind === "email"
           ? "Confirm your new email within 30 minutes. Your current login remains unchanged until you confirm. If you did not request this, ignore this message."
-          : "You have been invited to manage CareAtHome. This invitation expires in 24 hours and can be used once. Create your own password; the sender will never see it.",
+          : "You have been invited to manage Sukoonara Care. This invitation expires in 24 hours and can be used once. Create your own password; the sender will never see it.",
       url,
     });
     await pool.query("select private.account_link_delivery($1,true)", [id]);

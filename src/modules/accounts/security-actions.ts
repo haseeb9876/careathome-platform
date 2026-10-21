@@ -244,7 +244,7 @@ export async function confirmEmailChange(
     try {
       await sendAccountMail(pool, {
         to: result.rows[0].old_email,
-        subject: "Your CareAtHome login email changed",
+        subject: "Your Sukoonara Care login email changed",
         text: "Your login email was changed and all sessions were signed out. If this was not you, contact your care administrator immediately.",
       });
     } catch {

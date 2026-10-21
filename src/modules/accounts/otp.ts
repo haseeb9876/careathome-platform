@@ -84,7 +84,7 @@ export async function issueOtp(
     try {
       await sendAccountMail(pool, {
         to: email,
-        subject: "Your CareAtHome security code",
+        subject: "Your Sukoonara Care security code",
         text: `Your verification code is: ${otp.code}\n\nAction: ${purpose.replaceAll("-", " ")}\nThis code expires in five minutes and works once. A newer code replaces the previous code for this action.`,
       });
       await pool.query(
@@ -152,7 +152,7 @@ export async function securityNotice(email: string, action: string) {
   try {
     await sendAccountMail(authenticationPool(), {
       to: email,
-      subject: "CareAtHome security activity",
+      subject: "Sukoonara Care security activity",
       text: `${action}\nIf you did not do this, reset your password and contact your administrator immediately.`,
     });
   } catch {

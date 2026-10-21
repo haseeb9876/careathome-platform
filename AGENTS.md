@@ -5,7 +5,7 @@
 - Stack: strict TypeScript, Next.js App Router, React, Tailwind, customised shadcn primitives. The user authorised migration from Supabase to Neon on October 15; preserve existing SQL invariants and application features during that migration.
 - SQL migrations are authoritative. RLS and explicit RPC grants must enforce ownership and roles; UI visibility is not authorisation.
 - Never expose service-role credentials to the browser. Do not trust role, owner, price or verification fields supplied by clients.
-- The user explicitly authorised public Vercel deployment on October 16. Deploy a clearly labelled synthetic demonstration; real patient data, real payments and external AI remain out of scope.
+- The user explicitly authorised public Vercel deployment on October 16. Deploy a clearly labelled synthetic demonstration; real patient data and external AI remain out of scope. On October 21 the user authorized real-payment integration preparation for Pakistan (50 daily users initially); live activation still requires merchant onboarding, credentials and acceptance. No hosting budget has been approved.
 - Keep all seven SRS booking states. Completed and Cancelled are terminal. Assignment must validate eligibility and use database conflict protection.
 - Record test results only after they actually run. Unverified code remains pending in the matrix.
 - Required checks: npm.cmd run typecheck, npm.cmd run lint, npm.cmd test, npm.cmd run build; relevant database and Playwright tests.
