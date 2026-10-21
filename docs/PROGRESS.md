@@ -1,5 +1,13 @@
 # Current progress
 
+## Pakistan launch and payments — October 21 (validation)
+
+Owner chose Pakistan, initially 50 daily users and real payments; budget remains undecided. Working brand: **Sukoonara Care**. Web/PWA, email and Android source branding are updated while existing URLs, package identity and authenticator issuer remain compatible. This is not legal-name clearance.
+
+Safepay hosted-checkout preparation and a separate online ledger are implemented. Migration 017 is applied to the approved synthetic Neon database. Default mode remains simulation; no merchant credentials, live activation or real charge occurred. See [merchant setup and acceptance](PAKISTAN_PAYMENTS.md). Migration hashing now tolerates LF/CRLF encoding differences without rewriting historical hashes or accepting substantive changes.
+
+61 unit tests, 22 database checks, typecheck, zero-warning lint, optimized build and 12 local browser checks pass. Cloud application checks and Android packaging passed on `c7c389c`; the renamed APK is documented in the [Android guide](ANDROID_TEST_GUIDE.md). Provider sandbox acceptance, reconciliation, refund operations, production separation and Play signing/device acceptance remain pending. Next owner input: whether an approved merchant account exists (provider name only). No paid hosting selection is required yet.
+
 ## Readiness foundation release — October 21
 
 All 34 local browser scenarios and 55 unit tests pass. Typecheck, zero-warning web lint, production dependency audit and cloud web/Android builds pass. PR #2 is merged and release `5a4b1d7` is live at https://careathome-platform.vercel.app. All 12 targeted hosted scenarios pass, and GitHub service-check run `39556419334` confirms liveness and both restricted database connections. The Android debug APK and unsigned bundle are available for synthetic device testing; see [Android test guide](ANDROID_TEST_GUIDE.md). Sixteen non-blocking Android lint warnings remain, and physical-device/Play acceptance is not complete.

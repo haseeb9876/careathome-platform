@@ -1,5 +1,9 @@
 # Requirements-to-tests matrix
 
+## Pakistan payment extension — October 21
+
+FR-068/069 additionally have a Safepay hosted-checkout foundation: signed callbacks, separate online ledger, server prices, ownership checks, duplicate handling and monotonic refunds. Six adapter unit tests and 22 database checks pass. Provider sandbox/live acceptance, reconciliation, invoicing and merchant approval remain **pending**; older simulation evidence is not real-payment acceptance. See [payment launch guide](PAKISTAN_PAYMENTS.md).
+
 ## Production and Android extension — October 20
 
 Production-readiness and Android TWA preparation are now authorized. The initial implementation includes operational endpoints, bounded authentication pools, a protected association endpoint, cloud Android build and capacity tooling. Final Play submission, production traffic capacity and clinical readiness remain **pending**. See [production roadmap](PRODUCTION_ROADMAP.md), [launch prerequisites](../release/launch.json) and [executed evidence](TEST_RESULTS.md). Earlier deferred product features remain scope decisions.

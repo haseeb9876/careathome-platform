@@ -1,5 +1,15 @@
 # Test evidence
 
+## Pakistan payment foundation — October 21 (validation)
+
+- 61 unit tests pass, including six Safepay tests for live gates, server checkout requests, redirect origins, malformed responses, HMAC tampering/merchant mismatch and capture/refund validation.
+- Migration 017 passed 22 draft checks with fixtures/schema rolled back, then was applied; the same 22 checks passed against the applied schema with fixtures rolled back. Coverage: OTP/ownership/payable status, server amount, initialization lease/nonce, environment isolation, duplicate capture, incorrect amount, failure after success, refund ordering, independent visit status, simulation exclusion and effective grants. Grant assertions are not a full concurrent RLS penetration test.
+- Initial draft tests failed because the migration owner cannot assume runtime roles. Effective grants are now checked without escalating that owner. Migration initially stopped on Windows newline conversions in older scripts; LF/CRLF equivalence was verified against ledger hashes before adding portable checks.
+- A test environment typing error and JSX lint error were corrected. Final build/browser/cloud evidence is pending. External Safepay checkout, bank settlement and live refunds remain untested without merchant credentials.
+- Subsequent checks: typecheck, zero-warning lint and optimized build pass; all 12 local public/PWA/patient/provider/admin workspace browser scenarios pass using installed Chrome. The first browser attempt could not find Playwright's bundled browser (one HTTP test passed, eleven browser launches failed); no browser download was needed. Disabled webhook returns 503 to unauthenticated POST. Cloud web runs `39609039567`/`39609091437` and Android runs `39609039339`/`39609091936` passed. The renamed Android artifact was downloaded and hashed; physical-device acceptance remains pending.
+- The ledger now pins an additional canonical LF content hash only after matching verified historical bytes. Original hashes remain intact, including older mixed-newline files; future substantive edits still fail. Repeated migration execution passed without reapplying migrations; targeted migration-runner lint passed.
+- Local public-only baseline at five concurrent workers: 100 requests, zero failures, p95 608 ms, maximum 1150 ms. This is not authenticated or hosted capacity acceptance and does not establish a daily-user limit.
+
 ## Production readiness acceptance — October 21
 
 - All 34 local Chrome scenarios passed across the six-scenario targeted run (1.8 minutes) and the remaining 28-scenario run (11.2 minutes). This includes real synthetic OTP, role workspaces, admin invitations, account changes, full 5 MiB credential transfer/content rejection, reports/sharing, appearance/accessibility, PWA/offline/update behavior and request protections.

@@ -8,16 +8,16 @@ import { AppInstall } from "@/components/app-install";
 import { appearanceScript } from "@/lib/appearance";
 export const viewport: Viewport = { themeColor: "#101c19" };
 export const metadata: Metadata = {
-  applicationName: "CareAtHome",
+  applicationName: "Sukoonara Care",
   appleWebApp: {
     capable: true,
-    title: "CareAtHome",
+    title: "Sukoonara Care",
     statusBarStyle: "default",
   },
   icons: { icon: "/icons/app-192.png", apple: "/icons/apple-touch-icon.png" },
   title: {
-    default: "CareAtHome | A little closer to feeling better",
-    template: "%s · CareAtHome",
+    default: "Sukoonara Care | A little closer to feeling better",
+    template: "%s · Sukoonara Care",
   },
   description:
     "Thoughtful home nursing and physiotherapy, with your care journey in one place. Demonstration.",

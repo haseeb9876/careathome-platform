@@ -8,7 +8,7 @@ The user selected Neon, GitHub and Vercel, removed Docker, and authorised public
 | Identity | Patient, provider (nurse/physiotherapist), administrator. No separate doctor/platform-owner account. Better Auth with Neon. |
 | Assignment | Administrator assigns; no autonomous assignment or provider acceptance step. |
 | Packages | Multi-session care packages deferred by user brief (FR-031/041). |
-| Payments | Simulated payments/refunds; real gateway deferred (FR-068). |
+| Payments | Real payments authorized October 21 for Pakistan. Safepay hosted-checkout preparation; merchant onboarding/sandbox acceptance/live activation pending. Simulation remains isolated. |
 | Summaries | Labelled deterministic template; external AI requires separate scope/data handling decisions (FR-056-063). |
 | Cancellation | Default 24-hour patient cutoff, configurable; administrator override needs a reason. Rescheduling revalidates eligibility/conflicts. |
 | Scheduling | Configurable travel buffer, not route estimation. Credential expiry enforced by default. |

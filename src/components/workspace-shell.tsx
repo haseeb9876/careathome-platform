@@ -286,7 +286,7 @@ export function WorkspaceShell({
           {children}
         </main>
         <div className="workspace-footer">
-          <span>CareAtHome · Care, thoughtfully connected.</span>
+          <span>Sukoonara Care · Care, thoughtfully connected.</span>
           <span>Private workspace · Synthetic data</span>
         </div>
       </div>

@@ -1,4 +1,6 @@
 import { bookingStatusGuidance } from "@/modules/bookings/validation";
+import { CheckoutPanel } from "@/modules/payments/panel";
+import { paymentMode } from "@/modules/payments/safepay";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
@@ -302,7 +304,17 @@ export default async function Visit({
               </ActionForm>
             </Panel>
           )}
+          {patient && (
+            <CheckoutPanel
+              client={client}
+              booking={id}
+              payable={["Confirmed", "In Progress", "Completed"].includes(
+                b.status,
+              )}
+            />
+          )}
           {patient &&
+            paymentMode() === "simulation" &&
             ["Confirmed", "In Progress", "Completed"].includes(b.status) &&
             !pay.data?.status?.match(/Paid|Refunded/) && (
               <Panel title="Try a payment simulation">

@@ -90,11 +90,11 @@ export async function sendAccountMail(
       );
     try {
       await transport.sendMail({
-        from: { name: "CareAtHome Security", address: process.env.GMAIL_USER! },
+        from: { name: "Sukoonara Care Security", address: process.env.GMAIL_USER! },
         to: mail.to,
         subject: mail.subject,
-        text: `${mail.text}\n${mail.url ?? ""}\n\nCareAtHome account security. Never share verification codes.`,
-        html: `<div style="background:#f3f7f5;padding:28px;font-family:Arial,sans-serif;color:#163d32"><div style="max-width:520px;margin:auto;background:white;padding:28px;border-radius:16px"><h2>CareAtHome</h2><h3>${escape(mail.subject)}</h3><p style="white-space:pre-line;line-height:1.7">${escape(mail.text)}</p>${mail.url ? `<p><a href="${escape(mail.url)}">Continue securely</a></p>` : ""}<hr><p>Never share your code or password. If you did not request this action, do not approve it.</p></div></div>`,
+        text: `${mail.text}\n${mail.url ?? ""}\n\nSukoonara Care account security. Never share verification codes.`,
+        html: `<div style="background:#f3f7f5;padding:28px;font-family:Arial,sans-serif;color:#163d32"><div style="max-width:520px;margin:auto;background:white;padding:28px;border-radius:16px"><h2>Sukoonara Care</h2><h3>${escape(mail.subject)}</h3><p style="white-space:pre-line;line-height:1.7">${escape(mail.text)}</p>${mail.url ? `<p><a href="${escape(mail.url)}">Continue securely</a></p>` : ""}<hr><p>Never share your code or password. If you did not request this action, do not approve it.</p></div></div>`,
       });
     } catch {
       throw new Error("Email delivery failed. Try again later");
@@ -113,7 +113,7 @@ export async function sendAccountMail(
       from: process.env.EMAIL_FROM,
       to: [mail.to],
       subject: mail.subject,
-      text: `${mail.text}${mail.url ? `\n\n${mail.url}` : ""}\n\nCareAtHome · Synthetic demonstration. Never share your password or verification links.`,
+      text: `${mail.text}${mail.url ? `\n\n${mail.url}` : ""}\n\nSukoonara Care · Synthetic demonstration. Never share your password or verification links.`,
     }),
     cache: "no-store",
     signal: AbortSignal.timeout(15000),

@@ -10,12 +10,17 @@ import {
 import { dateTime } from "@/lib/format";
 import { money } from "@/lib/utils";
 import type { SectionProps } from "./types";
+import { gatewayColumns } from "@/modules/payments/panel";
 
 export async function PaymentsSection({ account }: SectionProps) {
   const { client, profile } = account;
   const admin = profile.role === "admin";
   const { data: config } = await client.from("settings").select("*").single();
   const tz = config?.timezone ?? "Asia/Karachi";
+  const { data: online, error: onlineError } = await client
+    .from("gateway_payments")
+    .select(gatewayColumns)
+    .order("created_at", { ascending: false });
 
   const { data } = await client
     .from("payments")
@@ -25,13 +30,74 @@ export async function PaymentsSection({ account }: SectionProps) {
     <>
       <PageHeading
         title="Clear costs. No surprises."
-        description="A separate record of simulated payments, receipts, and refunds."
+        description="Your online payment confirmations and separate demonstration receipts."
       />
+      <Panel title="Online payments">
+        {onlineError ? (
+          <p role="alert">
+            Online payment history could not be loaded. Please try again.
+          </p>
+        ) : online?.length ? (
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Visit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {online.map((p) => (
+                  <tr key={p.id}>
+                    <td>
+                      {p.id.slice(0, 8)}
+                      <small>
+                        {p.environment === "sandbox"
+                          ? "Sandbox test"
+                          : "Safepay"}
+                      </small>
+                    </td>
+                    <td>
+                      {money(p.amount_minor, p.currency)}
+                      {p.refunded_minor > 0 && (
+                        <small>
+                          Refunded {money(p.refunded_minor, p.currency)}
+                        </small>
+                      )}
+                    </td>
+                    <td>{p.status}</td>
+                    <td>
+                      <Link
+                        className="text-link"
+                        href={"/dashboard/bookings/" + p.booking_id}
+                      >
+                        View visit
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p>
+            No online payments yet. When online checkout is activated, verified
+            confirmations will appear here.
+          </p>
+        )}
+        <p className="muted mt-3">
+          Refunds require support review and provider confirmation. A payment
+          notification never changes visit status.
+        </p>
+      </Panel>
       <p className="notice">
-        Local payment simulation only. No real money is charged and no card
-        details are collected. Payment status does not change visit status.
+        The demonstration activity below is simulated. No real money is charged
+        and no card details are collected. Payment status does not change visit
+        status.
       </p>
-      <Panel title="Payment activity">
+      <Panel title="Demonstration payment activity">
         {data?.length ? (
           <div className="table-scroll">
             <table>

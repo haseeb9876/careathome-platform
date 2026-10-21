@@ -48,25 +48,49 @@ try {
     await client.query(
       "revoke all on public.careathome_migrations from public",
     );
+    await client.query(
+      "alter table public.careathome_migrations add column if not exists canonical_sha256 text",
+    );
     await client.query("SET LOCAL search_path=public,extensions");
     const folder = new URL("../database/migrations/", import.meta.url);
     for (const name of (await readdir(folder))
       .filter((n) => /^\d{3}_[a-z_]+\.sql$/.test(n))
       .sort()) {
       const sql = await readFile(new URL(name, folder), "utf8");
-      const hash = createHash("sha256").update(sql).digest("hex");
+      // Git/Windows can convert LF to CRLF without changing SQL. Preserve old
+      // ledger hashes, accepting only exact content with either newline encoding.
+      const canonicalSql = sql.replace(/\r\n/g, "\n");
+      const digest = (value) =>
+        createHash("sha256").update(value).digest("hex");
+      const hash = digest(canonicalSql);
+      const equivalentHashes = new Set([
+        digest(sql),
+        hash,
+        digest(canonicalSql.replace(/\n/g, "\r\n")),
+      ]);
       const prior = await client.query(
-        "select sha256 from public.careathome_migrations where name=$1",
+        "select sha256,canonical_sha256 from public.careathome_migrations where name=$1",
         [name],
       );
       if (prior.rows.length) {
-        if (prior.rows[0].sha256 !== hash)
+        if (
+          prior.rows[0].canonical_sha256
+            ? prior.rows[0].canonical_sha256 !== hash
+            : !equivalentHashes.has(prior.rows[0].sha256)
+        )
           throw new Error("Previously applied migration was edited: " + name);
+        // Pin canonical content only after the historical bytes are verified.
+        // This also preserves older migrations with mixed LF/CRLF newlines.
+        if (!prior.rows[0].canonical_sha256)
+          await client.query(
+            "update public.careathome_migrations set canonical_sha256=$2 where name=$1",
+            [name, hash],
+          );
         continue;
       }
       await client.query(sql);
       await client.query(
-        "insert into public.careathome_migrations(name,sha256) values($1,$2)",
+        "insert into public.careathome_migrations(name,sha256,canonical_sha256) values($1,$2,$2)",
         [name, hash],
       );
       console.log("Applied " + name);
