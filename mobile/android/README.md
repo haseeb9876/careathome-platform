@@ -4,7 +4,9 @@ This is an Android Trusted Web Activity project, not a Play-approved production 
 
 ## Build
 
-The repository's **Android build** GitHub Actions workflow compiles Java, runs Android lint and produces a debug APK plus an **unsigned** release AAB. It uses JDK 17, Gradle 8.11.1, Android Gradle Plugin 8.10.1 and target/compile API 36. This avoids installing Android Studio or the SDK on the owner's laptop.
+The repository's **Android build** GitHub Actions workflow compiles Java, runs Android lint and produces a debug APK plus an **unsigned** release AAB. It uses JDK 17, Gradle 8.11.1, Android Gradle Plugin 8.10.1 target/compile API 36 and minimum API 24 (Android 7). This avoids installing Android Studio or the SDK on the owner's laptop.
+
+The debug APK is for testing only. Its temporary build key can change between cloud builds, so reinstalling may be necessary. Native backup and device transfer are disabled; browser-managed website storage has its own settings.
 
 For a machine with the Android SDK and JDK 17 already configured:
 
