@@ -14,7 +14,11 @@ export function authenticationPool() {
   if (!pool) {
     pool = new Pool(
       applicationDatabaseConfig(
-        { DATABASE_URL: process.env.AUTH_DATABASE_URL },
+        {
+          DATABASE_URL: process.env.AUTH_DATABASE_URL,
+          DATABASE_POOL_MAX: process.env.DATABASE_POOL_MAX,
+          VERCEL: process.env.VERCEL,
+        },
         "careathome_auth",
       ),
     );

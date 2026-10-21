@@ -1,5 +1,9 @@
 # Requirements-to-tests matrix
 
+## Production and Android extension — October 20
+
+Production-readiness and Android TWA preparation are now authorized. The initial implementation includes operational endpoints, bounded authentication pools, a protected association endpoint, cloud Android build and capacity tooling. Final Play submission, production traffic capacity and clinical readiness remain **pending**. See [production roadmap](PRODUCTION_ROADMAP.md), [launch prerequisites](../release/launch.json) and [executed evidence](TEST_RESULTS.md). Earlier deferred product features remain scope decisions.
+
 ## Automatic OTP and security follow-up — October 19
 
 Automatic sign-in delivery, refresh-safe challenge reuse, expiry/resend feedback and a fresh dashboard transition are implemented. Request limits, authentication throttling and browser restrictions are reviewed in [SECURITY_REVIEW.md](SECURITY_REVIEW.md). Current acceptance and deployment status are recorded in [TEST_RESULTS.md](TEST_RESULTS.md); no deferred SRS item is marked complete by this follow-up.

@@ -1,0 +1,23 @@
+{
+  "mode": "synthetic-demonstration",
+  "organization": null,
+  "countries": [],
+  "monthlyBudgetApproved": false,
+  "targetConcurrentUsers": null,
+  "productionOrigin": null,
+  "androidPackageId": null,
+  "evidence": {
+    "stakeholderAcceptance": null,
+    "authenticatedLoadTest": null,
+    "scheduledBackupAndRestore": null,
+    "monitoringAndIncidentOwner": null,
+    "transactionalEmailDelivery": null,
+    "privacyAndRetentionApproval": null,
+    "accountDataDeletion": null,
+    "providerCredentialAuthority": null,
+    "independentSecurityReview": null,
+    "physicalAndroidAcceptance": null,
+    "accessibilityAcceptance": null,
+    "playDeclarationsAndSigning": null
+  }
+}

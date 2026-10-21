@@ -13,8 +13,30 @@ describe("Neon application configuration", () => {
     const config = applicationDatabaseConfig({ DATABASE_URL: valid });
     expect(config.ssl.rejectUnauthorized).toBe(true);
     expect(config.enableChannelBinding).toBe(true);
-    expect(config.max).toBe(4);
+    expect(config.max).toBe(2);
     expect(new URL(config.connectionString).search).toBe("");
+  });
+  it("requires pooled hosted connections and bounds configurable pool sizes", () => {
+    expect(() =>
+      applicationDatabaseConfig({
+        DATABASE_URL: valid.replace("-pooler.", "."),
+        VERCEL: "1",
+      }),
+    ).toThrow("pooler");
+    expect(
+      applicationDatabaseConfig({
+        DATABASE_URL: valid,
+        VERCEL: "1",
+        DATABASE_POOL_MAX: "1",
+      }).max,
+    ).toBe(1);
+    for (const max of ["0", "6", "1.5", "not-a-number"])
+      expect(() =>
+        applicationDatabaseConfig({
+          DATABASE_URL: valid,
+          DATABASE_POOL_MAX: max,
+        }),
+      ).toThrow("DATABASE_POOL_MAX");
   });
   it.each([
     undefined,
@@ -67,7 +89,9 @@ describe("transaction-scoped identity", () => {
       },
     );
     expect(result).toBe(42);
-    expect(client.calls[0].sql).toMatch(/^BEGIN;.*SET LOCAL ROLE authenticated$/);
+    expect(client.calls[0].sql).toMatch(
+      /^BEGIN;.*SET LOCAL ROLE authenticated$/,
+    );
     expect(client.calls[0].sql).toContain("statement_timeout = '8s'");
     expect(client.calls[1]).toEqual({
       sql: "SELECT set_config('request.jwt.claims', $1, true)",

@@ -26,7 +26,9 @@
     "test:recovery": "playwright test tests/e2e/email-otp.spec.ts --grep \"protects recovery\"",
     "local:inbox": "node --env-file=.env.neon scripts/neon-inbox.mjs",
     "test:account-security": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-account-security.mjs",
-    "test:otp": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-email-otp.mjs"
+    "test:otp": "node --conditions=react-server --experimental-strip-types --env-file=.env.neon tests/integration/neon-email-otp.mjs",
+    "test:capacity": "node scripts/load-public.mjs",
+    "release:check": "node scripts/release-readiness.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1152.0",

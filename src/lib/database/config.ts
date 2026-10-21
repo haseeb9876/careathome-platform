@@ -51,12 +51,19 @@ export function applicationDatabaseConfig(
   }
   const enableChannelBinding =
     url.searchParams.get("channel_binding") === "require";
+  const poolMax = Number(env.DATABASE_POOL_MAX ?? 2);
+  if (!Number.isInteger(poolMax) || poolMax < 1 || poolMax > 5)
+    throw new Error("DATABASE_POOL_MAX must be an integer from 1 to 5.");
+  if (env.VERCEL && !url.hostname.includes("-pooler."))
+    throw new Error("Hosted runtime connections must use the Neon pooler.");
   url.search = "";
   return {
     connectionString: url.toString(),
     ssl: { rejectUnauthorized: true as const },
     enableChannelBinding,
-    max: 4,
+    max: poolMax,
+    maxLifetimeSeconds: 300,
+    query_timeout: 15_000,
     connectionTimeoutMillis: 10_000,
     idleTimeoutMillis: 10_000,
     application_name: "careathome",

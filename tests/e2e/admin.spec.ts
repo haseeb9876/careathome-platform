@@ -1,4 +1,6 @@
+import { finishSyntheticSignIn } from "./otp-helpers";
 import { test, expect } from "@playwright/test";
+test.use({ trace: "off" });
 import { randomUUID } from "node:crypto";
 import { Pool, type PoolClient, type QueryResult } from "pg";
 import { withDatabaseIdentity } from "../../src/lib/database/transaction";
@@ -64,6 +66,7 @@ test("administrator reviews a persisted patient request", async ({ page }) => {
     .fill("admin-browser-" + suffix + "@careathome.test");
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await finishSyntheticSignIn(page);
   await expect(page.getByText("CARE OPERATIONS")).toBeVisible();
   await page.goto("/dashboard/bookings/" + booking);
   const card = page;

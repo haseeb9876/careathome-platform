@@ -1,3 +1,4 @@
+import { finishSyntheticSignIn } from "./otp-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
@@ -129,6 +130,7 @@ for (const role of ["patient", "provider", "admin"]) {
     await page.getByLabel("Email address").fill(`${role}@careathome.test`);
     await page.getByLabel("Password", { exact: true }).fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    await finishSyntheticSignIn(page);
     await expect(page).toHaveURL(/dashboard/, { timeout: 90000 });
     expect(
       (

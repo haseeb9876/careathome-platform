@@ -1,4 +1,6 @@
-﻿import { test, expect } from "@playwright/test";
+import { finishSyntheticSignIn } from "./otp-helpers";
+import { test, expect } from "@playwright/test";
+test.use({ trace: "off" });
 test("patient registers, requests, saves profile, cancels and signs out", async ({
   page,
 }) => {
@@ -10,12 +12,8 @@ test("patient registers, requests, saves profile, cancels and signs out", async 
     .getByLabel("Password", { exact: true })
     .fill("SyntheticOnlyPass123!");
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page.getByRole("status")).toContainText("Registration received");
-  await page.getByLabel("Email address").fill(email);
-  await page
-    .getByLabel("Password", { exact: true })
-    .fill("SyntheticOnlyPass123!");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(/\/auth\/email-code$/);
+  await finishSyntheticSignIn(page);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Hello, Browser.",
   );
@@ -94,12 +92,8 @@ test("provider registers as Pending", async ({ page }) => {
     .getByLabel("Password", { exact: true })
     .fill("SyntheticOnlyPass123!");
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page.getByRole("status")).toContainText("Registration received");
-  await page.getByLabel("Email address").fill(email);
-  await page
-    .getByLabel("Password", { exact: true })
-    .fill("SyntheticOnlyPass123!");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(/\/auth\/email-code$/);
+  await finishSyntheticSignIn(page);
   await expect(page).toHaveURL(/\/dashboard/);
   await page.goto("/dashboard/profile");
   await expect(

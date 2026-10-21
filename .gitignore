@@ -16,6 +16,15 @@ uploads/
 .neon/
 *.pem
 *.key
+tooling/android/
+mobile/android/.gradle/
+mobile/android/**/build/
+mobile/android/local.properties
+*.keystore
+*.jks
+*.aab
+*.apk
+artifacts/android/
 
 .vercel
 .env*

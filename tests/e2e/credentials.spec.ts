@@ -1,4 +1,6 @@
+import { finishSyntheticSignIn } from "./otp-helpers";
 import { test, expect } from "@playwright/test";
+test.use({ trace: "off" });
 import { readFileSync } from "node:fs";
 
 test("provider uploads a full 5 MiB private credential and rejects disguised content", async ({
@@ -10,6 +12,7 @@ test("provider uploads a full 5 MiB private credential and rejects disguised con
   await page.getByLabel("Email address").fill("provider@careathome.test");
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await finishSyntheticSignIn(page);
   await expect(page).toHaveURL(/dashboard/);
   await page.goto("/dashboard/profile");
   const label = "Synthetic hosted credential " + Date.now();
