@@ -1,4 +1,6 @@
+import { finishSyntheticSignIn } from "./otp-helpers";
 import { test, expect } from "@playwright/test";
+test.use({ trace: "off" });
 import { readFileSync, mkdirSync } from "node:fs";
 import AxeBuilder from "@axe-core/playwright";
 const password = readFileSync(".env.demo", "utf8").trim().split("=")[1];
@@ -7,6 +9,7 @@ async function login(page: import("@playwright/test").Page, role: string) {
   await page.getByLabel("Email address").fill(role + "@careathome.test");
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await finishSyntheticSignIn(page);
   await expect(page).toHaveURL(/dashboard/, { timeout: 90000 });
 }
 test("patient report review, PDF export, bearer sharing and revocation", async ({

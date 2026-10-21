@@ -1,5 +1,17 @@
 # Test evidence
 
+## Production readiness and Android — October 20
+
+- 55 unit tests pass. Initial readiness-query typing was corrected by using the pool's bounded query configuration. Typecheck and optimized build pass; an initial Edge-instrumentation warning was fixed by separating environment-neutral telemetry from Node-only token verification.
+- Five HTTP authentication checks passed against the running optimized server. An earlier invocation before server startup failed with connection refused; it was a test-order issue.
+- Production release preflight correctly exits nonzero with explicit missing organization, scope, operating and Play evidence. It is not a production-readiness pass.
+- Initial Android cloud run `39381424153` failed because the generator selected minimum API 21 while browser-helper 2.7.4 requires API 24. Updated minimum SDK and removed the obsolete manifest package attribute; rerun pending.
+- Android cloud run `39381824047` passed compilation, lint, debug APK and unsigned AAB generation. Android lint reported 17 warnings, including backup configuration; explicit native backup/device-transfer exclusions were subsequently added. Run `39554727171` passed with those exclusions. Physical Android acceptance and Play signing remain pending.
+- October 21: all 55 unit tests pass; production dependency audit reports zero known vulnerabilities. Six targeted browser checks pass: patient registration/booking/profile/cancellation, provider registration, admin request review, liveness/unauthorized readiness, empty-by-default Android association and authenticated readiness for both restricted database connections.
+- Earlier browser runs exposed outdated registration expectations and test-helper races: a transient dashboard URL and Next's route announcer were mistaken for successful sign-in/delivery failure. Tests now complete real OTP and scope delivery errors to main content. The earlier broad run was interrupted after the credential-transfer timeout; remaining journeys are being rerun, not counted as passed.
+- Bounded local optimized-server capacity baseline: 40 anonymous GETs, two workers, zero failures, 4.472 seconds total, p95 532 ms, maximum 1418 ms. Four routes: home, services, providers and liveness. This is not an authenticated-load result or a daily-user capacity guarantee.
+- Remaining browser and final hosted checks are in progress.
+
 ## Automatic OTP and request security — October 19
 
 - Typecheck, zero-warning lint, 48 unit tests and optimized build passed. A new test initially had an inferred HeadersInit type mismatch; using explicit Headers objects corrected it before the final successful typecheck/build.

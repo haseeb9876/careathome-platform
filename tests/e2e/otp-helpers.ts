@@ -128,3 +128,58 @@ export async function verifyEmailGate(
     .click();
   await expect(page).toHaveURL(/\/dashboard$/);
 }
+
+/** Exercise real OTP on older role journeys, without modifying their cooldowns. */
+export async function finishSyntheticSignIn(page: Page) {
+  await expect(page).toHaveURL(/\/(dashboard|auth\/email-code)(\/|$)/, {
+    timeout: 90000,
+  });
+  const session = await (
+    await page.request.get("/api/auth/get-session")
+  ).json();
+  if (session?.session?.emailOtpVerified) return;
+  // A sign-in can briefly visit /dashboard before its server-side OTP redirect.
+  await expect(page).toHaveURL(/\/auth\/email-code(?:\?|$)/);
+  const email = session?.user?.email;
+  if (typeof email !== "string" || !email.endsWith("@careathome.test"))
+    throw new Error("This helper only reads synthetic test mail.");
+  const pool = otpTestPool();
+  try {
+    const hidden = page.locator('input[name="otp_id"]');
+    const deliveryAlert = page.locator("main").getByRole("alert");
+    await expect
+      .poll(
+        async () =>
+          (await hidden.inputValue()) ||
+          (await deliveryAlert.allTextContents()).join(" "),
+      )
+      .not.toBe("");
+    if (!(await hidden.inputValue())) {
+      await expect(deliveryAlert).toContainText("Wait 60 seconds");
+      // Respect the live server cooldown for shared demonstration fixtures.
+      await page.waitForTimeout(61000);
+      await page
+        .getByRole("button", { name: "Send verification code", exact: true })
+        .click();
+    }
+    await expect(hidden).not.toHaveValue("");
+    let code = "";
+    await expect
+      .poll(async () => {
+        try {
+          code = await readTestCode(pool, email, await hidden.inputValue());
+          return true;
+        } catch {
+          return false;
+        }
+      })
+      .toBe(true);
+    await page.getByLabel("Six-digit email code", { exact: true }).fill(code);
+    await page
+      .getByRole("button", { name: "Verify and continue", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/dashboard$/);
+  } finally {
+    await pool.end();
+  }
+}

@@ -24,6 +24,7 @@ mobile/android/local.properties
 *.jks
 *.aab
 *.apk
+artifacts/android/
 
 .vercel
 .env*

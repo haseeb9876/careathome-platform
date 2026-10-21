@@ -1,5 +1,13 @@
 # Current progress
 
+## Production readiness and Android — October 20 (in validation)
+
+Added uptime/protected database-readiness endpoints, privacy-conscious error classifications, bounded pooled authentication connections, an opt-in monitoring workflow and a production-safe public-load harness. Added the Android TWA source project and GitHub cloud build, plus a certificate-controlled asset-links endpoint. The provisional Android identity is explicitly a demo; the release bundle is unsigned. No local Android SDK or Docker was installed, and no paid plan was selected.
+
+Updated older patient/provider/admin/browser acceptance tests to complete real email OTP. Added a [production roadmap](PRODUCTION_ROADMAP.md), [privacy data inventory](PRIVACY_DATA_INVENTORY.md) and machine-readable release prerequisites. The release preflight currently fails as intended because production business, operational and Play evidence is not supplied. `OPS_HEALTH_TOKEN` was configured privately for Vercel Production/GitHub; the scheduled monitoring switch remains off pending usage/alert-owner review.
+
+55 unit tests, corrected typecheck and clean optimized build pass; expanded browser and Android build acceptance are in progress. Android's first build found a minimum-SDK mismatch; the source now requires API 24 as its browser library does. See [TEST_RESULTS.md](TEST_RESULTS.md) for subsequent results. Next: complete browser/capacity/cloud-build validation, publish the tested web improvements, then obtain the organization/country/capacity/budget/feature decisions required for production.
+
 ## Automatic OTP and security hardening — October 19 (released)
 
 Sign-in OTP now sends automatically, survives refresh without sending another email, shows the actual expiry countdown and enables manual resend after expiry. Successful verification opens a fresh dashboard document; notification delivery no longer delays navigation. Added byte-counted public request limits, session-bound password-check throttling, a shared hosted source-IP authentication budget and browser restrictions. No database migration or new dependency is required. See [SECURITY_REVIEW.md](SECURITY_REVIEW.md).

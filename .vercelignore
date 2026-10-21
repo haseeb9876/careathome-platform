@@ -16,6 +16,7 @@
 /mobile/
 /tooling/
 /release/
+/artifacts/
 *.keystore
 *.jks
 *.apk
