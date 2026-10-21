@@ -2,6 +2,8 @@
 
 This is the implementation ledger for the owner's request to prepare large-scale web and Google Play releases. Existing synthetic-demo deployment authorization continues. No paid service, real payment provider, clinical retention rule or production organization is invented.
 
+October 22 update: Pakistan launch, 50 initial daily users and real payments are authorized. The working brand is Sukoonara Care. Safepay integration preparation is implemented but remains disabled pending merchant credentials and provider acceptance; see [payment setup](PAKISTAN_PAYMENTS.md). Budget, legal operator and accepted concurrent-user capacity remain unresolved.
+
 ## Current implementation
 
 - Public liveness `/api/health`, protected database readiness `/api/health/ready`, and deliberately minimal server-error telemetry. Readiness uses a separate minimum-32-character bearer token and never returns connection details. A liveness success alone is not dependency readiness.
@@ -16,8 +18,9 @@ This is the implementation ledger for the owner's request to prepare large-scale
 
 | Area | Required completion |
 |---|---|
-| Launch scope | Organization, country, daily/concurrent-user target, budget and launch feature decisions |
-| SRS | Client acceptance of all agreed workflows; distinguish deferred payments/AI/packages/doctor roles from bugs |
+| Launch scope | Legal organization, accepted concurrent-user target, budget and remaining launch feature decisions; Pakistan and 50 initial daily users are confirmed |
+| SRS | Client acceptance of all agreed workflows; real payments now require merchant acceptance; distinguish deferred AI/packages/doctor roles from bugs |
+| Payments | Approved merchant account, private sandbox credentials, provider checkout/refund acceptance, reconciliation and dispute/support operations |
 | Infrastructure | Separate production/staging targets, plan selection, cost alerts, rollback and capacity measurements |
 | Email | Verified transactional sender/domain, delivery and bounce handling, tested failure/retry behavior |
 | Reminder worker | Deployment schedule and end-to-end delivery acceptance; current worker captures to encrypted development inbox |

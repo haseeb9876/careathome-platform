@@ -1,6 +1,8 @@
 # Current progress
 
-## Pakistan launch and payments — October 21 (validation)
+## Pakistan launch and payments — released October 22
+
+PR #3 merged as `65d1503a65c10dfb422efaba623a78c10325acb5`; the public version endpoint and visible Sukoonara Care branding match this release. All 12 hosted public/PWA/patient/provider/admin workspace checks passed. Post-merge web and Android runs `39664998712` and `39664998617` passed. The disabled payment webhook returns 503 as intended. Merchant setup remains the next required owner input; production/Play readiness is not claimed.
 
 Owner chose Pakistan, initially 50 daily users and real payments; budget remains undecided. Working brand: **Sukoonara Care**. Web/PWA, email and Android source branding are updated while existing URLs, package identity and authenticator issuer remain compatible. This is not legal-name clearance.
 

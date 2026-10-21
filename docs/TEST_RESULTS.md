@@ -1,5 +1,9 @@
 # Test evidence
 
+## Hosted Pakistan-brand release — October 22
+
+PR #3 merged as `65d1503a65c10dfb422efaba623a78c10325acb5`. Public `/api/app-version` returned this SHA, and browser inspection confirmed Sukoonara Care branding. All 12 hosted public/PWA/role-workspace scenarios passed in 2.8 minutes. The unconfigured payment webhook returned 503. Master application run `39664998712` and Android run `39664998617` passed. Initial command-line verification encountered transient connection/TLS timeouts; subsequent browser and hosted test verification succeeded. No provider checkout or real-money acceptance was performed.
+
 ## Pakistan payment foundation — October 21 (validation)
 
 - 61 unit tests pass, including six Safepay tests for live gates, server checkout requests, redirect origins, malformed responses, HMAC tampering/merchant mismatch and capture/refund validation.
