@@ -1,6 +1,6 @@
 # Pakistan launch and payments
 
-Working brand: **Sukoonara Care** — Expert care. The comfort of home.
+Working brand: **CareAtHome** — Expert care. The comfort of home. (Sukoonara Care was used from October 22 to November 17.)
 Launch country: Pakistan; currency: PKR; timezone: Asia/Karachi.
 Initial planning volume: 50 daily users. Five simultaneous users is an initial
 engineering test target, not a measured capacity or a prediction from daily users.

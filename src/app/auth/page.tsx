@@ -29,7 +29,7 @@ export default async function Auth({
           time.
         </p>
         <div className="care-note">
-          Sukoonara Care demonstration
+          CareAtHome demonstration
           <br />
           <strong>Synthetic accounts only</strong>
         </div>

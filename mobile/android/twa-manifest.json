@@ -1,8 +1,8 @@
 {
   "packageId": "app.careathome.demo",
   "host": "careathome-platform.vercel.app",
-  "name": "Sukoonara Care Demo",
-  "launcherName": "Sukoonara Care Demo",
+  "name": "CareAtHome Demo",
+  "launcherName": "CareAtHome Demo",
   "display": "standalone",
   "themeColor": "#195C50",
   "themeColorDark": "#000000",
