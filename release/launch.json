@@ -24,7 +24,7 @@
     "merchantOnboardingAndPaymentAcceptance": null,
     "settlementRefundAndDisputeOperations": null
   },
-  "brandName": "Sukoonara Care",
+  "brandName": "CareAtHome",
   "expectedDailyUsers": 50,
   "realPaymentsRequired": true,
   "planningConcurrentUsers": 5,

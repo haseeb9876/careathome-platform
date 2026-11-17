@@ -1,5 +1,9 @@
 # Current progress
 
+## Brand name restored — November 17
+
+The visible app, PWA, email, PDF and Android source name is **CareAtHome** again, matching the SRS v1.0 baseline used for FYP reporting. Package identity, URLs and authenticator issuer are unchanged. The offline cache version is advanced to `careathome-offline-v4` so installed apps receive the renamed offline screen. Earlier entries below that mention Sukoonara Care describe past releases.
+
 ## Pakistan launch and payments — released October 22
 
 PR #3 merged as `65d1503a65c10dfb422efaba623a78c10325acb5`; the public version endpoint and visible Sukoonara Care branding match this release. All 12 hosted public/PWA/patient/provider/admin workspace checks passed. Post-merge web and Android runs `39664998712` and `39664998617` passed. The disabled payment webhook returns 503 as intended. Merchant setup remains the next required owner input; production/Play readiness is not claimed.

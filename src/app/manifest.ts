@@ -3,7 +3,7 @@ import { brand } from "@/lib/brand";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "Sukoonara Care — Home Care",
+    name: "CareAtHome — Home Care",
     short_name: brand.name,
     description: "Your home visits, care team and care records in one place.",
     start_url: "/dashboard",

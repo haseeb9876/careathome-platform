@@ -62,7 +62,7 @@ describe("account email transport", () => {
     );
     const message = smtp.sendMail.mock.calls[0][0];
     expect(message.from).toEqual({
-      name: "Sukoonara Care Security",
+      name: "CareAtHome Security",
       address: "sender@gmail.com",
     });
     expect(message.html).toContain("&lt;script&gt;");

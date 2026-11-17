@@ -46,7 +46,7 @@ function makeAuth() {
       sendResetPassword: async ({ user, url }) => {
         await sendAccountMail(connection, {
           to: user.email,
-          subject: "Reset your Sukoonara Care password",
+          subject: "Reset your CareAtHome password",
           text: "Use this single-use link to reset your password. Ignore it if you did not request a reset.",
           url,
         });

@@ -2,7 +2,7 @@
 
 This is the implementation ledger for the owner's request to prepare large-scale web and Google Play releases. Existing synthetic-demo deployment authorization continues. No paid service, real payment provider, clinical retention rule or production organization is invented.
 
-October 22 update: Pakistan launch, 50 initial daily users and real payments are authorized. The working brand is Sukoonara Care. Safepay integration preparation is implemented but remains disabled pending merchant credentials and provider acceptance; see [payment setup](PAKISTAN_PAYMENTS.md). Budget, legal operator and accepted concurrent-user capacity remain unresolved.
+October 22 update: Pakistan launch, 50 initial daily users and real payments are authorized. The working brand was Sukoonara Care until November 17, when it returned to CareAtHome. Safepay integration preparation is implemented but remains disabled pending merchant credentials and provider acceptance; see [payment setup](PAKISTAN_PAYMENTS.md). Budget, legal operator and accepted concurrent-user capacity remain unresolved.
 
 ## Current implementation
 
