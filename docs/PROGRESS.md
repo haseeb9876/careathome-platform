@@ -1,5 +1,9 @@
 # Current progress
 
+## Security patch — November 17
+
+Upgraded Next.js 16.4.0 → 16.4.6 (critical advisories GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr and others fixed from 16.4.5) and nodemailer 10.1.2 → 10.1.7 (address-parser advisories fixed from 10.1.4); eslint-config-next follows Next.js. Typecheck, zero-warning lint, 61 unit tests and the optimized build pass. `npm audit --omit=dev` still reports a high-severity picomatch ReDoS inside vitest/vite (pulled in by better-auth); its only offered fix is a breaking vitest downgrade, so it remains open.
+
 ## Brand name restored — November 17
 
 The visible app, PWA, email, PDF and Android source name is **CareAtHome** again, matching the SRS v1.0 baseline used for FYP reporting. Package identity, URLs and authenticator issuer are unchanged. The offline cache version is advanced to `careathome-offline-v4` so installed apps receive the renamed offline screen. Earlier entries below that mention Sukoonara Care describe past releases.
